@@ -109,11 +109,11 @@ const InteractiveMap = ({
 
   // Handle zoom in/out
   const handleZoomIn = () => {
-    setZoom(prevZoom => Math.min(prevZoom + 0.2, 3));
+    setZoom(prevZoom => Math.min(prevZoom + 0.2, 5));
   };
 
   const handleZoomOut = () => {
-    setZoom(prevZoom => Math.max(prevZoom - 0.2, 0.5));
+    setZoom(prevZoom => Math.max(prevZoom - 0.2, 0.2));
   };
 
   // Reset view to initial position
@@ -196,74 +196,88 @@ const InteractiveMap = ({
         {/* Background */}
         <rect width="100%" height="100%" fill={BG_COLOR} />
         
-        {/* Grid for streets */}
-        <g stroke={STREET_COLOR} strokeWidth="4">
-          {/* Horizontal streets */}
-          <line x1="0" y1="50" x2="800" y2="50" />
-          <line x1="0" y1="150" x2="800" y2="150" />
-          <line x1="0" y1="250" x2="800" y2="250" />
-          <line x1="0" y1="350" x2="800" y2="350" />
-          <line x1="0" y1="450" x2="800" y2="450" />
-          <line x1="0" y1="550" x2="800" y2="550" />
-          
-          {/* Vertical streets */}
-          <line x1="50" y1="0" x2="50" y2="600" />
-          <line x1="150" y1="0" x2="150" y2="600" />
-          <line x1="250" y1="0" x2="250" y2="600" />
-          <line x1="350" y1="0" x2="350" y2="600" />
-          <line x1="450" y1="0" x2="450" y2="600" />
-          <line x1="550" y1="0" x2="550" y2="600" />
-          <line x1="650" y1="0" x2="650" y2="600" />
-          <line x1="750" y1="0" x2="750" y2="600" />
-        </g>
-        
-        {/* Curved roads */}
-        <path 
-          d="M 0,100 Q 100,100 100,200 L 100,600" 
-          fill="none" 
-          stroke={STREET_COLOR} 
-          strokeWidth="4"
-        />
-        <path 
-          d="M 280,600 Q 280,500 350,500 L 800,500" 
-          fill="none" 
-          stroke={STREET_COLOR} 
-          strokeWidth="4"
-        />
-        
-        {/* Parks */}
-        <rect x="170" y="70" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
-        <rect x="670" y="70" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
-        <rect x="370" y="270" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
-        <rect x="570" y="370" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
-        <rect x="720" y="370" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
-        <rect x="270" y="470" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
-        <rect x="70" y="370" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
+        {/* Define a pattern for the map that repeats seamlessly */}
+        <defs>
+          <pattern id="map-pattern" x="0" y="0" width="800" height="600" patternUnits="userSpaceOnUse">
+            {/* Grid for streets */}
+            <g stroke={STREET_COLOR} strokeWidth="4">
+              {/* Horizontal streets */}
+              <line x1="0" y1="50" x2="800" y2="50" />
+              <line x1="0" y1="150" x2="800" y2="150" />
+              <line x1="0" y1="250" x2="800" y2="250" />
+              <line x1="0" y1="350" x2="800" y2="350" />
+              <line x1="0" y1="450" x2="800" y2="450" />
+              <line x1="0" y1="550" x2="800" y2="550" />
+              
+              {/* Vertical streets */}
+              <line x1="50" y1="0" x2="50" y2="600" />
+              <line x1="150" y1="0" x2="150" y2="600" />
+              <line x1="250" y1="0" x2="250" y2="600" />
+              <line x1="350" y1="0" x2="350" y2="600" />
+              <line x1="450" y1="0" x2="450" y2="600" />
+              <line x1="550" y1="0" x2="550" y2="600" />
+              <line x1="650" y1="0" x2="650" y2="600" />
+              <line x1="750" y1="0" x2="750" y2="600" />
+            </g>
+            
+            {/* Parks */}
+            <rect x="170" y="70" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
+            <rect x="670" y="70" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
+            <rect x="370" y="270" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
+            <rect x="570" y="370" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
+            <rect x="720" y="370" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
+            <rect x="270" y="470" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
+            <rect x="70" y="370" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
 
-        {/* Houses */}
-        {[
-          { x: 100, y: 80 },
-          { x: 280, y: 70 },
-          { x: 480, y: 130 },
-          { x: 380, y: 170 },
-          { x: 580, y: 200 },
-          { x: 280, y: 270 },
-          { x: 670, y: 250 },
-          { x: 170, y: 340 },
-          { x: 500, y: 400 }
-        ].map((pos, idx) => (
-          <g key={`house-${idx}`} transform={`translate(${pos.x}, ${pos.y})`}>
-            <path
-              d="M5,25 Q0,30 0,35 L0,55 Q0,60 5,60 L45,60 Q50,60 50,55 L50,35 Q50,30 45,25 L27,5 Q25,3 23,5 L5,25 Z"
-              fill={HOUSE_COLOR}
+            {/* Houses */}
+            {[
+              { x: 100, y: 80 },
+              { x: 280, y: 70 },
+              { x: 480, y: 130 },
+              { x: 380, y: 170 },
+              { x: 580, y: 200 },
+              { x: 280, y: 270 },
+              { x: 670, y: 250 },
+              { x: 170, y: 340 },
+              { x: 500, y: 400 }
+            ].map((pos, idx) => (
+              <g key={`house-${idx}`} transform={`translate(${pos.x}, ${pos.y})`}>
+                <path
+                  d="M5,25 Q0,30 0,35 L0,55 Q0,60 5,60 L45,60 Q50,60 50,55 L50,35 Q50,30 45,25 L27,5 Q25,3 23,5 L5,25 Z"
+                  fill={HOUSE_COLOR}
+                />
+                <rect x="20" y="45" width="10" height="15" fill={HOUSE_WINDOW_COLOR} />
+                <rect x="10" y="25" width="8" height="8" fill={HOUSE_WINDOW_COLOR} />
+                {idx === 2 || idx === 6 ? (
+                  <rect x="32" y="25" width="8" height="8" fill={HOUSE_WINDOW_COLOR} />
+                ) : null}
+              </g>
+            ))}
+            
+            {/* Curved roads within the pattern */}
+            <path 
+              d="M 0,100 Q 100,100 100,200 L 100,600" 
+              fill="none" 
+              stroke={STREET_COLOR} 
+              strokeWidth="4"
             />
-            <rect x="20" y="45" width="10" height="15" fill={HOUSE_WINDOW_COLOR} />
-            <rect x="10" y="25" width="8" height="8" fill={HOUSE_WINDOW_COLOR} />
-            {idx === 2 || idx === 6 ? (
-              <rect x="32" y="25" width="8" height="8" fill={HOUSE_WINDOW_COLOR} />
-            ) : null}
-          </g>
-        ))}
+            <path 
+              d="M 280,600 Q 280,500 350,500 L 800,500" 
+              fill="none" 
+              stroke={STREET_COLOR} 
+              strokeWidth="4"
+            />
+          </pattern>
+        </defs>
+        
+        {/* Extended map background that uses the pattern and is much larger than the viewport */}
+        <rect 
+          x="-4000" 
+          y="-3000" 
+          width="8000" 
+          height="6000" 
+          fill="url(#map-pattern)" 
+        />
 
         {/* User Location Marker */}
         {coordinates && (
