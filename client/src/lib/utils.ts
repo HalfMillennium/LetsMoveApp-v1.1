@@ -1,6 +1,65 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { Apartment } from "../types";
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
+
+export const exampleApartments: Apartment[] = [
+  {
+    id: 1,
+    title: "Modern Downtown Loft",
+    description: "A stylish loft in the heart of downtown.",
+    price: 2200,
+    bedrooms: 2,
+    bathrooms: 1,
+    squareFeet: 950,
+    location: "Downtown",
+    address: "123 Main St, Cityville",
+    latitude: "40.7128",
+    longitude: "-74.0060",
+    images: [
+      "https://photos.zillowstatic.com/fp/e5b8ce37137b31884017355f061ba30f-se_large_800_400.webp",
+      "https://photos.zillowstatic.com/fp/9f7dafe3786e3cc4411bd07636e14bff-se_large_800_400.webp",
+    ],
+    amenities: ["Washer/Dryer", "Balcony", "Gym"],
+    isAvailable: true,
+    createdById: 42,
+    distance: "1.2 miles",
+  },
+  {
+    id: 2,
+    title: "Cozy Suburban Home",
+    price: 1800,
+    bedrooms: 3,
+    bathrooms: 2,
+    location: "Suburbia",
+    address: "456 Elm St, Suburbia",
+    latitude: "40.7357",
+    longitude: "-74.1724",
+    images: [
+      "https://photos.zillowstatic.com/fp/d95390447576b321cf414aba76dcf272-se_large_800_400.webp",
+    ],
+    isAvailable: true,
+  },
+  {
+    id: 3,
+    title: "Luxury High-Rise Apartment",
+    description: "Breathtaking views and luxury amenities.",
+    price: 3500,
+    bedrooms: 2,
+    bathrooms: 2,
+    squareFeet: 1200,
+    location: "Uptown",
+    address: "789 Park Ave, Uptown",
+    latitude: "40.7488",
+    longitude: "-73.9857",
+    images: [
+      "https://photos.zillowstatic.com/fp/9f1b3b3f0fa1c4790917caeadec57a4f-se_large_800_400.webp",
+      "https://photos.zillowstatic.com/fp/1f128e2e4a81f578fb98461571493753-se_large_800_400.webp",
+    ],
+    amenities: ["Pool", "Concierge", "Pet Friendly"],
+    isAvailable: false,
+    distance: "0.8 miles",
+  },
+];
