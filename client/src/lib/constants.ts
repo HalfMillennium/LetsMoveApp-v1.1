@@ -90,3 +90,12 @@ export const COLORS = {
   mint: "#C9DAD0",
   lightCream: "#FFF9F2"
 };
+
+// API related
+export const API_BASE_URL = '/api';
+
+// Location defaults
+export const DEFAULT_COORDINATES = {
+  latitude: 40.7128,   // New York City latitude
+  longitude: -74.0060  // New York City longitude
+};

@@ -10,7 +10,9 @@ import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { exampleApartments } from "../lib/utils";
 import InteractiveMap from "../components/InteractiveMap2";
+import RadarMap from "../components/RadarMap";
 import { useGeolocation } from "../lib/useGeolocation";
+import { initializeRadar } from "../lib/radarService";
 
 const Listings = () => {
   const [location] = useLocation();
@@ -18,6 +20,7 @@ const Listings = () => {
   const [filters, setFilters] = useState<FilterSettings>({});
   const [selectedApartmentId, setSelectedApartmentId] = useState<number | undefined>();
   const [viewMode, setViewMode] = useState<'split' | 'list'>('split');
+  const [useRadarMap, setUseRadarMap] = useState<boolean>(true);
   const [searchParams] = useState(() => {
     const urlParams = new URLSearchParams(window.location.search);
     return {
@@ -25,6 +28,11 @@ const Listings = () => {
       type: urlParams.get("type") || "",
     };
   });
+  
+  // Initialize Radar SDK when component mounts
+  useEffect(() => {
+    initializeRadar();
+  }, []);
 
   // Fetch apartments with applied filters
   const {
@@ -168,11 +176,37 @@ const Listings = () => {
             {/* Interactive Map - takes up half the screen in split view, hidden in list view */}
             {viewMode === 'split' && (
               <div className="lg:sticky lg:top-24 h-[70vh] lg:h-[calc(100vh-12rem)] mb-6 lg:mb-0">
-                <InteractiveMap 
-                  apartments={apartments} 
-                  onApartmentSelect={handleApartmentSelect}
-                  selectedApartmentId={selectedApartmentId}
-                />
+                {useRadarMap ? (
+                  <RadarMap
+                    apartments={apartments.map(apt => ({
+                      ...apt,
+                      description: apt.description || null,
+                      amenities: apt.amenities || null,
+                      distance: apt.distance || null,
+                      squareFeet: apt.squareFeet || null,
+                      createdById: apt.createdById || null
+                    }))}
+                    onApartmentSelect={handleApartmentSelect}
+                    selectedApartmentId={selectedApartmentId}
+                  />
+                ) : (
+                  <InteractiveMap 
+                    apartments={apartments} 
+                    onApartmentSelect={handleApartmentSelect}
+                    selectedApartmentId={selectedApartmentId}
+                  />
+                )}
+                
+                {/* Map Toggle Button */}
+                <div className="absolute bottom-4 right-4 z-10">
+                  <Button
+                    variant="secondary"
+                    className="text-xs bg-white shadow-md hover:bg-gray-100 text-[#1A4A4A]"
+                    onClick={() => setUseRadarMap(!useRadarMap)}
+                  >
+                    {useRadarMap ? 'Use SVG Map' : 'Use Radar Map'}
+                  </Button>
+                </div>
               </div>
             )}
             
