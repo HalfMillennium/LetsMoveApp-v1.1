@@ -9,6 +9,9 @@ import {
   Plus,
   Minus,
   CornerUpLeft,
+  MapIcon,
+  HouseIcon,
+  Building2,
 } from "lucide-react";
 
 interface InteractiveMapProps {
@@ -369,13 +372,7 @@ const InteractiveMap = ({
               {/* Home icon */}
               <g transform="translate(-12, -12)">
                 <rect x="0" y="0" width="24" height="24" fill="none" />
-                <path
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h2a1 1 0 001-1v-7m-6 0a1 1 0 00-1 1v2a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 00-1-1h-2z"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+                <Building2 color="#212121"/>
               </g>
 
               {/* Price Label */}
