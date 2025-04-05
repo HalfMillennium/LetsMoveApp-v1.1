@@ -1,13 +1,18 @@
 import { useLocation, Link } from 'wouter';
 import { Home, Search, Heart, Users, User } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const MobileNavBar = () => {
   const [location] = useLocation();
+  const isMobile = useIsMobile();
   
   const isActive = (path: string) => location === path;
   
+  // Only render on mobile devices
+  if (!isMobile) return null;
+  
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg md:hidden z-40">
+    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40">
       <nav className="flex justify-around items-center py-3">
         <Link href="/">
           <a className="flex flex-col items-center text-[#1A4A4A]">

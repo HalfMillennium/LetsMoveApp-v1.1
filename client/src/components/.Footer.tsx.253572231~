@@ -114,11 +114,11 @@ const Footer = () => {
                   type="email"
                   name="email"
                   placeholder="Your email"
-                  className="px-3 py-2 rounded-lg w-full focus:outline-none text-[#1A4A4A]"
+                  className="px-3 py-2 rounded-l-lg w-full focus:outline-none text-[#1A4A4A]"
                 />
                 <Button
                   type="submit"
-                  className="bg-[#E9927E] text-white px-4 py-2 rounded-lg hover:bg-[#E9927E]/90"
+                  className="bg-[#E9927E] text-white px-4 py-2 rounded-r-lg hover:bg-[#E9927E]/90"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </Button>

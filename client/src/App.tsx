@@ -11,7 +11,6 @@ import Listings from "./pages/Listings";
 import SearchParty from "./pages/SearchParty";
 import Favorites from "./pages/Favorites";
 import Profile from "./pages/Profile";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 function Router() {
   return (
@@ -27,8 +26,6 @@ function Router() {
 }
 
 function App() {
-  const isMobile = useIsMobile();
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -36,7 +33,7 @@ function App() {
         <Router />
       </main>
       <Footer />
-      {isMobile && <MobileNavBar />}
+      <MobileNavBar />
       <Toaster />
     </div>
   );
