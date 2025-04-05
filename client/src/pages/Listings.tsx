@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { exampleApartments } from "../lib/utils";
-import InteractiveMap from "../components/InteractiveMap";
+import InteractiveMap from "../components/InteractiveMap2";
 import { useGeolocation } from "../lib/useGeolocation";
 
 const Listings = () => {
