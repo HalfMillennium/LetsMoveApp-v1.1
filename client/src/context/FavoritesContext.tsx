@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { queryClient } from "@/lib/queryClient";
@@ -17,37 +23,48 @@ interface FavoritesContextType {
   isFavorite: (apartmentId: number) => boolean;
 }
 
-const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
+const DEFAULT_FAVORITES: FavoritesContextType = {
+  favorites: [],
+  isLoading: false,
+  error: null,
+  addFavorite: async (apartmentId: number) => {},
+  removeFavorite: async (favoriteId: number) => {},
+  isFavorite: (apartmentId: number) => false,
+};
+
+const FavoritesContext = createContext<FavoritesContextType | undefined>(
+  DEFAULT_FAVORITES,
+);
 
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
-  
+
   // Fetch favorites
   const {
     data: favorites = [],
     isLoading,
     error,
   } = useQuery<Favorite[]>({
-    queryKey: ['/api/favorites', { userId: DEFAULT_USER_ID }],
+    queryKey: ["/api/favorites", { userId: DEFAULT_USER_ID }],
     queryFn: async () => {
       const response = await fetch(`/api/favorites?userId=${DEFAULT_USER_ID}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch favorites');
+        throw new Error("Failed to fetch favorites");
       }
       return response.json();
-    }
+    },
   });
 
   // Add favorite mutation
   const addFavoriteMutation = useMutation({
     mutationFn: async (apartmentId: number) => {
-      return apiRequest('POST', '/api/favorites', {
+      return apiRequest("POST", "/api/favorites", {
         userId: DEFAULT_USER_ID,
-        apartmentId
+        apartmentId,
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/favorites"] });
       toast({
         title: "Added to favorites",
         description: "The apartment has been added to your favorites.",
@@ -59,16 +76,16 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         description: "Could not add to favorites. Please try again.",
         variant: "destructive",
       });
-    }
+    },
   });
 
   // Remove favorite mutation
   const removeFavoriteMutation = useMutation({
     mutationFn: async (favoriteId: number) => {
-      return apiRequest('DELETE', `/api/favorites/${favoriteId}`);
+      return apiRequest("DELETE", `/api/favorites/${favoriteId}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/favorites"] });
       toast({
         title: "Removed from favorites",
         description: "The apartment has been removed from your favorites.",
@@ -80,12 +97,12 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         description: "Could not remove from favorites. Please try again.",
         variant: "destructive",
       });
-    }
+    },
   });
 
   // Check if an apartment is favorited
   const isFavorite = (apartmentId: number): boolean => {
-    return favorites.some(fav => fav.apartmentId === apartmentId);
+    return favorites.some((fav) => fav.apartmentId === apartmentId);
   };
 
   // Add a favorite
@@ -104,7 +121,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     error: error as Error | null,
     addFavorite,
     removeFavorite,
-    isFavorite
+    isFavorite,
   };
 
   return (

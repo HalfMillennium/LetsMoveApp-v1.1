@@ -37,13 +37,11 @@ export interface SearchParty {
   name: string;
   createdById: number;
   createdAt: string;
-  members?: SearchPartyMember[];
+  members?: Member[];
   listings?: SearchPartyListing[];
 }
 
-export interface SearchPartyMember {
-  id: number;
-  searchPartyId: number;
+export interface Member {
   userId: number;
   role: string;
   user?: User;
