@@ -2,13 +2,13 @@ import { useState, useEffect, useRef, SVGProps } from "react";
 import { Apartment } from "../types";
 import { useGeolocation } from "../lib/useGeolocation";
 import { Button } from "@/components/ui/button";
-import { 
-  Home, 
-  MapPin, 
-  Navigation, 
-  Plus, 
+import {
+  Home,
+  MapPin,
+  Navigation,
+  Plus,
   Minus,
-  CornerUpLeft
+  CornerUpLeft,
 } from "lucide-react";
 
 interface InteractiveMapProps {
@@ -24,26 +24,37 @@ const PARK_COLOR = "#c9e4d1";
 const HOUSE_COLOR = "#ff8c69";
 const HOUSE_WINDOW_COLOR = "#ffdab9";
 
-const InteractiveMap = ({ 
-  apartments, 
+const InteractiveMap = ({
+  apartments,
   onApartmentSelect,
-  selectedApartmentId 
+  selectedApartmentId,
 }: InteractiveMapProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const { coordinates, loading, error } = useGeolocation();
   const [zoom, setZoom] = useState(1);
-  const [center, setCenter] = useState<{ x: number, y: number }>({ x: 400, y: 300 }); // Center of our SVG viewBox
+  const [center, setCenter] = useState<{ x: number; y: number }>({
+    x: 400,
+    y: 300,
+  }); // Center of our SVG viewBox
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
-  const [hoveredApartmentId, setHoveredApartmentId] = useState<number | null>(null);
+  const [dragStart, setDragStart] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const [hoveredApartmentId, setHoveredApartmentId] = useState<number | null>(
+    null,
+  );
 
   // Convert lat/long to x,y coordinates in our SVG coordinate system
-  const convertLatLongToXY = (lat: string, long: string): { x: number, y: number } => {
+  const convertLatLongToXY = (
+    lat: string,
+    long: string,
+  ): { x: number; y: number } => {
     // This is a simplified conversion - in a real map app, you'd use proper projection
     // For our example, we'll just distribute apartments evenly across the map
     const latNum = parseFloat(lat);
     const longNum = parseFloat(long);
-    
+
     // Generate more predictable coordinates based on apartment id or location
     // This ensures pins are visible and spread across the map
     // We'll map the whole SVG viewport (800x600)
@@ -54,11 +65,11 @@ const InteractiveMap = ({
     } else if (lat === "40.7488" && long === "-73.9857") {
       return { x: 600, y: 350 }; // Luxury apartment
     }
-    
+
     // Default fallback if coordinates don't match known points
-    const x = ((longNum + 75) * 150) % 750 + 50; 
-    const y = ((41 - latNum) * 800) % 550 + 50;
-    
+    const x = (((longNum + 75) * 150) % 750) + 50;
+    const y = (((41 - latNum) * 800) % 550) + 50;
+
     return { x, y };
   };
 
@@ -67,7 +78,7 @@ const InteractiveMap = ({
     if (coordinates) {
       const userPosition = convertLatLongToXY(
         coordinates.latitude.toString(),
-        coordinates.longitude.toString()
+        coordinates.longitude.toString(),
       );
       setCenter(userPosition);
     }
@@ -78,28 +89,28 @@ const InteractiveMap = ({
     if (mapContainerRef.current) {
       const rect = mapContainerRef.current.getBoundingClientRect();
       setIsDragging(true);
-      setDragStart({ 
-        x: e.clientX - rect.left, 
-        y: e.clientY - rect.top 
+      setDragStart({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
       });
     }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !mapContainerRef.current) return;
-    
+
     const rect = mapContainerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     const deltaX = (x - dragStart.x) / zoom;
     const deltaY = (y - dragStart.y) / zoom;
-    
+
     setCenter({
       x: center.x - deltaX,
-      y: center.y - deltaY
+      y: center.y - deltaY,
     });
-    
+
     setDragStart({ x, y });
   };
 
@@ -109,11 +120,11 @@ const InteractiveMap = ({
 
   // Handle zoom in/out
   const handleZoomIn = () => {
-    setZoom(prevZoom => Math.min(prevZoom + 0.2, 5));
+    setZoom((prevZoom) => Math.min(prevZoom + 0.2, 5));
   };
 
   const handleZoomOut = () => {
-    setZoom(prevZoom => Math.max(prevZoom - 0.2, 0.2));
+    setZoom((prevZoom) => Math.max(prevZoom - 0.2, 0.2));
   };
 
   // Reset view to initial position
@@ -130,31 +141,31 @@ const InteractiveMap = ({
   const viewBox = `${viewBoxX} ${viewBoxY} ${viewBoxWidth} ${viewBoxHeight}`;
 
   return (
-    <div 
+    <div
       className="relative h-full w-full overflow-hidden bg-[#FFF5E6] rounded-lg shadow-md"
       ref={mapContainerRef}
     >
       {/* Map Controls */}
       <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
-        <Button 
-          onClick={handleZoomIn} 
-          size="icon" 
+        <Button
+          onClick={handleZoomIn}
+          size="icon"
           variant="secondary"
           className="bg-white shadow-md hover:bg-gray-100"
         >
           <Plus className="h-4 w-4" />
         </Button>
-        <Button 
-          onClick={handleZoomOut} 
-          size="icon" 
+        <Button
+          onClick={handleZoomOut}
+          size="icon"
           variant="secondary"
           className="bg-white shadow-md hover:bg-gray-100"
         >
           <Minus className="h-4 w-4" />
         </Button>
-        <Button 
-          onClick={handleResetView} 
-          size="icon" 
+        <Button
+          onClick={handleResetView}
+          size="icon"
           variant="secondary"
           className="bg-white shadow-md hover:bg-gray-100"
         >
@@ -179,13 +190,16 @@ const InteractiveMap = ({
             <div className="bg-red-100 text-red-800 p-3 rounded-lg mb-3">
               <p>{error}</p>
             </div>
-            <p className="text-[#1A4A4A]">Unable to access your location. The map will display example locations instead.</p>
+            <p className="text-[#1A4A4A]">
+              Unable to access your location. The map will display example
+              locations instead.
+            </p>
           </div>
         </div>
       )}
 
       {/* Map SVG */}
-      <svg 
+      <svg
         viewBox={viewBox}
         className="h-full w-full cursor-grab active:cursor-grabbing"
         onMouseDown={handleMouseDown}
@@ -195,100 +209,126 @@ const InteractiveMap = ({
       >
         {/* Background */}
         <rect width="100%" height="100%" fill={BG_COLOR} />
-        
-        {/* Define a pattern for the map that repeats seamlessly */}
-        <defs>
-          <pattern id="map-pattern" x="0" y="0" width="800" height="600" patternUnits="userSpaceOnUse">
-            {/* Grid for streets */}
-            <g stroke={STREET_COLOR} strokeWidth="4">
-              {/* Horizontal streets */}
-              <line x1="0" y1="50" x2="800" y2="50" />
-              <line x1="0" y1="150" x2="800" y2="150" />
-              <line x1="0" y1="250" x2="800" y2="250" />
-              <line x1="0" y1="350" x2="800" y2="350" />
-              <line x1="0" y1="450" x2="800" y2="450" />
-              <line x1="0" y1="550" x2="800" y2="550" />
-              
-              {/* Vertical streets */}
-              <line x1="50" y1="0" x2="50" y2="600" />
-              <line x1="150" y1="0" x2="150" y2="600" />
-              <line x1="250" y1="0" x2="250" y2="600" />
-              <line x1="350" y1="0" x2="350" y2="600" />
-              <line x1="450" y1="0" x2="450" y2="600" />
-              <line x1="550" y1="0" x2="550" y2="600" />
-              <line x1="650" y1="0" x2="650" y2="600" />
-              <line x1="750" y1="0" x2="750" y2="600" />
-            </g>
-            
-            {/* Parks */}
-            <rect x="170" y="70" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
-            <rect x="670" y="70" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
-            <rect x="370" y="270" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
-            <rect x="570" y="370" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
-            <rect x="720" y="370" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
-            <rect x="270" y="470" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
-            <rect x="70" y="370" width="60" height="100" rx="10" ry="10" fill={PARK_COLOR} />
 
-            {/* Houses */}
-            {[
-              { x: 100, y: 80 },
-              { x: 280, y: 70 },
-              { x: 480, y: 130 },
-              { x: 380, y: 170 },
-              { x: 580, y: 200 },
-              { x: 280, y: 270 },
-              { x: 670, y: 250 },
-              { x: 170, y: 340 },
-              { x: 500, y: 400 }
-            ].map((pos, idx) => (
-              <g key={`house-${idx}`} transform={`translate(${pos.x}, ${pos.y})`}>
-                <path
-                  d="M5,25 Q0,30 0,35 L0,55 Q0,60 5,60 L45,60 Q50,60 50,55 L50,35 Q50,30 45,25 L27,5 Q25,3 23,5 L5,25 Z"
-                  fill={HOUSE_COLOR}
-                />
-                <rect x="20" y="45" width="10" height="15" fill={HOUSE_WINDOW_COLOR} />
-                <rect x="10" y="25" width="8" height="8" fill={HOUSE_WINDOW_COLOR} />
-                {idx === 2 || idx === 6 ? (
-                  <rect x="32" y="25" width="8" height="8" fill={HOUSE_WINDOW_COLOR} />
-                ) : null}
-              </g>
-            ))}
-            
-            {/* Curved roads within the pattern */}
-            <path 
-              d="M 0,100 Q 100,100 100,200 L 100,600" 
-              fill="none" 
-              stroke={STREET_COLOR} 
-              strokeWidth="4"
-            />
-            <path 
-              d="M 280,600 Q 280,500 350,500 L 800,500" 
-              fill="none" 
-              stroke={STREET_COLOR} 
-              strokeWidth="4"
-            />
+        <defs>
+          <pattern
+            id="map-pattern"
+            x="0"
+            y="0"
+            width="800"
+            height="600"
+            patternUnits="userSpaceOnUse"
+          >
+            {/* Grid lines */}
+            <g stroke={STREET_COLOR} strokeWidth="2">
+              {/* Horizontal */}
+              {Array.from({ length: 13 }).map((_, i) => (
+                <line key={`h-${i}`} x1="0" y1={i * 50} x2="800" y2={i * 50} />
+              ))}
+              {/* Vertical */}
+              {Array.from({ length: 17 }).map((_, i) => (
+                <line key={`v-${i}`} x1={i * 50} y1="0" x2={i * 50} y2="600" />
+              ))}
+            </g>
+
+            {/* Repeating square park blocks — safely inside boundaries */}
+            <g>
+              <rect
+                x="100"
+                y="100"
+                width="80"
+                height="80"
+                rx="10"
+                ry="10"
+                fill={PARK_COLOR}
+              />
+              <rect
+                x="300"
+                y="300"
+                width="80"
+                height="80"
+                rx="10"
+                ry="10"
+                fill={PARK_COLOR}
+              />
+              <rect
+                x="500"
+                y="100"
+                width="80"
+                height="80"
+                rx="10"
+                ry="10"
+                fill={PARK_COLOR}
+              />
+              <rect
+                x="100"
+                y="400"
+                width="80"
+                height="80"
+                rx="10"
+                ry="10"
+                fill={PARK_COLOR}
+              />
+            </g>
+
+            {/* Generic house shapes aligned with grid */}
+            <g>
+              {[
+                { x: 200, y: 120 },
+                { x: 400, y: 360 },
+                { x: 600, y: 200 },
+              ].map((pos, idx) => (
+                <g
+                  key={`house-${idx}`}
+                  transform={`translate(${pos.x}, ${pos.y})`}
+                >
+                  <path
+                    d="M5,25 Q0,30 0,35 L0,55 Q0,60 5,60 L45,60 Q50,60 50,55 L50,35 Q50,30 45,25 L27,5 Q25,3 23,5 L5,25 Z"
+                    fill={HOUSE_COLOR}
+                  />
+                  <rect
+                    x="20"
+                    y="45"
+                    width="10"
+                    height="15"
+                    fill={HOUSE_WINDOW_COLOR}
+                  />
+                  <rect
+                    x="10"
+                    y="25"
+                    width="8"
+                    height="8"
+                    fill={HOUSE_WINDOW_COLOR}
+                  />
+                </g>
+              ))}
+            </g>
           </pattern>
         </defs>
-        
-        {/* Extended map background that uses the pattern and is much larger than the viewport */}
-        <rect 
-          x="-4000" 
-          y="-3000" 
-          width="8000" 
-          height="6000" 
-          fill="url(#map-pattern)" 
+
+        {/* Repeating tiled background */}
+        <rect
+          x="-4000"
+          y="-3000"
+          width="8000"
+          height="6000"
+          fill="url(#map-pattern)"
         />
 
         {/* User Location Marker */}
         {coordinates && (
-          <g 
-            transform={`translate(${convertLatLongToXY(
-              coordinates.latitude.toString(),
-              coordinates.longitude.toString()
-            ).x}, ${convertLatLongToXY(
-              coordinates.latitude.toString(),
-              coordinates.longitude.toString()
-            ).y})`}
+          <g
+            transform={`translate(${
+              convertLatLongToXY(
+                coordinates.latitude.toString(),
+                coordinates.longitude.toString(),
+              ).x
+            }, ${
+              convertLatLongToXY(
+                coordinates.latitude.toString(),
+                coordinates.longitude.toString(),
+              ).y
+            })`}
             className="animate-pulse"
           >
             <circle r="10" fill="#1A4A4A" opacity="0.3" />
@@ -301,67 +341,63 @@ const InteractiveMap = ({
           const { x, y } = convertLatLongToXY(apt.latitude, apt.longitude);
           const isSelected = apt.id === selectedApartmentId;
           const isHovered = apt.id === hoveredApartmentId;
-          
+
           return (
-            <g 
+            <g
               key={`apt-${apt.id}`}
               transform={`translate(${x}, ${y}) scale(${isSelected || isHovered ? 1.2 : 1})`}
               onClick={() => onApartmentSelect && onApartmentSelect(apt.id)}
               onMouseEnter={() => setHoveredApartmentId(apt.id)}
               onMouseLeave={() => setHoveredApartmentId(null)}
               style={{
-                transition: 'transform 0.2s ease',
-                cursor: 'pointer'
+                transition: "transform 0.2s ease",
+                cursor: "pointer",
               }}
             >
               {/* Marker background */}
-              <circle 
-                r="24" 
-                fill={isSelected ? "#E9927E" : "#ff8c69"} 
+              <circle
+                r="24"
+                fill={isSelected ? "#E9927E" : "#ff8c69"}
                 opacity={isSelected ? 1 : 0.9}
                 style={{
-                  filter: isSelected ? 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))' : 'none'
+                  filter: isSelected
+                    ? "drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))"
+                    : "none",
                 }}
               />
-              
+
               {/* Home icon */}
               <g transform="translate(-12, -12)">
-                <rect 
-                  x="0" 
-                  y="0" 
-                  width="24" 
-                  height="24" 
-                  fill="none" 
-                />
-                <path 
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h2a1 1 0 001-1v-7m-6 0a1 1 0 00-1 1v2a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 00-1-1h-2z" 
-                  stroke="white" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
+                <rect x="0" y="0" width="24" height="24" fill="none" />
+                <path
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h2a1 1 0 001-1v-7m-6 0a1 1 0 00-1 1v2a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 00-1-1h-2z"
+                  stroke="white"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </g>
-              
+
               {/* Price Label */}
               {(isSelected || isHovered) && (
                 <g transform="translate(0, -40)">
-                  <rect 
-                    x="-35" 
-                    y="-15" 
-                    width="70" 
-                    height="30" 
-                    rx="5" 
-                    fill="white" 
+                  <rect
+                    x="-35"
+                    y="-15"
+                    width="70"
+                    height="30"
+                    rx="5"
+                    fill="white"
                     style={{
-                      filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))'
+                      filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))",
                     }}
                   />
-                  <text 
-                    x="0" 
-                    y="0" 
-                    textAnchor="middle" 
-                    dominantBaseline="middle" 
-                    fill="#1A4A4A" 
+                  <text
+                    x="0"
+                    y="0"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="#1A4A4A"
                     fontWeight="bold"
                     fontSize="14px"
                   >
@@ -373,7 +409,7 @@ const InteractiveMap = ({
           );
         })}
       </svg>
-      
+
       {/* Mobile Legend */}
       <div className="absolute bottom-4 left-4 bg-white p-2 rounded-lg shadow-md text-xs md:hidden">
         <div className="flex items-center gap-2">
