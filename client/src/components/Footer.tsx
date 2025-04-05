@@ -40,31 +40,35 @@ const Footer = () => {
               <h3 className="text-lg font-medium mb-3">Explore</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/listings">
-                    <a className="text-[#C9DAD0]/80 hover:text-white transition-colors">
-                      Search
-                    </a>
+                  <Link 
+                    href="/listings"
+                    className="text-[#C9DAD0]/80 hover:text-white transition-colors"
+                  >
+                    Search
                   </Link>
                 </li>
                 <li>
-                  <Link href="/listings?type=neighborhoods">
-                    <a className="text-[#C9DAD0]/80 hover:text-white transition-colors">
-                      Neighborhoods
-                    </a>
+                  <Link 
+                    href="/listings?type=neighborhoods"
+                    className="text-[#C9DAD0]/80 hover:text-white transition-colors"
+                  >
+                    Neighborhoods
                   </Link>
                 </li>
                 <li>
-                  <Link href="/listings?type=buildings">
-                    <a className="text-[#C9DAD0]/80 hover:text-white transition-colors">
-                      Buildings
-                    </a>
+                  <Link 
+                    href="/listings?type=buildings"
+                    className="text-[#C9DAD0]/80 hover:text-white transition-colors"
+                  >
+                    Buildings
                   </Link>
                 </li>
                 <li>
-                  <Link href="/search-party">
-                    <a className="text-[#C9DAD0]/80 hover:text-white transition-colors">
-                      Search Parties
-                    </a>
+                  <Link 
+                    href="/search-party"
+                    className="text-[#C9DAD0]/80 hover:text-white transition-colors"
+                  >
+                    Search Parties
                   </Link>
                 </li>
               </ul>
@@ -74,31 +78,35 @@ const Footer = () => {
               <h3 className="text-lg font-medium mb-3">About</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/about">
-                    <a className="text-[#C9DAD0]/80 hover:text-white transition-colors">
-                      Our Story
-                    </a>
+                  <Link 
+                    href="/about"
+                    className="text-[#C9DAD0]/80 hover:text-white transition-colors"
+                  >
+                    Our Story
                   </Link>
                 </li>
                 <li>
-                  <Link href="/how-it-works">
-                    <a className="text-[#C9DAD0]/80 hover:text-white transition-colors">
-                      How It Works
-                    </a>
+                  <Link 
+                    href="/how-it-works"
+                    className="text-[#C9DAD0]/80 hover:text-white transition-colors"
+                  >
+                    How It Works
                   </Link>
                 </li>
                 <li>
-                  <Link href="/faq">
-                    <a className="text-[#C9DAD0]/80 hover:text-white transition-colors">
-                      FAQ
-                    </a>
+                  <Link 
+                    href="/faq"
+                    className="text-[#C9DAD0]/80 hover:text-white transition-colors"
+                  >
+                    FAQ
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact">
-                    <a className="text-[#C9DAD0]/80 hover:text-white transition-colors">
-                      Contact
-                    </a>
+                  <Link 
+                    href="/contact"
+                    className="text-[#C9DAD0]/80 hover:text-white transition-colors"
+                  >
+                    Contact
                   </Link>
                 </li>
               </ul>
