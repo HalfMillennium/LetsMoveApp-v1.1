@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   DragDropContext,
   Droppable,
@@ -9,14 +9,6 @@ import { useSearchParty } from "../context/SearchPartyContext";
 import { SearchParty, Apartment, Member, SearchPartyListing } from "../types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -33,6 +25,7 @@ import {
   X,
   Home,
   User,
+  PartyPopper,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -57,9 +50,10 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
   >([]);
   const [selectedSearchParty, setSelectedSearchParty] =
     useState<SearchParty | null>(null);
+  const [filterByParty, setFilterByParty] = useState(false);
 
   useEffect(() => {
-    if (selectedSearchPartyId) {
+    if (selectedSearchPartyId && filterByParty) {
       fetchSearchPartyListings(selectedSearchPartyId);
       const party = searchParties.find((p) => p.id === selectedSearchPartyId);
       if (party) {
@@ -89,10 +83,22 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
     setIsExpanded(!isExpanded);
   };
 
+  const toggleFilterBySearchParty = () => {
+    if (filterByParty) {
+      setFilterByParty(false);
+      onFilterBySearchParty(null);
+      return;
+    }
+    setFilterByParty(true);
+    onFilterBySearchParty(selectedSearchPartyId);
+  };
+
   const handleSearchPartyChange = (value: string) => {
     const partyId = value === "all" ? null : parseInt(value, 10);
     setSelectedSearchPartyId(partyId);
-    onFilterBySearchParty(partyId);
+    if (filterByParty) {
+      onFilterBySearchParty(partyId);
+    }
   };
 
   const handleDragEnd = async (result: DropResult) => {
@@ -118,7 +124,7 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
 
       // Check if the apartment is already in the search party
       const alreadyExists = searchPartyListings.some(
-        (listing) => listing.apartmentId === apartmentId,
+        (listing) => listing.apartmentId === apartmentId
       );
 
       if (alreadyExists) {
@@ -149,10 +155,6 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
     }
   };
 
-  if (searchParties.length === 0) {
-    return null; // Don't render the widget if there are no search parties
-  }
-
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 border border-[#C9DAD0]">
       {/* Header - always visible */}
@@ -181,7 +183,7 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
       {/* Content - visible when expanded */}
       {isExpanded && (
         <div className="p-4">
-          <div className="mb-4">
+          <div className="flex flex-1 items-center justify-between gap-4">
             <Select
               value={
                 selectedSearchPartyId ? selectedSearchPartyId.toString() : "all"
@@ -200,11 +202,32 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
                 ))}
               </SelectContent>
             </Select>
+            {!filterByParty && (
+              <Button
+                variant="default"
+                size="sm"
+                className="flex flex-1 text-[#1A4A4A] border-[#C9DAD0] text-white items-center gap-2"
+                onClick={toggleFilterBySearchParty}
+              >
+                <PartyPopper />
+                <span>Filter By Search Party</span>
+              </Button>
+            )}
+            {filterByParty && (
+              <Button
+                variant="dark"
+                size="sm"
+                className="bg-black flex flex-1 text-[#1A4A4A] border-[#C9DAD0] text-white"
+                onClick={toggleFilterBySearchParty}
+              >
+                See All Apartments
+              </Button>
+            )}
           </div>
 
           {selectedSearchParty && (
-            <div className="mb-4">
-              <h4 className="font-medium text-[#1A4A4A] mb-2">
+            <div className="pt-4 flex flex-1 flex-col gap-2">
+              <h4 className="font-medium text-[#1A4A4A]">
                 {selectedSearchParty.name}
               </h4>
 
