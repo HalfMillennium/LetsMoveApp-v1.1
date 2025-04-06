@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import {
   DragDropContext,
   Droppable,
-  Draggable,
   DropResult,
 } from "react-beautiful-dnd";
 import { useSearchParty } from "../context/SearchPartyContext";
@@ -32,11 +31,13 @@ import { Badge } from "@/components/ui/badge";
 interface SearchPartyWidgetProps {
   apartments: Apartment[];
   onFilterBySearchParty: (searchPartyId: number | null) => void;
+  onDragEnd?: (result: DropResult) => void;
 }
 
 const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
   apartments,
   onFilterBySearchParty,
+  onDragEnd: parentOnDragEnd,
 }) => {
   const { searchParties, addListingToParty, getSearchPartyListings } =
     useSearchParty();
@@ -101,9 +102,17 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
     }
   };
 
-  const handleDragEnd = async (result: DropResult) => {
+  // Use parentOnDragEnd prop if provided, otherwise use our own implementation
+  const handleLocalDrag = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
+    // If the parent component has provided its own onDragEnd handler, use that instead
+    if (parentOnDragEnd) {
+      parentOnDragEnd(result);
+      return;
+    }
+
+    // Otherwise use our own implementation
     // If dropped outside the droppable area
     if (!destination) return;
 
@@ -260,67 +269,87 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
               </div>
 
               {/* Drag and drop area for search party listings */}
-              <DragDropContext onDragEnd={handleDragEnd}>
-                <Droppable droppableId="searchPartyDropArea">
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className={`p-3 mb-3 border-2 border-dashed rounded-lg min-h-[100px] transition-colors ${
-                        snapshot.isDraggingOver
-                          ? "bg-[#C9DAD0]/20 border-[#E9927E]"
-                          : "border-[#C9DAD0]/50"
-                      }`}
-                    >
-                      <div className="flex items-center justify-center h-full">
-                        {searchPartyListings.length === 0 ? (
-                          <div className="text-center p-4">
-                            <Home className="h-8 w-8 text-[#C9DAD0] mx-auto mb-2" />
-                            <p className="text-sm text-[#1A4A4A]">
-                              Drag apartments here to add them to this search
-                              party
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
-                            {searchPartyListings.map((listing, index) => (
+              <Droppable droppableId="searchPartyDropArea">
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={`p-3 mb-3 border-2 border-dashed rounded-lg min-h-[150px] transition-colors ${
+                      snapshot.isDraggingOver
+                        ? "bg-[#C9DAD0]/20 border-[#E9927E]"
+                        : "border-[#C9DAD0]/50"
+                    }`}
+                    data-search-party-id={selectedSearchPartyId} // Pass the ID as data attribute
+                  >
+                    <div className="flex items-center justify-center h-full">
+                      {searchPartyListings.length === 0 ? (
+                        <div className="text-center p-4">
+                          <Home className="h-8 w-8 text-[#C9DAD0] mx-auto mb-2" />
+                          <p className="text-sm text-[#1A4A4A]">
+                            Drag apartments here to add them to this search
+                            party
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                          {searchPartyListings.map((listing, index) => {
+                            // Find the associated apartment for better display
+                            const apartment = apartments.find(a => a.id === listing.apartmentId);
+                            
+                            return (
                               <div
                                 key={listing.id}
-                                className="bg-[#FFF9F2] p-2 rounded-md text-sm flex items-start"
+                                className="bg-[#FFF9F2] rounded-md overflow-hidden shadow-sm border border-[#C9DAD0]/30"
                               >
-                                <div className="mr-2 flex-shrink-0">
-                                  <Badge
-                                    variant="outline"
-                                    className="bg-[#E9927E]/10 text-[#E9927E] text-xs"
-                                  >
-                                    ${listing.apartment?.price}
-                                  </Badge>
+                                {apartment?.images && apartment.images.length > 0 && (
+                                  <div className="h-24 bg-gray-200 overflow-hidden">
+                                    <img 
+                                      src={apartment.images[0]} 
+                                      alt={apartment.title} 
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
+                                )}
+                                <div className="p-2">
+                                  <div className="flex justify-between items-start">
+                                    <div>
+                                      <Badge
+                                        variant="outline"
+                                        className="bg-[#E9927E]/10 text-[#E9927E] text-xs mb-1"
+                                      >
+                                        ${apartment?.price || listing.apartment?.price}
+                                      </Badge>
+                                      <h5 className="text-xs font-medium text-[#1A4A4A] line-clamp-1">
+                                        {apartment?.title || listing.apartment?.title || "Apartment"}
+                                      </h5>
+                                      <p className="text-xs text-[#1A4A4A]/70 line-clamp-1">
+                                        {apartment?.address || listing.apartment?.address || "Address"}
+                                      </p>
+                                    </div>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="p-1 h-6 w-6 ml-1"
+                                    >
+                                      <X className="h-3 w-3 text-[#1A4A4A]/70" />
+                                    </Button>
+                                  </div>
+                                  {listing.notes && (
+                                    <p className="text-xs italic text-[#1A4A4A]/60 mt-1 line-clamp-1">
+                                      Note: {listing.notes}
+                                    </p>
+                                  )}
                                 </div>
-                                <div className="flex-grow">
-                                  <p className="text-xs font-medium text-[#1A4A4A] truncate">
-                                    {listing.apartment?.title || "Apartment"}
-                                  </p>
-                                  <p className="text-xs text-[#1A4A4A]/70 truncate">
-                                    {listing.apartment?.location || "Location"}
-                                  </p>
-                                </div>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="p-1 h-6 w-6 ml-1"
-                                >
-                                  <X className="h-3 w-3 text-[#1A4A4A]/70" />
-                                </Button>
                               </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      {provided.placeholder}
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </Droppable>
-              </DragDropContext>
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
 
               <p className="text-xs text-[#1A4A4A]/70 italic">
                 Drag an apartment from the listings below to add it to this

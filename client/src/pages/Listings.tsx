@@ -19,7 +19,7 @@ import { useSearchParty } from "../context/SearchPartyContext";
 const Listings = () => {
   const [location] = useLocation();
   const { toast } = useToast();
-  const { getSearchPartyListings } = useSearchParty();
+  const searchPartyContext = useSearchParty();
   const [filters, setFilters] = useState<FilterSettings>({});
   const [selectedApartmentId, setSelectedApartmentId] = useState<
     number | undefined
@@ -80,7 +80,7 @@ const Listings = () => {
 
     const fetchSearchPartyListings = async () => {
       try {
-        const listings = await getSearchPartyListings(selectedSearchPartyId);
+        const listings = await searchPartyContext.getSearchPartyListings(selectedSearchPartyId);
         setSearchPartyListings(listings);
 
         // Filter apartments to only show those in the search party
@@ -101,7 +101,7 @@ const Listings = () => {
     };
 
     fetchSearchPartyListings();
-  }, [selectedSearchPartyId, apartments, getSearchPartyListings]);
+  }, [selectedSearchPartyId, apartments, searchPartyContext]);
 
   // Handle filter changes
   const handleFilterChange = (newFilters: FilterSettings) => {
@@ -145,8 +145,61 @@ const Listings = () => {
 
   // Handle drag end for react-beautiful-dnd
   const handleDragEnd = (result: DropResult) => {
-    // This is handled within the SearchPartyWidget component
-    // We just need this function to satisfy DragDropContext requirements
+    const { destination, source, draggableId } = result;
+
+    // If dropped outside the droppable area or no valid destination
+    if (!destination) return;
+
+    // If dropped in the same position
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    // Handle drop in search party drop area
+    if (destination.droppableId === 'searchPartyDropArea' && selectedSearchPartyId) {
+      const apartmentId = parseInt(draggableId.replace('apartment-', ''), 10);
+      
+      addApartmentToSearchParty(selectedSearchPartyId, apartmentId);
+    }
+  };
+  
+  // Function to add apartment to search party
+  const addApartmentToSearchParty = async (searchPartyId: number, apartmentId: number) => {
+    try {
+      // Check if apartment is already in the party (fetch current listings first)
+      const currentListings = await searchPartyContext.getSearchPartyListings(searchPartyId);
+      
+      // Check if the apartment is already in the search party
+      const alreadyExists = currentListings.some(listing => 
+        listing.apartmentId === apartmentId
+      );
+      
+      if (alreadyExists) {
+        toast({
+          title: "Already added",
+          description: "This apartment is already in this search party",
+        });
+        return;
+      }
+      
+      // Add the apartment to the search party
+      await searchPartyContext.addListingToParty(searchPartyId, apartmentId);
+      
+      toast({
+        title: "Apartment added",
+        description: "Successfully added to your search party",
+      });
+    } catch (error) {
+      console.error("Error adding listing to search party:", error);
+      toast({
+        title: "Error",
+        description: "Could not add listing to search party",
+        variant: "destructive"
+      });
+    }
   };
 
   const displayedApartments = selectedSearchPartyId
@@ -212,6 +265,7 @@ const Listings = () => {
               <SearchPartyWidget
                 apartments={apartments}
                 onFilterBySearchParty={handleFilterBySearchParty}
+                onDragEnd={handleDragEnd}
               />
               {isLoading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
