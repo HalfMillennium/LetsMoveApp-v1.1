@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useLocation } from "wouter";
 import MapBackground from "../components/MapBackground";
 import SearchBar from "../components/SearchBar";
-import Navigation from "../components/Navigation";
+import {Navigation} from "../components/Navigation";
 
 const Home = () => {
   const [, navigate] = useLocation();

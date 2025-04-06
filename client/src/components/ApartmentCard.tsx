@@ -50,7 +50,7 @@ const ApartmentCard = ({ apartment }: ApartmentCardProps) => {
   };
   
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+    <div className="h-full bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
       <div className="relative">
         <img 
           src={apartment.images[0]} 
@@ -77,7 +77,7 @@ const ApartmentCard = ({ apartment }: ApartmentCardProps) => {
         </p>
         <p className="text-[#1A4A4A] text-sm mb-3">{apartment.location}</p>
         
-        <div className="flex flex-wrap gap-2 mb-3">
+        <div className="flex-wrap gap-2 mb-3">
           {apartment.amenities?.slice(0, 3).map((amenity, index) => (
             <span 
               key={index} 
@@ -89,7 +89,7 @@ const ApartmentCard = ({ apartment }: ApartmentCardProps) => {
         </div>
         
         {searchParties.length > 0 && (
-          <div className="mt-2">
+          <div className="flex flex-col h-full mt-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="w-full">

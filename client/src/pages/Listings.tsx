@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import ApartmentCard from "../components/ApartmentCard";
@@ -10,16 +10,16 @@ import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { exampleApartments } from "../lib/utils";
 import InteractiveMap from "../components/InteractiveMap2";
-import GoogleMapComponent from "../components/GoogleMap";
 import { useGeolocation } from "../lib/useGeolocation";
 
 const Listings = () => {
   const [location] = useLocation();
   const { toast } = useToast();
   const [filters, setFilters] = useState<FilterSettings>({});
-  const [selectedApartmentId, setSelectedApartmentId] = useState<number | undefined>();
-  const [viewMode, setViewMode] = useState<'split' | 'list'>('split');
-  const [useMapType, setUseMapType] = useState<'google' | 'svg'>('google');
+  const [selectedApartmentId, setSelectedApartmentId] = useState<
+    number | undefined
+  >();
+  const [viewMode, setViewMode] = useState<"split" | "list">("split");
   const [searchParams] = useState(() => {
     const urlParams = new URLSearchParams(window.location.search);
     return {
@@ -27,9 +27,6 @@ const Listings = () => {
       type: urlParams.get("type") || "",
     };
   });
-  
-  // Get user's geolocation
-  const { coordinates } = useGeolocation();
 
   // Fetch apartments with applied filters
   const {
@@ -82,19 +79,19 @@ const Listings = () => {
   // Handle apartment selection from map
   const handleApartmentSelect = (apartmentId: number) => {
     setSelectedApartmentId(apartmentId);
-    
+
     // Scroll the selected apartment into view if in split mode
-    if (viewMode === 'split') {
+    if (viewMode === "split") {
       const element = document.getElementById(`apartment-${apartmentId}`);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
   };
 
   // Toggle between split view and list view
   const toggleViewMode = () => {
-    setViewMode(viewMode === 'split' ? 'list' : 'split');
+    setViewMode(viewMode === "split" ? "list" : "split");
   };
 
   return (
@@ -105,17 +102,20 @@ const Listings = () => {
             {searchParams.q
               ? `Search Results for "${searchParams.q}"`
               : searchParams.type
-                ? `${searchParams.type.charAt(0).toUpperCase() + searchParams.type.slice(1)}`
-                : "Nearby Apartments"}
+              ? `${
+                  searchParams.type.charAt(0).toUpperCase() +
+                  searchParams.type.slice(1)
+                }`
+              : "Nearby Apartments"}
           </h2>
           <div className="flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={toggleViewMode}
               className="flex items-center gap-1 text-[#1A4A4A] hover:bg-[#C9DAD0]/20"
             >
-              {viewMode === 'split' ? (
+              {viewMode === "split" ? (
                 <>
                   <List className="h-4 w-4" />
                   <span className="hidden md:inline">List View</span>
@@ -169,52 +169,51 @@ const Listings = () => {
             </p>
           </div>
         ) : (
-          <div className={`${viewMode === 'split' ? 'lg:grid lg:grid-cols-2 gap-6' : ''}`}>
+          <div
+            className={`${
+              viewMode === "split" ? "lg:grid lg:grid-cols-2 gap-6" : ""
+            }`}
+          >
             {/* Interactive Map - takes up half the screen in split view, hidden in list view */}
-            {viewMode === 'split' && (
+            {viewMode === "split" && (
               <div className="lg:sticky lg:top-24 h-[70vh] lg:h-[calc(100vh-12rem)] mb-6 lg:mb-0">
-                {useMapType === 'google' ? (
-                  <GoogleMapComponent
-                    apartments={apartments}
-                    onApartmentSelect={handleApartmentSelect}
-                    selectedApartmentId={selectedApartmentId}
-                  />
-                ) : (
-                  <InteractiveMap 
-                    apartments={apartments} 
-                    onApartmentSelect={handleApartmentSelect}
-                    selectedApartmentId={selectedApartmentId}
-                  />
-                )}
-                
-                {/* Map Toggle Button */}
-                <div className="absolute bottom-4 right-4 z-10">
-                  <Button
-                    variant="secondary"
-                    className="text-xs bg-white shadow-md hover:bg-gray-100 text-[#1A4A4A]"
-                    onClick={() => setUseMapType(useMapType === 'google' ? 'svg' : 'google')}
-                  >
-                    {useMapType === 'google' ? 'Use SVG Map' : 'Use Google Map'}
-                  </Button>
-                </div>
+                <InteractiveMap
+                  apartments={apartments}
+                  onApartmentSelect={handleApartmentSelect}
+                  selectedApartmentId={selectedApartmentId}
+                />
               </div>
             )}
-            
+
             {/* Apartment Listings - takes up half the screen in split view, full width in list view */}
-            <div className={`${viewMode === 'split' ? '' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'}`}>
+            <div
+              className={`grid grid-cols-2 gap-6${
+                viewMode === "split"
+                  ? ""
+                  : "md:grid-cols-2 lg:grid-cols-3"
+              }`}
+            >
               {apartments.map((apartment) => (
-                <div 
+                <div
                   key={apartment.id}
                   id={`apartment-${apartment.id}`}
-                  className={`mb-6 ${selectedApartmentId === apartment.id ? 'ring-2 ring-[#E9927E] rounded-lg' : ''}`}
+                  className={`h-full grid-item mb-6 ${
+                    selectedApartmentId === apartment.id
+                      ? "ring-2 ring-[#E9927E] rounded-lg"
+                      : ""
+                  }`}
                   onClick={() => setSelectedApartmentId(apartment.id)}
                 >
                   <ApartmentCard apartment={apartment} />
                 </div>
               ))}
-              
+
               {apartments.length > 0 && (
-                <div className={`mt-6 flex justify-center ${viewMode === 'split' ? 'col-span-1' : 'col-span-full'}`}>
+                <div
+                  className={`mt-6 flex justify-center ${
+                    viewMode === "split" ? "col-span-1" : "col-span-full"
+                  }`}
+                >
                   <Button
                     onClick={handleLoadMore}
                     className="bg-[#E9927E] text-white px-6 py-3 rounded-full shadow-md hover:bg-[#E9927E]/90 transition-colors"

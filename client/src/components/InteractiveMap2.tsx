@@ -190,7 +190,7 @@ const InteractiveMap = ({
       {error && (
         <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-20">
           <div className="text-center p-4 max-w-md">
-            <div className="bg-red-100 text-red-800 p-3 rounded-lg mb-3">
+            <div className="text-red-800 p-3 rounded-lg mb-3">
               <p>{error}</p>
             </div>
             <p className="text-[#1A4A4A]">

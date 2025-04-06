@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 
-const Navigation = () => {
+export const Navigation = () => {
   const [location] = useLocation();
 
   const isActive = (path: string) => location === path;
@@ -11,7 +11,7 @@ const Navigation = () => {
         <li>
           <Link 
             href="/favorites"
-            className={`py-2 px-4 font-medium ${isActive("/favorites") ? "text-[#E9927E]" : ""}`}
+            className={`bg-[#FFF5E6] rounded-full py-4 px-6 text-sm font-medium ${isActive("/favorites") ? "text-[#E9927E]" : ""}`}
           >
             Favorites
           </Link>
@@ -19,7 +19,7 @@ const Navigation = () => {
         <li>
           <Link 
             href="/search-party"
-            className={`py-2 px-4 font-medium ${isActive("/search-party") ? "text-[#E9927E]" : ""}`}
+            className={`bg-[#FFF5E6] rounded-full py-4 px-6 text-sm font-medium ${isActive("/search-party") ? "text-[#E9927E]" : ""}`}
           >
             Messages
           </Link>
@@ -27,7 +27,7 @@ const Navigation = () => {
         <li>
           <Link 
             href="/profile"
-            className={`py-2 px-4 font-medium ${isActive("/profile") ? "text-[#E9927E]" : ""}`}
+            className={`bg-[#FFF5E6] rounded-full py-4 px-6 text-sm font-medium ${isActive("/profile") ? "text-[#E9927E]" : ""}`}
           >
             Account
           </Link>
@@ -36,5 +36,3 @@ const Navigation = () => {
     </nav>
   );
 };
-
-export default Navigation;
