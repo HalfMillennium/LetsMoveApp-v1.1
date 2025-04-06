@@ -12,21 +12,18 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FilterSettings } from '../types';
 
 interface FilterChipsProps {
-  onFilterChange: (filters: FilterSettings) => void;
-}
-
-interface ActiveFilters {
-  price?: PriceRange,
-  bedrooms?: number,
-  distance?: number,
-  petFriendly?: boolean
+  onFilterChange: (filters: any) => void;
 }
 
 const FilterChips = ({ onFilterChange }: FilterChipsProps) => {
-  const [activeFilters, setActiveFilters] = useState<ActiveFilters>({});
+  const [activeFilters, setActiveFilters] = useState<{
+    price?: PriceRange,
+    bedrooms?: number,
+    distance?: number,
+    petFriendly?: boolean
+  }>({});
 
   const handleFilterChange = (filterType: string, value: any) => {
     const newFilters = { ...activeFilters };
@@ -55,24 +52,7 @@ const FilterChips = ({ onFilterChange }: FilterChipsProps) => {
     }
     
     setActiveFilters(newFilters);
-    
-    // Convert to FilterSettings format
-    const filterSettings: FilterSettings = {};
-    if (newFilters.price) {
-      filterSettings.minPrice = newFilters.price.min;
-      filterSettings.maxPrice = newFilters.price.max || undefined;
-    }
-    if (newFilters.bedrooms !== undefined) {
-      filterSettings.bedrooms = newFilters.bedrooms;
-    }
-    if (newFilters.distance) {
-      filterSettings.maxDistance = newFilters.distance;
-    }
-    if (newFilters.petFriendly) {
-      filterSettings.petFriendly = true;
-    }
-    
-    onFilterChange(filterSettings);
+    onFilterChange(newFilters);
   };
 
   const togglePetFriendly = () => {
@@ -83,24 +63,7 @@ const FilterChips = ({ onFilterChange }: FilterChipsProps) => {
       newFilters.petFriendly = true;
     }
     setActiveFilters(newFilters);
-    
-    // Convert to FilterSettings format
-    const filterSettings: FilterSettings = {};
-    if (newFilters.price) {
-      filterSettings.minPrice = newFilters.price.min;
-      filterSettings.maxPrice = newFilters.price.max || undefined;
-    }
-    if (newFilters.bedrooms !== undefined) {
-      filterSettings.bedrooms = newFilters.bedrooms;
-    }
-    if (newFilters.distance) {
-      filterSettings.maxDistance = newFilters.distance;
-    }
-    if (newFilters.petFriendly) {
-      filterSettings.petFriendly = true;
-    }
-    
-    onFilterChange(filterSettings);
+    onFilterChange(newFilters);
   };
 
   const clearAllFilters = () => {
