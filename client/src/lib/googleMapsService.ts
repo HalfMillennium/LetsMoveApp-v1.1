@@ -29,7 +29,7 @@ export const getUserLocation = async (): Promise<{
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(resolve, reject, {
           enableHighAccuracy: true,
-          timeout: 5000,
+          timeout: 5050,
           maximumAge: 0,
         });
       } else {
