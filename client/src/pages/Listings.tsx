@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { exampleApartments } from "../lib/utils";
 import InteractiveMap from "../components/InteractiveMap2";
 import { useGeolocation } from "../lib/useGeolocation";
+import EnvDebug from "../components/EnvDebug";
 
 const Listings = () => {
   const [location] = useLocation();
@@ -137,6 +138,9 @@ const Listings = () => {
         </div>
 
         <FilterChips onFilterChange={handleFilterChange} />
+        
+        {/* Temporary component to debug environment variables */}
+        <EnvDebug />
 
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
