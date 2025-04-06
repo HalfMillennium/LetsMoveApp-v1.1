@@ -36,7 +36,7 @@ interface GoogleMapComponentProps {
   selectedApartmentId?: number;
 }
 
-const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
+export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
   apartments,
   onApartmentSelect,
   selectedApartmentId,
@@ -175,5 +175,3 @@ const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
     </div>
   );
 };
-
-export default GoogleMapComponent;

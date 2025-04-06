@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { exampleApartments } from "../lib/utils";
-import InteractiveMap from "../components/InteractiveMap2";
+import { GoogleMapComponent } from "../components/GoogleMap";
 import { useGeolocation } from "../lib/useGeolocation";
 
 const Listings = () => {
@@ -174,10 +174,10 @@ const Listings = () => {
               viewMode === "split" ? "lg:grid lg:grid-cols-2 gap-6" : ""
             }`}
           >
-            {/* Interactive Map - takes up half the screen in split view, hidden in list view */}
+            {/* Google Map - takes up half the screen in split view, hidden in list view */}
             {viewMode === "split" && (
-              <div className="lg:sticky lg:top-24 h-[70vh] lg:h-[calc(100vh-12rem)] mb-6 lg:mb-0">
-                <InteractiveMap
+              <div className="lg:sticky lg:top-24 h-[70vh] lg:h-[calc(100vh-12rem)] mb-6 lg:mb-0 relative rounded-lg overflow-hidden shadow-md">
+                <GoogleMapComponent
                   apartments={apartments}
                   onApartmentSelect={handleApartmentSelect}
                   selectedApartmentId={selectedApartmentId}
