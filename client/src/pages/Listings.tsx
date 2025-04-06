@@ -127,11 +127,8 @@ const Listings = () => {
                 </>
               )}
             </Button>
-            <div className="flex items-center space-x-2">
-              <span className="text-[#1A4A4A]">Filters</span>
-              <button className="text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20">
-                <Plus className="h-5 w-5" />
-              </button>
+            <div className="flex items-center">
+              <span className="text-[#1A4A4A] text-sm font-medium">Filters</span>
             </div>
           </div>
         </div>

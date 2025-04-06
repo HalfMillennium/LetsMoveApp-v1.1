@@ -49,7 +49,13 @@ export const AMENITIES = [
 ];
 
 // Price ranges for filtering
-export const PRICE_RANGES = [
+export interface PriceRange {
+  label: string;
+  min: number;
+  max: number | null;
+}
+
+export const PRICE_RANGES: PriceRange[] = [
   { label: "$500-$1000", min: 500, max: 1000 },
   { label: "$1000-$1500", min: 1000, max: 1500 },
   { label: "$1500-$2000", min: 1500, max: 2000 },
