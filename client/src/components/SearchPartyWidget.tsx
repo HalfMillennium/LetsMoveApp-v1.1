@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import { useSearchParty } from '../context/SearchPartyContext';
-import { SearchParty, Apartment, Member, SearchPartyListing } from '../types';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
+import React, { useState, useEffect } from "react";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
+import { useSearchParty } from "../context/SearchPartyContext";
+import { SearchParty, Apartment, Member, SearchPartyListing } from "../types";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -19,38 +24,44 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from '@/hooks/use-toast';
-import { 
-  Users, 
-  ChevronDown, 
-  ChevronUp, 
-  Plus, 
-  X, 
-  Home, 
-  User
-} from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { useToast } from "@/hooks/use-toast";
+import {
+  Users,
+  ChevronDown,
+  ChevronUp,
+  Plus,
+  X,
+  Home,
+  User,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface SearchPartyWidgetProps {
   apartments: Apartment[];
   onFilterBySearchParty: (searchPartyId: number | null) => void;
 }
 
-const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({ 
+const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
   apartments,
-  onFilterBySearchParty
+  onFilterBySearchParty,
 }) => {
-  const { searchParties, addListingToParty, getSearchPartyListings } = useSearchParty();
+  const { searchParties, addListingToParty, getSearchPartyListings } =
+    useSearchParty();
   const { toast } = useToast();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [selectedSearchPartyId, setSelectedSearchPartyId] = useState<number | null>(null);
-  const [searchPartyListings, setSearchPartyListings] = useState<SearchPartyListing[]>([]);
-  const [selectedSearchParty, setSelectedSearchParty] = useState<SearchParty | null>(null);
+  const [selectedSearchPartyId, setSelectedSearchPartyId] = useState<
+    number | null
+  >(null);
+  const [searchPartyListings, setSearchPartyListings] = useState<
+    SearchPartyListing[]
+  >([]);
+  const [selectedSearchParty, setSelectedSearchParty] =
+    useState<SearchParty | null>(null);
 
   useEffect(() => {
     if (selectedSearchPartyId) {
       fetchSearchPartyListings(selectedSearchPartyId);
-      const party = searchParties.find(p => p.id === selectedSearchPartyId);
+      const party = searchParties.find((p) => p.id === selectedSearchPartyId);
       if (party) {
         setSelectedSearchParty(party);
       }
@@ -69,7 +80,7 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
       toast({
         title: "Error",
         description: "Could not fetch search party listings",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
@@ -79,7 +90,7 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
   };
 
   const handleSearchPartyChange = (value: string) => {
-    const partyId = value === 'all' ? null : parseInt(value, 10);
+    const partyId = value === "all" ? null : parseInt(value, 10);
     setSelectedSearchPartyId(partyId);
     onFilterBySearchParty(partyId);
   };
@@ -98,15 +109,18 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
       return;
     }
 
-    if (destination.droppableId === 'searchPartyDropArea' && selectedSearchPartyId) {
+    if (
+      destination.droppableId === "searchPartyDropArea" &&
+      selectedSearchPartyId
+    ) {
       // Add the apartment to the search party
-      const apartmentId = parseInt(draggableId.replace('apartment-', ''), 10);
-      
+      const apartmentId = parseInt(draggableId.replace("apartment-", ""), 10);
+
       // Check if the apartment is already in the search party
-      const alreadyExists = searchPartyListings.some(listing => 
-        listing.apartmentId === apartmentId
+      const alreadyExists = searchPartyListings.some(
+        (listing) => listing.apartmentId === apartmentId,
       );
-      
+
       if (alreadyExists) {
         toast({
           title: "Already added",
@@ -119,7 +133,7 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
         await addListingToParty(selectedSearchPartyId, apartmentId);
         // Refresh the listings
         fetchSearchPartyListings(selectedSearchPartyId);
-        
+
         toast({
           title: "Apartment added",
           description: "Successfully added to your search party",
@@ -129,7 +143,7 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
         toast({
           title: "Error",
           description: "Could not add listing to search party",
-          variant: "destructive"
+          variant: "destructive",
         });
       }
     }
@@ -140,9 +154,9 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md mb-6 overflow-hidden transition-all duration-300 border border-[#C9DAD0]">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 border border-[#C9DAD0]">
       {/* Header - always visible */}
-      <div 
+      <div
         className="flex items-center justify-between p-4 bg-gradient-to-r from-[#E9927E] to-[#C9DAD0] cursor-pointer"
         onClick={toggleExpand}
       >
@@ -150,13 +164,17 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
           <Users className="h-5 w-5 text-white mr-2" />
           <h3 className="font-bold text-white">Search Parties</h3>
         </div>
-        <Button 
-          variant="ghost" 
-          size="sm" 
+        <Button
+          variant="ghost"
+          size="sm"
           className="p-1 text-white hover:bg-white/20"
           onClick={toggleExpand}
         >
-          {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+          {isExpanded ? (
+            <ChevronUp className="h-5 w-5" />
+          ) : (
+            <ChevronDown className="h-5 w-5" />
+          )}
         </Button>
       </div>
 
@@ -165,7 +183,9 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
         <div className="p-4">
           <div className="mb-4">
             <Select
-              value={selectedSearchPartyId ? selectedSearchPartyId.toString() : 'all'}
+              value={
+                selectedSearchPartyId ? selectedSearchPartyId.toString() : "all"
+              }
               onValueChange={handleSearchPartyChange}
             >
               <SelectTrigger className="w-full">
@@ -173,7 +193,7 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Apartments</SelectItem>
-                {searchParties.map(party => (
+                {searchParties.map((party) => (
                   <SelectItem key={party.id} value={party.id.toString()}>
                     {party.name}
                   </SelectItem>
@@ -184,17 +204,22 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
 
           {selectedSearchParty && (
             <div className="mb-4">
-              <h4 className="font-medium text-[#1A4A4A] mb-2">{selectedSearchParty.name}</h4>
-              
+              <h4 className="font-medium text-[#1A4A4A] mb-2">
+                {selectedSearchParty.name}
+              </h4>
+
               {/* Members */}
               <div className="flex items-center mb-3 overflow-x-auto">
                 <span className="text-xs text-[#1A4A4A] mr-2">Members:</span>
                 <div className="flex -space-x-2">
                   {selectedSearchParty.members?.map((member, index) => (
-                    <Avatar key={index} className="w-6 h-6 border-2 border-white">
-                      <AvatarImage 
-                        src={member.user?.profileImage || ""} 
-                        alt={member.user?.fullName || `Member ${index + 1}`} 
+                    <Avatar
+                      key={index}
+                      className="w-6 h-6 border-2 border-white"
+                    >
+                      <AvatarImage
+                        src={member.user?.profileImage || ""}
+                        alt={member.user?.fullName || `Member ${index + 1}`}
                       />
                       <AvatarFallback>
                         <User className="h-3 w-3" />
@@ -219,7 +244,9 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
                       ref={provided.innerRef}
                       {...provided.droppableProps}
                       className={`p-3 mb-3 border-2 border-dashed rounded-lg min-h-[100px] transition-colors ${
-                        snapshot.isDraggingOver ? 'bg-[#C9DAD0]/20 border-[#E9927E]' : 'border-[#C9DAD0]/50'
+                        snapshot.isDraggingOver
+                          ? "bg-[#C9DAD0]/20 border-[#E9927E]"
+                          : "border-[#C9DAD0]/50"
                       }`}
                     >
                       <div className="flex items-center justify-center h-full">
@@ -227,31 +254,35 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
                           <div className="text-center p-4">
                             <Home className="h-8 w-8 text-[#C9DAD0] mx-auto mb-2" />
                             <p className="text-sm text-[#1A4A4A]">
-                              Drag apartments here to add them to this search party
+                              Drag apartments here to add them to this search
+                              party
                             </p>
                           </div>
                         ) : (
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
                             {searchPartyListings.map((listing, index) => (
-                              <div 
+                              <div
                                 key={listing.id}
                                 className="bg-[#FFF9F2] p-2 rounded-md text-sm flex items-start"
                               >
                                 <div className="mr-2 flex-shrink-0">
-                                  <Badge variant="outline" className="bg-[#E9927E]/10 text-[#E9927E] text-xs">
+                                  <Badge
+                                    variant="outline"
+                                    className="bg-[#E9927E]/10 text-[#E9927E] text-xs"
+                                  >
                                     ${listing.apartment?.price}
                                   </Badge>
                                 </div>
                                 <div className="flex-grow">
                                   <p className="text-xs font-medium text-[#1A4A4A] truncate">
-                                    {listing.apartment?.title || 'Apartment'}
+                                    {listing.apartment?.title || "Apartment"}
                                   </p>
                                   <p className="text-xs text-[#1A4A4A]/70 truncate">
-                                    {listing.apartment?.location || 'Location'}
+                                    {listing.apartment?.location || "Location"}
                                   </p>
                                 </div>
-                                <Button 
-                                  variant="ghost" 
+                                <Button
+                                  variant="ghost"
                                   size="sm"
                                   className="p-1 h-6 w-6 ml-1"
                                 >
@@ -269,7 +300,8 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
               </DragDropContext>
 
               <p className="text-xs text-[#1A4A4A]/70 italic">
-                Drag an apartment from the listings below to add it to this search party
+                Drag an apartment from the listings below to add it to this
+                search party
               </p>
             </div>
           )}

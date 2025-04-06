@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import ApartmentCard from "../components/ApartmentCard";
 import DraggableApartmentCard from "../components/DraggableApartmentCard";
 import FilterChips from "../components/FilterChips";
@@ -32,8 +32,12 @@ const Listings = () => {
       type: urlParams.get("type") || "",
     };
   });
-  const [selectedSearchPartyId, setSelectedSearchPartyId] = useState<number | null>(null);
-  const [searchPartyListings, setSearchPartyListings] = useState<SearchPartyListing[]>([]);
+  const [selectedSearchPartyId, setSelectedSearchPartyId] = useState<
+    number | null
+  >(null);
+  const [searchPartyListings, setSearchPartyListings] = useState<
+    SearchPartyListing[]
+  >([]);
   const [filteredApartments, setFilteredApartments] = useState<Apartment[]>([]);
 
   // Fetch apartments with applied filters
@@ -78,20 +82,20 @@ const Listings = () => {
       try {
         const listings = await getSearchPartyListings(selectedSearchPartyId);
         setSearchPartyListings(listings);
-        
+
         // Filter apartments to only show those in the search party
-        const apartmentIds = listings.map(listing => listing.apartmentId);
-        const filtered = apartments.filter(apartment => 
-          apartmentIds.includes(apartment.id)
+        const apartmentIds = listings.map((listing) => listing.apartmentId);
+        const filtered = apartments.filter((apartment) =>
+          apartmentIds.includes(apartment.id),
         );
-        
+
         setFilteredApartments(filtered);
       } catch (error) {
         console.error("Error fetching search party listings:", error);
         toast({
           title: "Error",
           description: "Could not fetch search party listings",
-          variant: "destructive"
+          variant: "destructive",
         });
       }
     };
@@ -138,14 +142,16 @@ const Listings = () => {
   const handleFilterBySearchParty = (searchPartyId: number | null) => {
     setSelectedSearchPartyId(searchPartyId);
   };
-  
+
   // Handle drag end for react-beautiful-dnd
   const handleDragEnd = (result: DropResult) => {
     // This is handled within the SearchPartyWidget component
     // We just need this function to satisfy DragDropContext requirements
   };
 
-  const displayedApartments = selectedSearchPartyId ? filteredApartments : apartments;
+  const displayedApartments = selectedSearchPartyId
+    ? filteredApartments
+    : apartments;
 
   return (
     <section className="flex-grow py-8 bg-[#FFF9F2]">
@@ -155,11 +161,11 @@ const Listings = () => {
             {searchParams.q
               ? `Search Results for "${searchParams.q}"`
               : searchParams.type
-              ? `${
-                  searchParams.type.charAt(0).toUpperCase() +
-                  searchParams.type.slice(1)
-                }`
-              : "Nearby Apartments"}
+                ? `${
+                    searchParams.type.charAt(0).toUpperCase() +
+                    searchParams.type.slice(1)
+                  }`
+                : "Nearby Apartments"}
           </h2>
           <div className="flex items-center space-x-4">
             <Button
@@ -181,19 +187,14 @@ const Listings = () => {
               )}
             </Button>
             <div className="flex items-center">
-              <span className="text-[#1A4A4A] text-sm font-medium">Filters</span>
+              <span className="text-[#1A4A4A] text-sm font-medium">
+                Filters
+              </span>
             </div>
           </div>
         </div>
 
         <FilterChips onFilterChange={handleFilterChange} />
-        
-        {/* Search Party Widget */}
-        <SearchPartyWidget 
-          apartments={apartments} 
-          onFilterBySearchParty={handleFilterBySearchParty} 
-        />
-
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((_, i) => (
@@ -221,8 +222,8 @@ const Listings = () => {
               No apartments found
             </h3>
             <p className="text-[#1A4A4A]/70">
-              {selectedSearchPartyId 
-                ? "This search party doesn't have any apartments yet" 
+              {selectedSearchPartyId
+                ? "This search party doesn't have any apartments yet"
                 : "Try adjusting your filters or search for a different area"}
             </p>
           </div>
@@ -245,45 +246,53 @@ const Listings = () => {
               )}
 
               {/* Apartment Listings - takes up half the screen in split view, full width in list view */}
-              <Droppable droppableId="apartmentList">
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className={`grid grid-cols-2 gap-6 ${
-                      viewMode === "split"
-                        ? ""
-                        : "md:grid-cols-2 lg:grid-cols-3"
-                    }`}
-                  >
-                    {displayedApartments.map((apartment, index) => (
-                      <DraggableApartmentCard
-                        key={apartment.id}
-                        apartment={apartment}
-                        index={index}
-                        isSelected={selectedApartmentId === apartment.id}
-                        onClick={() => setSelectedApartmentId(apartment.id)}
-                      />
-                    ))}
-                    {provided.placeholder}
+              <div className="w-full flex flex-col flex-1 gap-6">
+                <SearchPartyWidget
+                  apartments={apartments}
+                  onFilterBySearchParty={handleFilterBySearchParty}
+                />
+                <Droppable droppableId="apartmentList">
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className={`grid grid-cols-2 gap-6 ${
+                        viewMode === "split"
+                          ? ""
+                          : "md:grid-cols-2 lg:grid-cols-3"
+                      }`}
+                    >
+                      {displayedApartments.map((apartment, index) => (
+                        <DraggableApartmentCard
+                          key={apartment.id}
+                          apartment={apartment}
+                          index={index}
+                          isSelected={selectedApartmentId === apartment.id}
+                          onClick={() => setSelectedApartmentId(apartment.id)}
+                        />
+                      ))}
+                      {provided.placeholder}
 
-                    {displayedApartments.length > 0 && (
-                      <div
-                        className={`mt-6 flex justify-center ${
-                          viewMode === "split" ? "col-span-1" : "col-span-full"
-                        }`}
-                      >
-                        <Button
-                          onClick={handleLoadMore}
-                          className="bg-[#E9927E] text-white px-6 py-3 rounded-full shadow-md hover:bg-[#E9927E]/90 transition-colors"
+                      {displayedApartments.length > 0 && (
+                        <div
+                          className={`mt-6 flex justify-center ${
+                            viewMode === "split"
+                              ? "col-span-1"
+                              : "col-span-full"
+                          }`}
                         >
-                          Load more listings
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </Droppable>
+                          <Button
+                            onClick={handleLoadMore}
+                            className="bg-[#E9927E] text-white px-6 py-3 rounded-full shadow-md hover:bg-[#E9927E]/90 transition-colors"
+                          >
+                            Load more listings
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
             </div>
           </DragDropContext>
         )}
