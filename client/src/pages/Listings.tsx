@@ -187,7 +187,7 @@ const Listings = () => {
 
             {/* Apartment Listings - takes up half the screen in split view, full width in list view */}
             <div
-              className={`grid grid-cols-2 gap-6${
+              className={`grid grid-cols-2 gap-6 ${
                 viewMode === "split"
                   ? ""
                   : "md:grid-cols-2 lg:grid-cols-3"
