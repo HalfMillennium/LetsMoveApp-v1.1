@@ -51,7 +51,6 @@ const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
   } | null>(null);
 
   // Load Google Maps API
-  console.log("Google Maps API Key:", import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
@@ -101,10 +100,8 @@ const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
 
   if (loadError) {
     return (
-      <div className="h-full flex items-center justify-center flex-col p-4">
-        <p className="text-lg font-semibold text-red-500 mb-2">Error loading Google Maps</p>
-        <p className="text-sm text-center">{loadError.message}</p>
-        <p className="text-xs mt-2">API Key: {import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? "Set" : "Not set"}</p>
+      <div className="h-full flex items-center justify-center">
+        Error loading maps
       </div>
     );
   }

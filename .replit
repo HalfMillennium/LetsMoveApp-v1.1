@@ -12,6 +12,10 @@ run = ["npm", "run", "start"]
 
 [[ports]]
 localPort = 5050
+externalPort = 5050
+
+[[ports]]
+localPort = 5050
 externalPort = 80
 
 [workflows]
