@@ -86,7 +86,7 @@ const Listings = () => {
         // Filter apartments to only show those in the search party
         const apartmentIds = listings.map((listing) => listing.apartmentId);
         const filtered = apartments.filter((apartment) =>
-          apartmentIds.includes(apartment.id),
+          apartmentIds.includes(apartment.id)
         );
 
         setFilteredApartments(filtered);
@@ -161,18 +161,18 @@ const Listings = () => {
             {searchParams.q
               ? `Search Results for "${searchParams.q}"`
               : searchParams.type
-                ? `${
-                    searchParams.type.charAt(0).toUpperCase() +
-                    searchParams.type.slice(1)
-                  }`
-                : "Nearby Apartments"}
+              ? `${
+                  searchParams.type.charAt(0).toUpperCase() +
+                  searchParams.type.slice(1)
+                }`
+              : "Nearby Apartments"}
           </h2>
           <div className="flex items-center space-x-4">
             <Button
               variant="ghost"
               size="sm"
               onClick={toggleViewMode}
-              className="flex items-center gap-1 text-[#1A4A4A] hover:bg-[#C9DAD0]/20"
+              className="flex items-center gap-2 text-[#1A4A4A] hover:bg-[#C9DAD0]/20"
             >
               {viewMode === "split" ? (
                 <>
@@ -186,71 +186,66 @@ const Listings = () => {
                 </>
               )}
             </Button>
-            <div className="flex items-center">
-              <span className="text-[#1A4A4A] text-sm font-medium">
-                Filters
-              </span>
-            </div>
           </div>
         </div>
-
         <FilterChips onFilterChange={handleFilterChange} />
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((_, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-lg overflow-hidden shadow-md"
-              >
-                <Skeleton className="w-full h-64" />
-                <div className="p-4">
-                  <Skeleton className="h-6 w-32 mb-2" />
-                  <Skeleton className="h-4 w-full mb-2" />
-                  <Skeleton className="h-4 w-3/4 mb-3" />
-                  <div className="flex gap-2 mb-3">
-                    <Skeleton className="h-6 w-20" />
-                    <Skeleton className="h-6 w-20" />
-                    <Skeleton className="h-6 w-20" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : displayedApartments.length === 0 ? (
-          <div className="text-center py-10">
-            <h3 className="text-xl font-semibold text-[#1A4A4A] mb-2">
-              No apartments found
-            </h3>
-            <p className="text-[#1A4A4A]/70">
-              {selectedSearchPartyId
-                ? "This search party doesn't have any apartments yet"
-                : "Try adjusting your filters or search for a different area"}
-            </p>
-          </div>
-        ) : (
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <div
-              className={`${
-                viewMode === "split" ? "lg:grid lg:grid-cols-2 gap-6" : ""
-              }`}
-            >
-              {/* Google Map - takes up half the screen in split view, hidden in list view */}
-              {viewMode === "split" && (
-                <div className="lg:sticky lg:top-24 h-[70vh] lg:h-[calc(100vh-12rem)] mb-6 lg:mb-0 relative rounded-lg overflow-hidden shadow-md">
-                  <GoogleMapComponent
-                    apartments={displayedApartments}
-                    onApartmentSelect={handleApartmentSelect}
-                    selectedApartmentId={selectedApartmentId}
-                  />
-                </div>
-              )}
 
-              {/* Apartment Listings - takes up half the screen in split view, full width in list view */}
-              <div className="w-full flex flex-col flex-1 gap-6">
-                <SearchPartyWidget
-                  apartments={apartments}
-                  onFilterBySearchParty={handleFilterBySearchParty}
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <div
+            className={`${
+              viewMode === "split" ? "lg:grid lg:grid-cols-2 gap-6" : ""
+            }`}
+          >
+            {/* Google Map - takes up half the screen in split view, hidden in list view */}
+            {viewMode === "split" && (
+              <div className="lg:sticky lg:top-24 h-[70vh] lg:h-[calc(100vh-12rem)] mb-6 lg:mb-0 relative rounded-lg overflow-hidden shadow-md">
+                <GoogleMapComponent
+                  apartments={displayedApartments}
+                  onApartmentSelect={handleApartmentSelect}
+                  selectedApartmentId={selectedApartmentId}
                 />
+              </div>
+            )}
+
+            {/* Apartment Listings - takes up half the screen in split view, full width in list view */}
+            <div className="w-full flex flex-col flex-1 gap-6">
+              <SearchPartyWidget
+                apartments={apartments}
+                onFilterBySearchParty={handleFilterBySearchParty}
+              />
+              {isLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[1, 2, 3, 4, 5, 6].map((_, i) => (
+                    <div
+                      key={i}
+                      className="bg-white rounded-lg overflow-hidden shadow-md"
+                    >
+                      <Skeleton className="w-full h-64" />
+                      <div className="p-4">
+                        <Skeleton className="h-6 w-32 mb-2" />
+                        <Skeleton className="h-4 w-full mb-2" />
+                        <Skeleton className="h-4 w-3/4 mb-3" />
+                        <div className="flex gap-2 mb-3">
+                          <Skeleton className="h-6 w-20" />
+                          <Skeleton className="h-6 w-20" />
+                          <Skeleton className="h-6 w-20" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : displayedApartments.length === 0 ? (
+                <div className="text-center py-10">
+                  <h3 className="text-xl font-semibold text-[#1A4A4A] mb-2">
+                    No apartments found
+                  </h3>
+                  <p className="text-[#1A4A4A]/70">
+                    {selectedSearchPartyId
+                      ? "This search party doesn't have any apartments yet"
+                      : "Try adjusting your filters or search for a different area"}
+                  </p>
+                </div>
+              ) : (
                 <Droppable droppableId="apartmentList">
                   {(provided) => (
                     <div
@@ -292,10 +287,10 @@ const Listings = () => {
                     </div>
                   )}
                 </Droppable>
-              </div>
+              )}
             </div>
-          </DragDropContext>
-        )}
+          </div>
+        </DragDropContext>
       </div>
     </section>
   );
