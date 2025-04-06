@@ -58,7 +58,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   // Add favorite mutation
   const addFavoriteMutation = useMutation({
     mutationFn: async (apartmentId: number) => {
-      return apiRequest("POST", "/api/favorites", {
+      return apiRequest("/api/favorites", "POST", {
         userId: DEFAULT_USER_ID,
         apartmentId,
       });
@@ -82,7 +82,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   // Remove favorite mutation
   const removeFavoriteMutation = useMutation({
     mutationFn: async (favoriteId: number) => {
-      return apiRequest("DELETE", `/api/favorites/${favoriteId}`);
+      return apiRequest(`/api/favorites/${favoriteId}`, "DELETE");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/favorites"] });
