@@ -66,3 +66,18 @@ export interface FilterSettings {
   petFriendly?: boolean;
   amenities?: string[];
 }
+
+export interface SearchPartyContextType {
+  searchParties: SearchParty[];
+  isLoading: boolean;
+  error: Error | null;
+  createSearchParty: (name: string) => Promise<SearchParty>;
+  addListingToParty: (
+    searchPartyId: number,
+    apartmentId: number,
+    notes?: string,
+  ) => Promise<SearchPartyListing>;
+  getSearchPartyListings: (
+    searchPartyId: number,
+  ) => Promise<SearchPartyListing[]>;
+}
