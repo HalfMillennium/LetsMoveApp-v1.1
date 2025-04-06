@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import ApartmentCard from "../components/ApartmentCard";
@@ -10,9 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { exampleApartments } from "../lib/utils";
 import InteractiveMap from "../components/InteractiveMap2";
-import RadarMap from "../components/RadarMap";
+import GoogleMapComponent from "../components/GoogleMap";
 import { useGeolocation } from "../lib/useGeolocation";
-import { initializeRadar } from "../lib/radarService";
 
 const Listings = () => {
   const [location] = useLocation();
@@ -20,7 +19,7 @@ const Listings = () => {
   const [filters, setFilters] = useState<FilterSettings>({});
   const [selectedApartmentId, setSelectedApartmentId] = useState<number | undefined>();
   const [viewMode, setViewMode] = useState<'split' | 'list'>('split');
-  const [useRadarMap, setUseRadarMap] = useState<boolean>(true);
+  const [useMapType, setUseMapType] = useState<'google' | 'svg'>('google');
   const [searchParams] = useState(() => {
     const urlParams = new URLSearchParams(window.location.search);
     return {
@@ -29,10 +28,8 @@ const Listings = () => {
     };
   });
   
-  // Initialize Radar SDK when component mounts
-  useEffect(() => {
-    initializeRadar();
-  }, []);
+  // Get user's geolocation
+  const { coordinates } = useGeolocation();
 
   // Fetch apartments with applied filters
   const {
@@ -176,16 +173,9 @@ const Listings = () => {
             {/* Interactive Map - takes up half the screen in split view, hidden in list view */}
             {viewMode === 'split' && (
               <div className="lg:sticky lg:top-24 h-[70vh] lg:h-[calc(100vh-12rem)] mb-6 lg:mb-0">
-                {useRadarMap ? (
-                  <RadarMap
-                    apartments={apartments.map(apt => ({
-                      ...apt,
-                      description: apt.description || null,
-                      amenities: apt.amenities || null,
-                      distance: apt.distance || null,
-                      squareFeet: apt.squareFeet || null,
-                      createdById: apt.createdById || null
-                    }))}
+                {useMapType === 'google' ? (
+                  <GoogleMapComponent
+                    apartments={apartments}
                     onApartmentSelect={handleApartmentSelect}
                     selectedApartmentId={selectedApartmentId}
                   />
@@ -202,9 +192,9 @@ const Listings = () => {
                   <Button
                     variant="secondary"
                     className="text-xs bg-white shadow-md hover:bg-gray-100 text-[#1A4A4A]"
-                    onClick={() => setUseRadarMap(!useRadarMap)}
+                    onClick={() => setUseMapType(useMapType === 'google' ? 'svg' : 'google')}
                   >
-                    {useRadarMap ? 'Use SVG Map' : 'Use Radar Map'}
+                    {useMapType === 'google' ? 'Use SVG Map' : 'Use Google Map'}
                   </Button>
                 </div>
               </div>
