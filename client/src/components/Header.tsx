@@ -37,7 +37,10 @@ const Header = () => {
               Apartments
             </span>
           </Link>
-          <Link href="/search-party" className="flex flex-grow w-full cursor-pointer">
+          <Link
+            href="/search-party"
+            className="flex flex-grow w-full cursor-pointer"
+          >
             <span
               className={`w-full text-[#1A4A4A] font-medium ${
                 isActive("/search-party") ? "text-[#E9927E]" : ""
@@ -74,8 +77,13 @@ const Header = () => {
             <Search className="h-6 w-6" />
           </button>
 
-          <button className="text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20">
-            <CircleUserRound className="h-6 w-6" />
+          <button className="">
+            <Link
+              href="/profile"
+              className="flex flex-1 w-full text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20"
+            >
+              <CircleUserRound color="#1A4A4A" className="h-6 w-6" />
+            </Link>
           </button>
 
           {/* Mobile: Sheet/Drawer Menu */}

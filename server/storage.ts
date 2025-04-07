@@ -6,7 +6,15 @@ import {
   searchPartyMembers, type SearchPartyMember, type InsertSearchPartyMember,
   searchPartyListings, type SearchPartyListing, type InsertSearchPartyListing
 } from "@shared/schema";
-import { exampleApartments } from "../client/src/lib/utils";
+import {
+  exampleUsers,
+  exampleApartments,
+  exampleFavorites,
+  exampleSearchParties,
+  exampleSearchPartyMembers,
+  exampleSearchPartyListings,
+  generateMoreApartments
+} from "../client/src/lib/mockData.simple";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -16,6 +24,7 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  getAllUsers(): Promise<User[]>;
   
   // Apartment methods
   getApartments(): Promise<Apartment[]>;
@@ -56,15 +65,49 @@ export class MemStorage implements IStorage {
     this.searchPartyMembers = new Map();
     this.searchPartyListings = new Map();
     
-    this.userIdCounter = 1;
-    this.favoriteIdCounter = 1;
-    this.searchPartyIdCounter = 1;
-    this.memberIdCounter = 1;
-    this.listingIdCounter = 1;
+    // Set ID counters to be greater than our example data
+    this.userIdCounter = exampleUsers.length + 1;
+    this.favoriteIdCounter = exampleFavorites.length + 1;
+    this.searchPartyIdCounter = exampleSearchParties.length + 1;
+    this.memberIdCounter = exampleSearchPartyMembers.length + 1;
+    this.listingIdCounter = exampleSearchPartyListings.length + 1;
     
-    // Initialize with example apartments
+    // Initialize with example data
+    
+    // Add users
+    exampleUsers.forEach(user => {
+      this.users.set(user.id, user);
+    });
+    
+    // Add apartments
     exampleApartments.forEach(apt => {
       this.apartments.set(apt.id, apt);
+    });
+    
+    // Add favorites
+    exampleFavorites.forEach(favorite => {
+      this.favorites.set(favorite.id, favorite);
+    });
+    
+    // Add search parties
+    exampleSearchParties.forEach(party => {
+      this.searchParties.set(party.id, party);
+    });
+    
+    // Add search party members
+    exampleSearchPartyMembers.forEach(member => {
+      this.searchPartyMembers.set(member.id, member);
+    });
+    
+    // Add search party listings
+    exampleSearchPartyListings.forEach(listing => {
+      // Add apartment details to the listing
+      const apartment = this.apartments.get(listing.apartmentId);
+      const enrichedListing = {
+        ...listing,
+        apartment
+      } as SearchPartyListing;
+      this.searchPartyListings.set(listing.id, enrichedListing);
     });
   }
 
@@ -81,9 +124,18 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.userIdCounter++;
-    const user: User = { ...insertUser, id };
+    const user: User = { 
+      ...insertUser, 
+      id,
+      fullName: insertUser.fullName || null,
+      profileImage: insertUser.profileImage || null
+    };
     this.users.set(id, user);
     return user;
+  }
+  
+  async getAllUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
   }
   
   // Apartment Methods
@@ -141,7 +193,7 @@ export class MemStorage implements IStorage {
   
   async createSearchParty(insertSearchParty: InsertSearchParty): Promise<SearchParty> {
     const id = this.searchPartyIdCounter++;
-    const now = new Date().toISOString();
+    const now = new Date();
     const searchParty: SearchParty = { 
       ...insertSearchParty, 
       id, 
@@ -153,18 +205,23 @@ export class MemStorage implements IStorage {
   
   async addSearchPartyMember(insertMember: InsertSearchPartyMember): Promise<SearchPartyMember> {
     const id = this.memberIdCounter++;
-    const member: SearchPartyMember = { ...insertMember, id };
+    const member: SearchPartyMember = { 
+      ...insertMember, 
+      id,
+      role: insertMember.role || null
+    };
     this.searchPartyMembers.set(id, member);
     return member;
   }
   
   async addSearchPartyListing(insertListing: InsertSearchPartyListing): Promise<SearchPartyListing> {
     const id = this.listingIdCounter++;
-    const now = new Date().toISOString();
+    const now = new Date();
     const listing: SearchPartyListing = { 
       ...insertListing, 
       id, 
-      addedAt: now 
+      addedAt: now,
+      notes: insertListing.notes || null
     };
     this.searchPartyListings.set(id, listing);
     return listing;
