@@ -250,21 +250,17 @@ const Listings = () => {
             </Button>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mb-6">
           <FilterChips onFilterChange={handleFilterChange} />
-          <SearchPartyWidget
-            apartments={apartments}
-            onFilterBySearchParty={handleFilterBySearchParty}
-          />
         </div>
 
         <DragDropContext onDragEnd={handleDragEnd}>
           <div
             className={`${
-              viewMode === "split" ? "lg:grid lg:grid-cols-2 gap-6" : ""
+              viewMode === "split" ? "lg:grid lg:grid-cols-[1fr,400px] gap-6" : ""
             }`}
           >
-            {/* Google Map - takes up half the screen in split view, hidden in list view */}
+            {/* Google Map - takes up more screen space in split view, hidden in list view */}
             {viewMode === "split" && (
               <div className="lg:sticky lg:top-24 h-[70vh] lg:h-[calc(100vh-12rem)] mb-6 lg:mb-0 relative rounded-lg overflow-hidden shadow-md">
                 <GoogleMapComponent
@@ -274,6 +270,17 @@ const Listings = () => {
                 />
               </div>
             )}
+            {/* Search Party Widget - appears on the right side in split view */}
+            {viewMode === "split" && (
+              <div className="order-last lg:order-last">
+                <SearchPartyWidget
+                  apartments={apartments}
+                  onFilterBySearchParty={handleFilterBySearchParty}
+                  onDragEnd={handleDragEnd}
+                />
+              </div>
+            )}
+            
             {/* Apartment Listings - takes up half the screen in split view, full width in list view */}
             <div className="w-full flex flex-col flex-1 gap-6">
               {isLoading ? (

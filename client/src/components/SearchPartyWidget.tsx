@@ -1,28 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Droppable, DropResult } from "react-beautiful-dnd";
 import { useSearchParty } from "../context/SearchPartyContext";
 import { SearchParty, Apartment, SearchPartyListing } from "../types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import {
-  Users,
-  ChevronDown,
-  ChevronUp,
+  Clock,
   Plus,
-  X,
-  Home,
   User,
-  PartyPopper,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 
 interface SearchPartyWidgetProps {
   apartments: Apartment[];
@@ -38,7 +25,6 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
   const { searchParties, addListingToParty, getSearchPartyListings } =
     useSearchParty();
   const { toast } = useToast();
-  const [isExpanded, setIsExpanded] = useState(false);
   const [selectedSearchPartyId, setSelectedSearchPartyId] = useState<
     number | null
   >(null);
@@ -46,34 +32,21 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
     SearchPartyListing[]
   >([]);
   const [selectedSearchParty, setSelectedSearchParty] =
-    useState<SearchParty | null>(null);
-  const [filterByParty, setFilterByParty] = useState(false);
+    useState<SearchParty | null>(searchParties[0] || null);
 
   useEffect(() => {
-    if (selectedSearchPartyId && filterByParty) {
+    // Select the first search party by default if available
+    if (searchParties.length > 0 && !selectedSearchParty) {
+      setSelectedSearchParty(searchParties[0]);
+      setSelectedSearchPartyId(searchParties[0].id);
+    }
+  }, [searchParties]);
+
+  useEffect(() => {
+    if (selectedSearchPartyId) {
       fetchSearchPartyListings(selectedSearchPartyId);
-      const party = searchParties.find((p) => p.id === selectedSearchPartyId);
-      if (party) {
-        setSelectedSearchParty(party);
-      }
-    } else {
-      setSearchPartyListings([]);
-      setSelectedSearchParty(null);
     }
-  }, [selectedSearchPartyId, searchParties]);
-
-  // Prevent body scrolling when modal is open
-  useEffect(() => {
-    if (isExpanded) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-    
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [isExpanded]);
+  }, [selectedSearchPartyId]);
 
   const fetchSearchPartyListings = async (searchPartyId: number) => {
     try {
@@ -89,31 +62,15 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
     }
   };
 
-  const toggleExpand = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsExpanded(!isExpanded);
-  };
-
-  const toggleFilterBySearchParty = () => {
-    if (filterByParty) {
-      setFilterByParty(false);
-      onFilterBySearchParty(null);
-      return;
-    }
-    setFilterByParty(true);
-    onFilterBySearchParty(selectedSearchPartyId);
-  };
-
-  const handleSearchPartyChange = (value: string) => {
-    const partyId = value === "all" ? null : parseInt(value, 10);
-    setSelectedSearchPartyId(partyId);
-    if (filterByParty) {
-      onFilterBySearchParty(partyId);
-    }
+  const handleAddToParty = () => {
+    toast({
+      title: "Add to Search Party",
+      description: "Drag an apartment to add it to this search party",
+    });
   };
 
   // Handle drag and drop
-  const handleLocalDrag = async (result: DropResult) => {
+  const handleDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
     // If the parent component has provided its own onDragEnd handler, use that instead
@@ -175,204 +132,59 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
   };
 
   return (
-    <div className="inline-block">
-      {/* Button to open search parties dialog */}
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={toggleExpand}
-        className="h-10 bg-gradient-to-r from-[#E9927E] to-[#C9DAD0] text-white border-none hover:text-white hover:opacity-90"
-      >
-        <Users className="h-4 w-4 mr-2" />
-        <span>Search Parties</span>
-        {isExpanded ? (
-          <ChevronUp className="h-4 w-4 ml-2" />
-        ) : (
-          <ChevronDown className="h-4 w-4 ml-2" />
-        )}
-      </Button>
-
-      {/* Modal backdrop and content */}
-      {isExpanded && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={() => setIsExpanded(false)}
-        >
-          <div 
-            className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center p-4 border-b border-[#C9DAD0]">
-              <h3 className="text-lg font-bold text-[#1A4A4A]">Search Parties</h3>
-              <Button variant="ghost" size="sm" onClick={() => setIsExpanded(false)}>
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-            
-            <div className="p-4">
-              <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center mb-4">
-                <Select
-                  value={selectedSearchPartyId ? selectedSearchPartyId.toString() : "all"}
-                  onValueChange={handleSearchPartyChange}
-                >
-                  <SelectTrigger className="w-full sm:w-[200px]">
-                    <SelectValue placeholder="Select a search party" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Apartments</SelectItem>
-                    {searchParties.map((party) => (
-                      <SelectItem key={party.id} value={party.id.toString()}>
-                        {party.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                
-                {!filterByParty ? (
-                  <Button
-                    variant="default"
-                    size="default"
-                    className="bg-[#E9927E] text-white hover:bg-[#E9927E]/90 w-full sm:w-auto"
-                    onClick={toggleFilterBySearchParty}
-                  >
-                    <PartyPopper className="h-4 w-4 mr-2" />
-                    <span>Filter By Search Party</span>
-                  </Button>
-                ) : (
-                  <Button
-                    variant="outline"
-                    size="default"
-                    className="border-[#C9DAD0] text-[#1A4A4A] w-full sm:w-auto"
-                    onClick={toggleFilterBySearchParty}
-                  >
-                    See All Apartments
-                  </Button>
-                )}
-              </div>
-
-              {selectedSearchParty && (
-                <div className="mt-4">
-                  <h4 className="font-medium text-[#1A4A4A] mb-2">
-                    {selectedSearchParty.name}
-                  </h4>
-
-                  {/* Members */}
-                  <div className="flex items-center mb-4">
-                    <span className="text-sm text-[#1A4A4A] mr-2">Members:</span>
-                    <div className="flex -space-x-2">
-                      {selectedSearchParty.members?.map((member, index) => (
-                        <Avatar
-                          key={index}
-                          className="w-8 h-8 border-2 border-white"
-                        >
-                          <AvatarImage
-                            src={member.user?.profileImage || ""}
-                            alt={member.user?.fullName || `Member ${index + 1}`}
-                          />
-                          <AvatarFallback>
-                            <User className="h-4 w-4" />
-                          </AvatarFallback>
-                        </Avatar>
-                      ))}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-8 h-8 rounded-full p-0 flex items-center justify-center border-[#C9DAD0] text-[#1A4A4A]"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Drop area for search party listings */}
-                  <Droppable droppableId="searchPartyDropArea">
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        className={`p-4 border-2 border-dashed rounded-lg min-h-[200px] transition-colors ${
-                          snapshot.isDraggingOver
-                            ? "bg-[#C9DAD0]/20 border-[#E9927E]"
-                            : "border-[#C9DAD0]/50"
-                        }`}
-                        data-search-party-id={selectedSearchPartyId}
-                      >
-                        {searchPartyListings.length === 0 ? (
-                          <div className="flex flex-col items-center justify-center h-full py-8">
-                            <Home className="h-12 w-12 text-[#C9DAD0] mb-3" />
-                            <p className="text-[#1A4A4A] text-center max-w-md">
-                              Drag apartments here to add them to this search party
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 w-full">
-                            {searchPartyListings.map((listing) => {
-                              // Find the associated apartment for better display
-                              const apartment = apartments.find(a => a.id === listing.apartmentId);
-                              
-                              return (
-                                <div
-                                  key={listing.id}
-                                  className="bg-[#FFF9F2] rounded-md overflow-hidden shadow-sm border border-[#C9DAD0]/30 flex flex-col"
-                                >
-                                  {apartment?.images && apartment.images.length > 0 && (
-                                    <div className="h-32 bg-gray-200 overflow-hidden">
-                                      <img 
-                                        src={apartment.images[0]} 
-                                        alt={apartment.title} 
-                                        className="w-full h-full object-cover"
-                                      />
-                                    </div>
-                                  )}
-                                  <div className="p-3 flex-1">
-                                    <div className="flex justify-between items-start">
-                                      <div>
-                                        <Badge
-                                          variant="outline"
-                                          className="bg-[#E9927E]/10 text-[#E9927E] text-xs mb-1"
-                                        >
-                                          ${apartment?.price || listing.apartment?.price}
-                                        </Badge>
-                                        <h5 className="text-sm font-medium text-[#1A4A4A] line-clamp-1">
-                                          {apartment?.title || listing.apartment?.title || "Apartment"}
-                                        </h5>
-                                        <p className="text-xs text-[#1A4A4A]/70 line-clamp-1">
-                                          {apartment?.address || listing.apartment?.address || "Address"}
-                                        </p>
-                                      </div>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="p-1 h-7 w-7 ml-1"
-                                      >
-                                        <X className="h-4 w-4 text-[#1A4A4A]/70" />
-                                      </Button>
-                                    </div>
-                                    {listing.notes && (
-                                      <p className="text-xs italic text-[#1A4A4A]/60 mt-1">
-                                        Note: {listing.notes}
-                                      </p>
-                                    )}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                  
-                  <p className="text-sm text-[#1A4A4A]/70 italic text-center mt-3">
-                    Drag an apartment from the listings below to add it to this search party
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
+    <div className="bg-white rounded-3xl p-5 shadow-md h-auto">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <Clock className="w-5 h-5 text-[#1A4A4A] mr-2" />
+          <h2 className="text-lg font-bold text-[#1A4A4A]">Search Parties</h2>
         </div>
-      )}
+      </div>
+      
+      {/* Search party members */}
+      <div className="flex justify-center mb-6">
+        <div className="flex -space-x-2">
+          {selectedSearchParty?.members?.slice(0, 3).map((member, index) => (
+            <Avatar
+              key={index}
+              className="w-12 h-12 border-2 border-white"
+            >
+              <AvatarImage
+                src={member.user?.profileImage || "https://placekitten.com/100/100"}
+                alt={member.user?.fullName || `Member ${index + 1}`}
+              />
+              <AvatarFallback>
+                <User className="h-4 w-4" />
+              </AvatarFallback>
+            </Avatar>
+          ))}
+        </div>
+      </div>
+      
+      {/* Drop area button */}
+      <Droppable droppableId="searchPartyDropArea">
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            className={`mb-4 ${
+              snapshot.isDraggingOver
+                ? "bg-[#C9DAD0]/20 border-[#E9927E]"
+                : ""
+            }`}
+            data-search-party-id={selectedSearchPartyId}
+          >
+            <Button 
+              variant="outline" 
+              className="w-full flex items-center justify-center h-12 bg-white border border-gray-200 rounded-full hover:bg-gray-50"
+              onClick={handleAddToParty}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              <span>Add to Search Party</span>
+            </Button>
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </div>
   );
 };
