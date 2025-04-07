@@ -257,7 +257,9 @@ const Listings = () => {
         <DragDropContext onDragEnd={handleDragEnd}>
           <div
             className={`${
-              viewMode === "split" ? "lg:grid lg:grid-cols-[1fr,400px] gap-6" : ""
+              viewMode === "split"
+                ? "lg:grid lg:grid-cols-[1fr,400px] gap-6"
+                : ""
             }`}
           >
             {/* Google Map - takes up more screen space in split view, hidden in list view */}
@@ -270,19 +272,14 @@ const Listings = () => {
                 />
               </div>
             )}
-            {/* Search Party Widget - appears on the right side in split view */}
-            {viewMode === "split" && (
-              <div className="order-last lg:order-last">
-                <SearchPartyWidget
-                  apartments={apartments}
-                  onFilterBySearchParty={handleFilterBySearchParty}
-                  onDragEnd={handleDragEnd}
-                />
-              </div>
-            )}
-            
+
             {/* Apartment Listings - takes up half the screen in split view, full width in list view */}
             <div className="w-full flex flex-col flex-1 gap-6">
+              <SearchPartyWidget
+                apartments={apartments}
+                onFilterBySearchParty={handleFilterBySearchParty}
+                onDragEnd={handleDragEnd}
+              />
               {isLoading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {[1, 2, 3, 4, 5, 6].map((_, i) => (
