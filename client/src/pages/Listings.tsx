@@ -80,15 +80,13 @@ const Listings = () => {
 
     const fetchSearchPartyListings = async () => {
       try {
-        const listings = await searchPartyContext.getSearchPartyListings(
-          selectedSearchPartyId,
-        );
+        const listings = await searchPartyContext.getSearchPartyListings(selectedSearchPartyId);
         setSearchPartyListings(listings);
 
         // Filter apartments to only show those in the search party
         const apartmentIds = listings.map((listing) => listing.apartmentId);
         const filtered = apartments.filter((apartment) =>
-          apartmentIds.includes(apartment.id),
+          apartmentIds.includes(apartment.id)
         );
 
         setFilteredApartments(filtered);
@@ -161,31 +159,24 @@ const Listings = () => {
     }
 
     // Handle drop in search party drop area
-    if (
-      destination.droppableId === "searchPartyDropArea" &&
-      selectedSearchPartyId
-    ) {
-      const apartmentId = parseInt(draggableId.replace("apartment-", ""), 10);
-
+    if (destination.droppableId === 'searchPartyDropArea' && selectedSearchPartyId) {
+      const apartmentId = parseInt(draggableId.replace('apartment-', ''), 10);
+      
       addApartmentToSearchParty(selectedSearchPartyId, apartmentId);
     }
   };
-
+  
   // Function to add apartment to search party
-  const addApartmentToSearchParty = async (
-    searchPartyId: number,
-    apartmentId: number,
-  ) => {
+  const addApartmentToSearchParty = async (searchPartyId: number, apartmentId: number) => {
     try {
       // Check if apartment is already in the party (fetch current listings first)
-      const currentListings =
-        await searchPartyContext.getSearchPartyListings(searchPartyId);
-
+      const currentListings = await searchPartyContext.getSearchPartyListings(searchPartyId);
+      
       // Check if the apartment is already in the search party
-      const alreadyExists = currentListings.some(
-        (listing) => listing.apartmentId === apartmentId,
+      const alreadyExists = currentListings.some(listing => 
+        listing.apartmentId === apartmentId
       );
-
+      
       if (alreadyExists) {
         toast({
           title: "Already added",
@@ -193,10 +184,10 @@ const Listings = () => {
         });
         return;
       }
-
+      
       // Add the apartment to the search party
       await searchPartyContext.addListingToParty(searchPartyId, apartmentId);
-
+      
       toast({
         title: "Apartment added",
         description: "Successfully added to your search party",
@@ -206,7 +197,7 @@ const Listings = () => {
       toast({
         title: "Error",
         description: "Could not add listing to search party",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
@@ -223,11 +214,11 @@ const Listings = () => {
             {searchParams.q
               ? `Search Results for "${searchParams.q}"`
               : searchParams.type
-                ? `${
-                    searchParams.type.charAt(0).toUpperCase() +
-                    searchParams.type.slice(1)
-                  }`
-                : "Nearby Apartments"}
+              ? `${
+                  searchParams.type.charAt(0).toUpperCase() +
+                  searchParams.type.slice(1)
+                }`
+              : "Nearby Apartments"}
           </h2>
           <div className="flex items-center space-x-4">
             <Button
@@ -250,19 +241,15 @@ const Listings = () => {
             </Button>
           </div>
         </div>
-        <div className="flex items-center gap-3 mb-6">
-          <FilterChips onFilterChange={handleFilterChange} />
-        </div>
+        <FilterChips onFilterChange={handleFilterChange} />
 
         <DragDropContext onDragEnd={handleDragEnd}>
           <div
             className={`${
-              viewMode === "split"
-                ? "lg:grid lg:grid-cols-[1fr,400px] gap-6"
-                : ""
+              viewMode === "split" ? "lg:grid lg:grid-cols-2 gap-6" : ""
             }`}
           >
-            {/* Google Map - takes up more screen space in split view, hidden in list view */}
+            {/* Google Map - takes up half the screen in split view, hidden in list view */}
             {viewMode === "split" && (
               <div className="lg:sticky lg:top-24 h-[70vh] lg:h-[calc(100vh-12rem)] mb-6 lg:mb-0 relative rounded-lg overflow-hidden shadow-md">
                 <GoogleMapComponent
