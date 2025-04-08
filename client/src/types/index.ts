@@ -1,3 +1,5 @@
+import {PriceRange } from '../lib/constants';
+
 export interface Apartment {
   id: number;
   title: string;
@@ -15,6 +17,13 @@ export interface Apartment {
   isAvailable: boolean;
   createdById?: number;
   distance?: string;
+}
+
+export interface ActiveFilters {
+  price?: PriceRange,
+  bedrooms?: number,
+  distance?: number,
+  petFriendly?: boolean
 }
 
 export interface Favorite {
