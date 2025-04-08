@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
-import ApartmentCard from "../components/ApartmentCard";
+import { BEDROOM_OPTIONS, DISTANCE_OPTIONS } from '../lib/constants';
+import { Badge } from "@/components/ui/badge";
 import DraggableApartmentCard from "../components/DraggableApartmentCard";
 import FilterChips from "../components/FilterChips";
 import SearchPartyWidget from "../components/SearchPartyWidget";
@@ -15,16 +16,19 @@ import { exampleApartments } from "../lib/utils";
 import { GoogleMapComponent } from "../components/GoogleMap";
 import { useGeolocation } from "../lib/useGeolocation";
 import { useSearchParty } from "../context/SearchPartyContext";
+import { ActiveFilters } from "../types";
 
 const Listings = () => {
   const [location] = useLocation();
   const { toast } = useToast();
-  const searchPartyContext = useSearchParty();
+  const { getSearchPartyListings } = useSearchParty();
   const [filters, setFilters] = useState<FilterSettings>({});
   const [selectedApartmentId, setSelectedApartmentId] = useState<
     number | undefined
   >();
   const [viewMode, setViewMode] = useState<"split" | "list">("split");
+  const [activeListingFilters, setActiveListingFilters] =
+    useState<ActiveFilters>({});
   const [searchParams] = useState(() => {
     const urlParams = new URLSearchParams(window.location.search);
     return {
@@ -80,7 +84,7 @@ const Listings = () => {
 
     const fetchSearchPartyListings = async () => {
       try {
-        const listings = await searchPartyContext.getSearchPartyListings(selectedSearchPartyId);
+        const listings = await getSearchPartyListings(selectedSearchPartyId);
         setSearchPartyListings(listings);
 
         // Filter apartments to only show those in the search party
@@ -101,7 +105,7 @@ const Listings = () => {
     };
 
     fetchSearchPartyListings();
-  }, [selectedSearchPartyId, apartments, searchPartyContext]);
+  }, [selectedSearchPartyId, apartments, getSearchPartyListings]);
 
   // Handle filter changes
   const handleFilterChange = (newFilters: FilterSettings) => {
@@ -145,61 +149,12 @@ const Listings = () => {
 
   // Handle drag end for react-beautiful-dnd
   const handleDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId } = result;
-
-    // If dropped outside the droppable area or no valid destination
-    if (!destination) return;
-
-    // If dropped in the same position
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
-    }
-
-    // Handle drop in search party drop area
-    if (destination.droppableId === 'searchPartyDropArea' && selectedSearchPartyId) {
-      const apartmentId = parseInt(draggableId.replace('apartment-', ''), 10);
-      
-      addApartmentToSearchParty(selectedSearchPartyId, apartmentId);
-    }
+    // This is handled within the SearchPartyWidget component
+    // We just need this function to satisfy DragDropContext requirements
   };
-  
-  // Function to add apartment to search party
-  const addApartmentToSearchParty = async (searchPartyId: number, apartmentId: number) => {
-    try {
-      // Check if apartment is already in the party (fetch current listings first)
-      const currentListings = await searchPartyContext.getSearchPartyListings(searchPartyId);
-      
-      // Check if the apartment is already in the search party
-      const alreadyExists = currentListings.some(listing => 
-        listing.apartmentId === apartmentId
-      );
-      
-      if (alreadyExists) {
-        toast({
-          title: "Already added",
-          description: "This apartment is already in this search party",
-        });
-        return;
-      }
-      
-      // Add the apartment to the search party
-      await searchPartyContext.addListingToParty(searchPartyId, apartmentId);
-      
-      toast({
-        title: "Apartment added",
-        description: "Successfully added to your search party",
-      });
-    } catch (error) {
-      console.error("Error adding listing to search party:", error);
-      toast({
-        title: "Error",
-        description: "Could not add listing to search party",
-        variant: "destructive"
-      });
-    }
+
+  const updateActiveFilters = (activeFilters: ActiveFilters) => {
+    setActiveListingFilters(activeFilters);
   };
 
   const displayedApartments = selectedSearchPartyId
@@ -210,16 +165,63 @@ const Listings = () => {
     <section className="flex-grow py-8 bg-[#FFF9F2]">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-[#1A4A4A]">
-            {searchParams.q
-              ? `Search Results for "${searchParams.q}"`
-              : searchParams.type
-              ? `${
-                  searchParams.type.charAt(0).toUpperCase() +
-                  searchParams.type.slice(1)
-                }`
-              : "Nearby Apartments"}
-          </h2>
+          <div className="flex items-center gap-4">
+            <h2 className="text-2xl font-bold text-[#1A4A4A]">
+              {searchParams.q
+                ? `Search Results for "${searchParams.q}"`
+                : searchParams.type
+                ? `${
+                    searchParams.type.charAt(0).toUpperCase() +
+                    searchParams.type.slice(1)
+                  }`
+                : "Nearby Apartments"}
+            </h2>
+            {/* Active Filter Badges */}
+            {Object.keys(activeListingFilters).length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {activeListingFilters.price && (
+                  <Badge
+                    className="bg-[#C9DAD0]/30 hover:bg-[#C9DAD0]/40 text-[#1A4A4A]"
+                    variant="outline"
+                  >
+                    {activeListingFilters.price.label}
+                  </Badge>
+                )}
+                {activeListingFilters.bedrooms !== undefined && (
+                  <Badge
+                    className="bg-[#C9DAD0]/30 hover:bg-[#C9DAD0]/40 text-[#1A4A4A]"
+                    variant="outline"
+                  >
+                    {
+                      BEDROOM_OPTIONS.find(
+                        (opt) => opt.value === activeListingFilters.bedrooms
+                      )?.label
+                    }
+                  </Badge>
+                )}
+                {activeListingFilters.distance && (
+                  <Badge
+                    className="bg-[#C9DAD0]/30 hover:bg-[#C9DAD0]/40 text-[#1A4A4A]"
+                    variant="outline"
+                  >
+                    {
+                      DISTANCE_OPTIONS.find(
+                        (opt) => opt.value === activeListingFilters.distance
+                      )?.label
+                    }
+                  </Badge>
+                )}
+                {activeListingFilters.petFriendly && (
+                  <Badge
+                    className="bg-[#C9DAD0]/30 hover:bg-[#C9DAD0]/40 text-[#1A4A4A]"
+                    variant="outline"
+                  >
+                    Pet friendly
+                  </Badge>
+                )}
+              </div>
+            )}
+          </div>
           <div className="flex items-center space-x-4">
             <Button
               variant="ghost"
@@ -241,7 +243,10 @@ const Listings = () => {
             </Button>
           </div>
         </div>
-        <FilterChips onFilterChange={handleFilterChange} />
+        <FilterChips
+          onFilterChange={handleFilterChange}
+          updateActiveFilters={updateActiveFilters}
+        />
 
         <DragDropContext onDragEnd={handleDragEnd}>
           <div
@@ -265,7 +270,6 @@ const Listings = () => {
               <SearchPartyWidget
                 apartments={apartments}
                 onFilterBySearchParty={handleFilterBySearchParty}
-                onDragEnd={handleDragEnd}
               />
               {isLoading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

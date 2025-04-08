@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PRICE_RANGES, BEDROOM_OPTIONS, DISTANCE_OPTIONS, PriceRange } from '../lib/constants';
+import { PRICE_RANGES, BEDROOM_OPTIONS, DISTANCE_OPTIONS } from '../lib/constants';
 import { DollarSign, Bed, Map, PawPrint } from 'lucide-react';
 import {
   Select,
@@ -11,21 +11,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { FilterSettings } from '../types';
+import { FilterSettings, ActiveFilters } from '../types';
 
 interface FilterChipsProps {
   onFilterChange: (filters: FilterSettings) => void;
+  updateActiveFilters: (filters: ActiveFilters) => void;
 }
 
-interface ActiveFilters {
-  price?: PriceRange,
-  bedrooms?: number,
-  distance?: number,
-  petFriendly?: boolean
-}
-
-const FilterChips = ({ onFilterChange }: FilterChipsProps) => {
+const FilterChips = ({ onFilterChange, updateActiveFilters }: FilterChipsProps) => {
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({});
 
   const handleFilterChange = (filterType: string, value: any) => {
@@ -55,6 +48,7 @@ const FilterChips = ({ onFilterChange }: FilterChipsProps) => {
     }
     
     setActiveFilters(newFilters);
+    updateActiveFilters(newFilters);
     
     // Convert to FilterSettings format
     const filterSettings: FilterSettings = {};
@@ -83,6 +77,7 @@ const FilterChips = ({ onFilterChange }: FilterChipsProps) => {
       newFilters.petFriendly = true;
     }
     setActiveFilters(newFilters);
+    updateActiveFilters(newFilters);
     
     // Convert to FilterSettings format
     const filterSettings: FilterSettings = {};
@@ -105,6 +100,7 @@ const FilterChips = ({ onFilterChange }: FilterChipsProps) => {
 
   const clearAllFilters = () => {
     setActiveFilters({});
+    updateActiveFilters({});
     onFilterChange({});
   };
 
@@ -239,32 +235,6 @@ const FilterChips = ({ onFilterChange }: FilterChipsProps) => {
           </Button>
         )}
       </div>
-
-      {/* Active Filter Badges */}
-      {Object.keys(activeFilters).length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2">
-          {activeFilters.price && (
-            <Badge className="bg-[#C9DAD0]/30 hover:bg-[#C9DAD0]/40 text-[#1A4A4A]" variant="outline">
-              {activeFilters.price.label}
-            </Badge>
-          )}
-          {activeFilters.bedrooms !== undefined && (
-            <Badge className="bg-[#C9DAD0]/30 hover:bg-[#C9DAD0]/40 text-[#1A4A4A]" variant="outline">
-              {BEDROOM_OPTIONS.find(opt => opt.value === activeFilters.bedrooms)?.label}
-            </Badge>
-          )}
-          {activeFilters.distance && (
-            <Badge className="bg-[#C9DAD0]/30 hover:bg-[#C9DAD0]/40 text-[#1A4A4A]" variant="outline">
-              {DISTANCE_OPTIONS.find(opt => opt.value === activeFilters.distance)?.label}
-            </Badge>
-          )}
-          {activeFilters.petFriendly && (
-            <Badge className="bg-[#C9DAD0]/30 hover:bg-[#C9DAD0]/40 text-[#1A4A4A]" variant="outline">
-              Pet friendly
-            </Badge>
-          )}
-        </div>
-      )}
     </div>
   );
 };
