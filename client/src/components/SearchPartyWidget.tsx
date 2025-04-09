@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  DragDropContext,
-  Droppable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useSearchParty } from "../context/SearchPartyContext";
 import { SearchParty, Apartment, Member, SearchPartyListing } from "../types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -133,7 +129,7 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
 
       // Check if the apartment is already in the search party
       const alreadyExists = searchPartyListings.some(
-        (listing) => listing.apartmentId === apartmentId
+        (listing) => listing.apartmentId === apartmentId,
       );
 
       if (alreadyExists) {
@@ -165,15 +161,15 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 border border-[#C9DAD0]">
+    <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 border border-[#C9DAD0]">
       {/* Header - always visible */}
       <div
-        className="flex items-center justify-between p-4 bg-gradient-to-r from-[#E9927E] to-[#C9DAD0] cursor-pointer"
+        className="flex items-center justify-between p-2 px-4 bg-black cursor-pointer"
         onClick={toggleExpand}
       >
-        <div className="flex items-center">
-          <Users className="h-5 w-5 text-white mr-2" />
-          <h3 className="font-bold text-white">Search Parties</h3>
+        <div className="flex items-center gap-2">
+          <Users className="h-4 w-4 text-white" />
+          <h3 className="font-medium text-white">Search Parties</h3>
         </div>
         <Button
           variant="ghost"
@@ -294,22 +290,25 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                           {searchPartyListings.map((listing, index) => {
                             // Find the associated apartment for better display
-                            const apartment = apartments.find(a => a.id === listing.apartmentId);
-                            
+                            const apartment = apartments.find(
+                              (a) => a.id === listing.apartmentId,
+                            );
+
                             return (
                               <div
                                 key={listing.id}
                                 className="bg-[#FFF9F2] rounded-md overflow-hidden shadow-sm border border-[#C9DAD0]/30"
                               >
-                                {apartment?.images && apartment.images.length > 0 && (
-                                  <div className="h-24 bg-gray-200 overflow-hidden">
-                                    <img 
-                                      src={apartment.images[0]} 
-                                      alt={apartment.title} 
-                                      className="w-full h-full object-cover"
-                                    />
-                                  </div>
-                                )}
+                                {apartment?.images &&
+                                  apartment.images.length > 0 && (
+                                    <div className="h-24 bg-gray-200 overflow-hidden">
+                                      <img
+                                        src={apartment.images[0]}
+                                        alt={apartment.title}
+                                        className="w-full h-full object-cover"
+                                      />
+                                    </div>
+                                  )}
                                 <div className="p-2">
                                   <div className="flex justify-between items-start">
                                     <div>
@@ -317,13 +316,19 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
                                         variant="outline"
                                         className="bg-[#E9927E]/10 text-[#E9927E] text-xs mb-1"
                                       >
-                                        ${apartment?.price || listing.apartment?.price}
+                                        $
+                                        {apartment?.price ||
+                                          listing.apartment?.price}
                                       </Badge>
                                       <h5 className="text-xs font-medium text-[#1A4A4A] line-clamp-1">
-                                        {apartment?.title || listing.apartment?.title || "Apartment"}
+                                        {apartment?.title ||
+                                          listing.apartment?.title ||
+                                          "Apartment"}
                                       </h5>
                                       <p className="text-xs text-[#1A4A4A]/70 line-clamp-1">
-                                        {apartment?.address || listing.apartment?.address || "Address"}
+                                        {apartment?.address ||
+                                          listing.apartment?.address ||
+                                          "Address"}
                                       </p>
                                     </div>
                                     <Button
