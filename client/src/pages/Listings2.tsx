@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "wouter";
-import { Heart, Search, Sliders, Map as MapIcon, MapPin, Globe, Menu, ChevronLeft, ChevronRight, Wifi, Coffee, Theater, Dumbbell, UtensilsCrossed, Binoculars } from "lucide-react";
+import { useLocation, Link } from "wouter";
+import { Heart, Search, Sliders, Map as MapIcon, MapPin, Globe, Menu, ChevronLeft, ChevronRight, Wifi, Coffee, Theater, Dumbbell, UtensilsCrossed, Binoculars, CircleUserRound } from "lucide-react";
 import { Apartment, FilterSettings } from "../types";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -30,6 +30,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { exampleApartments } from "../lib/utils";
+import appLogo from "../assets/letsmove_logo_black.png";
 
 const Listings2 = () => {
   const [location] = useLocation();
@@ -122,66 +123,32 @@ const Listings2 = () => {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Header */}
-      <header className="border-b border-gray-200 py-4 px-6 sticky top-0 z-10 bg-white">
-        <div className="container mx-auto flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="h-8 w-8 text-[#ff385c] fill-current">
-              <path d="M12.0002 0.839996C12.0002 0.839996 14.6842 0.0379963 18.16 2.522C21.6358 5.006 22.5918 8.73 21.8238 13.104C21.0558 17.478 17.2998 22.4 12.0002 22.4C6.7006 22.4 2.94463 17.478 2.17663 13.104C1.40863 8.73 2.36463 5.006 5.84043 2.522C9.31623 0.0379963 12.0002 0.839996 12.0002 0.839996ZM12.0002 1.91999C11.296 1.91999 7.45343 2.01051 4.85903 5.39999C2.26463 8.78947 2.56224 12.5387 3.44064 15.44C4.31903 18.3413 7.82382 21.32 12.0002 21.32C16.1766 21.32 19.6814 18.3413 20.5598 15.44C21.4382 12.5387 21.7358 8.78947 19.1414 5.39999C16.547 2.01051 12.7044 1.91999 12.0002 1.91999Z" />
-              <path d="M16.8918 11.8321C16.8918 11.3119 16.4765 10.8917 15.9649 10.8917C15.4533 10.8917 15.038 11.3119 15.038 11.8321C15.038 12.3523 15.4533 12.7724 15.9649 12.7724C16.4765 12.7724 16.8918 12.3523 16.8918 11.8321Z" />
-              <path d="M12.0003 10.1724C11.4887 10.1724 11.0734 10.5926 11.0734 11.1128C11.0734 11.633 11.4887 12.0532 12.0003 12.0532C12.5119 12.0532 12.9272 11.633 12.9272 11.1128C12.9272 10.5926 12.5119 10.1724 12.0003 10.1724Z" />
-              <path d="M8.03565 11.8321C8.03565 11.3119 7.62036 10.8917 7.10878 10.8917C6.5972 10.8917 6.18192 11.3119 6.18192 11.8321C6.18192 12.3523 6.5972 12.7724 7.10878 12.7724C7.62036 12.7724 8.03565 12.3523 8.03565 11.8321Z" />
-            </svg>
-            <span className="text-[#ff385c] font-bold text-xl ml-1">letsmove</span>
-          </div>
-
-          {/* Search Bar */}
-          <div className="hidden md:flex items-center border border-gray-300 rounded-full py-2 px-4 shadow-sm hover:shadow-md transition-shadow">
-            <button className="text-sm font-medium px-3 border-r border-gray-300">
-              Beyoglu TR
-            </button>
-            <button className="text-sm font-medium px-3 border-r border-gray-300">
-              Anytime
-            </button>
-            <button className="text-sm font-medium px-3">
-              1 guest
-            </button>
-            <div className="bg-[#ff385c] rounded-full p-2 ml-2">
-              <Search className="h-4 w-4 text-white" />
-            </div>
-          </div>
+      <header className="sticky top-0 z-50 bg-[#FFF5E6] shadow-sm">
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+          <Link href="/">
+            <img src={appLogo} className="h-8 cursor-pointer" />
+          </Link>
 
           {/* User Menu */}
-          <div className="flex items-center">
-            <Button 
-              variant="ghost" 
-              className="text-gray-700 rounded-full hover:bg-gray-100 mr-2 hidden md:flex"
+          <div className="flex items-center space-x-3">
+            <button
+              className="text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20"
             >
-              Airbnb your home
-            </Button>
-            <Button 
-              variant="ghost" 
-              className="text-gray-700 rounded-full p-2 hover:bg-gray-100 mr-2"
-            >
-              <Globe className="h-5 w-5" />
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center space-x-2 rounded-full border border-gray-300 p-1 pl-3 shadow-sm hover:shadow-md">
-                  <Menu className="h-4 w-4" />
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src="https://github.com/shadcn.png" alt="User" />
-                    <AvatarFallback>U</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Sign Out</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              <Search className="h-6 w-6" />
+            </button>
+
+            <button>
+              <Link
+                href="/profile"
+                className="flex flex-1 w-full text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20"
+              >
+                <CircleUserRound color="#1A4A4A" className="h-6 w-6" />
+              </Link>
+            </button>
+
+            <button className="text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20 md:hidden">
+              <Menu className="h-6 w-6" />
+            </button>
           </div>
         </div>
       </header>
