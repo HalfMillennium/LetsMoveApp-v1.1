@@ -18,56 +18,64 @@ const Header = () => {
         <Link href="/">
           <img src={appLogo} className="h-8 cursor-pointer" />
         </Link>
-        <div className="flex items-center space-x-12 text-sm">
-          <Link href="/" className="flex flex-1 w-full cursor-pointer">
-            <span
-              className={`w-full text-[#1A4A4A] font-medium ${
-                isActive("/") ? "text-[#E9927E]" : ""
-              }`}
+        {!isMobile && (
+          <div className="flex items-center space-x-12 text-sm">
+            <Link href="/" className="flex flex-1 w-full cursor-pointer">
+              <span
+                className={`w-full text-[#1A4A4A] font-medium ${
+                  isActive("/") ? "text-[#E9927E]" : ""
+                }`}
+              >
+                Home
+              </span>
+            </Link>
+            <Link
+              href="/listings"
+              className="flex flex-1 w-full cursor-pointer"
             >
-              Home
-            </span>
-          </Link>
-          <Link href="/listings" className="flex flex-1 w-full cursor-pointer">
-            <span
-              className={`w-full text-[#1A4A4A] font-medium ${
-                isActive("/listings") ? "text-[#E9927E]" : ""
-              }`}
+              <span
+                className={`w-full text-[#1A4A4A] font-medium ${
+                  isActive("/listings") ? "text-[#E9927E]" : ""
+                }`}
+              >
+                Apartments
+              </span>
+            </Link>
+            <Link
+              href="/search-party"
+              className="flex flex-grow w-full cursor-pointer"
             >
-              Apartments
-            </span>
-          </Link>
-          <Link
-            href="/search-party"
-            className="flex flex-grow w-full cursor-pointer"
-          >
-            <span
-              className={`w-full text-[#1A4A4A] font-medium ${
-                isActive("/search-party") ? "text-[#E9927E]" : ""
-              }`}
+              <span
+                className={`w-full text-[#1A4A4A] font-medium ${
+                  isActive("/search-party") ? "text-[#E9927E]" : ""
+                }`}
+              >
+                Search Parties
+              </span>
+            </Link>
+            <Link
+              href="/favorites"
+              className="flex flex-1 w-full cursor-pointer"
             >
-              Search Parties
-            </span>
-          </Link>
-          <Link href="/favorites" className="flex flex-1 w-full cursor-pointer">
-            <span
-              className={`w-full text-[#1A4A4A] font-medium ${
-                isActive("/favorites") ? "text-[#E9927E]" : ""
-              }`}
-            >
-              Favorites
-            </span>
-          </Link>
-          <Link href="/profile" className="flex flex-1 w-full cursor-pointer">
-            <span
-              className={`w-full text-[#1A4A4A] font-medium ${
-                isActive("/profile") ? "text-[#E9927E]" : ""
-              }`}
-            >
-              Profile
-            </span>
-          </Link>
-        </div>
+              <span
+                className={`w-full text-[#1A4A4A] font-medium ${
+                  isActive("/favorites") ? "text-[#E9927E]" : ""
+                }`}
+              >
+                Favorites
+              </span>
+            </Link>
+            <Link href="/profile" className="flex flex-1 w-full cursor-pointer">
+              <span
+                className={`w-full text-[#1A4A4A] font-medium ${
+                  isActive("/profile") ? "text-[#E9927E]" : ""
+                }`}
+              >
+                Profile
+              </span>
+            </Link>
+          </div>
+        )}
 
         <div className="flex items-center space-x-3">
           <button
