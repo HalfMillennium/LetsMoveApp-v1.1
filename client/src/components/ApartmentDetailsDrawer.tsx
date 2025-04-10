@@ -106,87 +106,134 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
           </div>
 
           {/* Main apartment details */}
-          <div className="p-6 space-y-6 max-w-md mx-auto md:mx-4 lg:mx-6">
-            <div>
-              <h1 className="text-2xl font-semibold text-gray-900">
-                {apartment.title}
-              </h1>
-              <p className="text-gray-600">
-                {apartment.address}
-              </p>
-              <div className="flex items-center mt-2">
-                <Badge>{apartment.isAvailable ? "Available Now" : "Coming Soon"}</Badge>
+          <div className="p-6 space-y-6 w-full">
+            {/* Basic info and price - responsive layout */}
+            <div className="flex flex-col md:flex-row md:gap-4 md:justify-between">
+              {/* Left column - Title and interest */}
+              <div className="md:flex-1">
+                <h1 className="text-2xl font-semibold text-gray-900">
+                  {apartment.title}
+                </h1>
+                <p className="text-gray-600">
+                  {apartment.address}
+                </p>
+                <div className="flex items-center mt-2">
+                  <Badge>{apartment.isAvailable ? "Available Now" : "Coming Soon"}</Badge>
+                </div>
+                
+                {/* People who saved this listing */}
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium text-gray-700 mb-2">People interested in this listing</h3>
+                  <div className="flex -space-x-2 overflow-hidden">
+                    {[1, 2, 3, 4, 5].map((index) => (
+                      <div 
+                        key={index} 
+                        className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
+                        style={{
+                          backgroundColor: ['#FFA07A', '#98FB98', '#87CEFA', '#FFD700', '#FF69B4'][index % 5],
+                          zIndex: 10 - index
+                        }}
+                      >
+                        <span className="sr-only">User {index}</span>
+                      </div>
+                    ))}
+                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gray-200 ring-2 ring-white text-xs font-medium text-gray-500">
+                      +8
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    This apartment is in 3 search parties
+                  </p>
+                </div>
+              </div>
+              
+              {/* Right column - Price and details (only visible on md+ screens) */}
+              <div className="hidden md:block md:w-[220px] md:flex-none">
+                <div className="bg-gray-50 p-4 rounded-lg h-full">
+                  <div className="flex flex-col h-full justify-between">
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-lg font-semibold text-gray-900">${apartment.price}</span>
+                        <span className="text-gray-500">/month</span>
+                      </div>
+                      <div className="grid grid-cols-1 gap-2 mb-4">
+                        <div className="flex items-center">
+                          <Home className="h-4 w-4 mr-2 text-gray-500" />
+                          <span>{apartment.bedrooms} bed</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Bath className="h-4 w-4 mr-2 text-gray-500" />
+                          <span>{apartment.bathrooms} bath</span>
+                        </div>
+                        {apartment.squareFeet && (
+                          <div className="flex items-center">
+                            <Ruler className="h-4 w-4 mr-2 text-gray-500" />
+                            <span>{apartment.squareFeet} sq ft</span>
+                          </div>
+                        )}
+                        <div className="flex items-center">
+                          <MapPin className="h-4 w-4 mr-2 text-gray-500" />
+                          <span>{apartment.location}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <Button
+                      className="w-full"
+                      onClick={() => onAddToSearchParty?.(apartment.id)}
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add to Search Party
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
             
-            {/* People who saved this listing */}
-            <div className="mt-4">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">People interested in this listing</h3>
-              <div className="flex -space-x-2 overflow-hidden">
-                {[1, 2, 3, 4, 5].map((index) => (
-                  <div 
-                    key={index} 
-                    className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
-                    style={{
-                      backgroundColor: ['#FFA07A', '#98FB98', '#87CEFA', '#FFD700', '#FF69B4'][index % 5],
-                      zIndex: 10 - index
-                    }}
-                  >
-                    <span className="sr-only">User {index}</span>
-                  </div>
-                ))}
-                <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gray-200 ring-2 ring-white text-xs font-medium text-gray-500">
-                  +8
-                </div>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                This apartment is in 3 search parties
-              </p>
-            </div>
-
             <Separator />
-
-            {/* Price and details */}
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="flex flex-col">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-lg font-semibold text-gray-900">${apartment.price}</span>
-                  <span className="text-gray-500">/month</span>
-                </div>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="flex items-center">
-                    <Home className="h-4 w-4 mr-2 text-gray-500" />
-                    <span>{apartment.bedrooms} bed</span>
+            
+            {/* Price and details - Mobile only */}
+            <div className="md:hidden w-full">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex flex-col">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-lg font-semibold text-gray-900">${apartment.price}</span>
+                    <span className="text-gray-500">/month</span>
                   </div>
-                  <div className="flex items-center">
-                    <Bath className="h-4 w-4 mr-2 text-gray-500" />
-                    <span>{apartment.bathrooms} bath</span>
-                  </div>
-                  {apartment.squareFeet && (
+                  <div className="grid grid-cols-2 gap-4 mb-4">
                     <div className="flex items-center">
-                      <Ruler className="h-4 w-4 mr-2 text-gray-500" />
-                      <span>{apartment.squareFeet} sq ft</span>
+                      <Home className="h-4 w-4 mr-2 text-gray-500" />
+                      <span>{apartment.bedrooms} bed</span>
                     </div>
-                  )}
-                  <div className="flex items-center">
-                    <MapPin className="h-4 w-4 mr-2 text-gray-500" />
-                    <span>{apartment.location}</span>
+                    <div className="flex items-center">
+                      <Bath className="h-4 w-4 mr-2 text-gray-500" />
+                      <span>{apartment.bathrooms} bath</span>
+                    </div>
+                    {apartment.squareFeet && (
+                      <div className="flex items-center">
+                        <Ruler className="h-4 w-4 mr-2 text-gray-500" />
+                        <span>{apartment.squareFeet} sq ft</span>
+                      </div>
+                    )}
+                    <div className="flex items-center">
+                      <MapPin className="h-4 w-4 mr-2 text-gray-500" />
+                      <span>{apartment.location}</span>
+                    </div>
                   </div>
+                  <Button
+                    className="w-full"
+                    onClick={() => onAddToSearchParty?.(apartment.id)}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add to Search Party
+                  </Button>
                 </div>
-                <Button
-                  className="w-full"
-                  onClick={() => onAddToSearchParty?.(apartment.id)}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add to Search Party
-                </Button>
               </div>
             </div>
 
             <Separator />
 
             {/* Description */}
-            <div>
+            <div className="w-full">
               <h3 className="text-lg font-semibold mb-2">About this apartment</h3>
               <p className="text-gray-700 whitespace-pre-line">
                 {apartment.description || 
@@ -199,7 +246,7 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
             <Separator />
 
             {/* Amenities */}
-            <div>
+            <div className="w-full">
               <h3 className="text-lg font-semibold mb-3">What this place offers</h3>
               <div className="grid grid-cols-2 gap-4">
                 {apartment.amenities && apartment.amenities.length > 0 ? (
@@ -240,7 +287,7 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
             <Separator />
 
             {/* Location */}
-            <div>
+            <div className="w-full">
               <h3 className="text-lg font-semibold mb-3">Location</h3>
               <div className="h-[200px] bg-gray-100 rounded-lg overflow-hidden">
                 <img 
