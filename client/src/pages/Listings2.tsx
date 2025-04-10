@@ -18,7 +18,9 @@ import {
   Dog,
   Building2,
   Waves,
-  Star
+  Star,
+  PlusCircle,
+  ChevronDown
 } from "lucide-react";
 import { Apartment, FilterSettings, ActiveFilters } from "../types";
 import { Button } from "@/components/ui/button";
@@ -30,6 +32,8 @@ import { PRICE_RANGES, BEDROOM_OPTIONS } from "../lib/constants";
 import FilterChips from "../components/FilterChips";
 import { exampleApartments } from "../lib/utils";
 import ApartmentDetailsDrawer from "../components/ApartmentDetailsDrawer";
+import CreateCollectionModal from "../components/CreateCollectionModal";
+import AllCollectionsModal from "../components/AllCollectionsModal";
 
 const Listings2 = () => {
   const [location] = useLocation();
@@ -95,16 +99,62 @@ const Listings2 = () => {
   const [activeListingFilters, setActiveListingFilters] =
     useState<ActiveFilters>({});
 
-  // Custom apartment collections
-  const apartmentCollections = [
+  // State for collections management
+  const [createCollectionModalOpen, setCreateCollectionModalOpen] = useState(false);
+  const [allCollectionsModalOpen, setAllCollectionsModalOpen] = useState(false);
+  
+  // Default built-in collections
+  const defaultCollections = [
     { name: "All Apartments", icon: <Home className="h-4 w-4" /> },
     { name: "Close to Parks", icon: <Flower2 className="h-4 w-4" /> },
     { name: "Close to Subway", icon: <Train className="h-4 w-4" /> },
     { name: "Pet Friendly", icon: <Dog className="h-4 w-4" /> },
     { name: "New Construction", icon: <Building2 className="h-4 w-4" /> },
-    { name: "Waterfront View", icon: <Waves className="h-4 w-4" /> },
-    { name: "Luxury Units", icon: <Star className="h-4 w-4" /> },
   ];
+  
+  // User-created collections saved in state
+  const [userCollections, setUserCollections] = useState<Array<{name: string, icon: React.ReactNode}>>([]);
+
+  // All collections combined
+  const apartmentCollections = [...defaultCollections, ...userCollections];
+  
+  // Collection modification handlers
+  const handleAddCollection = () => {
+    setCreateCollectionModalOpen(true);
+  };
+  
+  const handleCreateCollection = (name: string, iconIndex: number) => {
+    const collectionIcons = [
+      <Home className="h-4 w-4" />,
+      <Building2 className="h-4 w-4" />,
+      <Map className="h-4 w-4" />,
+      <MapPin className="h-4 w-4" />,
+      <Flower2 className="h-4 w-4" />,
+      <Star className="h-4 w-4" />,
+      <Train className="h-4 w-4" />,
+      <Dog className="h-4 w-4" />,
+      <Globe className="h-4 w-4" />,
+    ];
+    
+    const newCollection = {
+      name,
+      icon: collectionIcons[iconIndex],
+    };
+    
+    setUserCollections([...userCollections, newCollection]);
+    
+    toast({
+      title: "Collection created",
+      description: `Your "${name}" collection has been created`,
+    });
+  };
+  
+  const handleOpenAllCollectionsModal = () => {
+    setAllCollectionsModalOpen(true);
+  };
+  
+  // Helper to check if collections might overflow
+  const mightCollectionsOverflow = apartmentCollections.length > 5;
 
   // Handle category change
   const handleCategoryChange = (category: string) => {
@@ -148,7 +198,7 @@ const Listings2 = () => {
             {apartmentCollections.map((collection) => (
               <button
                 key={collection.name}
-                className={`flex flex-col items-center px-4 py-2 whitespace-nowrap mr-6 transition-all ${
+                className={`flex flex-col items-center px-4 py-2 whitespace-nowrap mr-4 transition-all ${
                   activeCategory === collection.name
                     ? "border-b-2 border-gray-800 text-gray-800"
                     : "text-gray-500 hover:text-gray-800 hover:border-b-2 hover:border-gray-300"
@@ -159,6 +209,36 @@ const Listings2 = () => {
                 <span className="text-sm">{collection.name}</span>
               </button>
             ))}
+            
+            {/* Add Collection Button */}
+            <button
+              className="flex flex-col items-center px-4 py-2 whitespace-nowrap mr-4 text-gray-500 hover:text-gray-800 border-dashed border-gray-300 hover:border-gray-400 rounded-lg"
+              onClick={handleAddCollection}
+            >
+              <div className="flex items-center mb-1">
+                <PlusCircle className="h-4 w-4" />
+              </div>
+              <span className="text-sm">Add Collection</span>
+            </button>
+            
+            {/* View All Button - Only shows when collections might overflow */}
+            {mightCollectionsOverflow && (
+              <button
+                className="flex items-center ml-2 px-4 py-2 border border-gray-200 rounded-full text-gray-700 whitespace-nowrap hover:bg-gray-50"
+                onClick={handleOpenAllCollectionsModal}
+              >
+                <span className="text-sm font-medium mr-1">View All</span>
+                <ChevronDown className="h-4 w-4" />
+              </button>
+            )}
+            
+            {/* Filters Button */}
+            <button
+              className="flex items-center ml-auto px-4 py-2 border border-gray-300 rounded-full text-gray-700 whitespace-nowrap"
+            >
+              <Sliders className="h-4 w-4 mr-2" />
+              Filters
+            </button>
           </div>
         </div>
 
