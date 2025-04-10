@@ -19,7 +19,7 @@ interface SearchPartyCardProps {
 
 const SearchPartyCard = ({ searchParty }: SearchPartyCardProps) => {
   const [email, setEmail] = useState("");
-  const { addMemberToParty } = useSearchParty();
+  //const { addMemberToParty } = useSearchParty();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
 
