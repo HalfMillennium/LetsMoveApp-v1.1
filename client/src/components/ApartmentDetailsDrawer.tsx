@@ -1,19 +1,19 @@
 import React from "react";
-import { 
-  X, 
-  Heart, 
-  Share2, 
-  Map, 
-  Home, 
-  Ruler, 
-  Wifi, 
-  DollarSign, 
-  Building, 
-  Plus, 
+import {
+  X,
+  Heart,
+  Share2,
+  Map,
+  Home,
+  Ruler,
+  Wifi,
+  DollarSign,
+  Building,
+  Plus,
   CheckCircle2,
   BadgeCheck,
   MapPin,
-  Bath
+  Bath,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -47,7 +47,9 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
         {/* Header */}
         <div className="sticky top-0 z-10 bg-white p-4 border-b">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold truncate">{apartment.title}</h2>
+            <h2 className="text-xl font-semibold truncate">
+              {apartment.title}
+            </h2>
             <Button
               variant="ghost"
               size="icon"
@@ -81,7 +83,7 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
                 className="bg-white/90 hover:bg-white rounded-full shadow-sm transition-all"
                 onClick={() => onAddToFavorites?.(apartment.id)}
               >
-                <Heart className="h-4 w-4 mr-2 text-rose-500" />
+                <Heart className="h-4 w-4 text-rose-500" />
                 Save
               </Button>
               <Button
@@ -89,17 +91,19 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
                 size="sm"
                 className="bg-white/90 hover:bg-white rounded-full shadow-sm transition-all"
               >
-                <Share2 className="h-4 w-4 mr-2 text-blue-500" />
+                <Share2 className="h-4 w-4 text-blue-500" />
                 Share
               </Button>
             </div>
-            
+
             {/* Image pagination dots */}
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1">
               {[0, 1, 2, 3].map((index) => (
-                <div 
-                  key={index} 
-                  className={`w-2 h-2 rounded-full ${index === 0 ? 'bg-white' : 'bg-white/50'}`}
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full ${
+                    index === 0 ? "bg-white" : "bg-white/50"
+                  }`}
                 />
               ))}
             </div>
@@ -108,30 +112,40 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
           {/* Main apartment details */}
           <div className="p-6 space-y-6 w-full">
             {/* Basic info and price - responsive layout */}
-            <div className="flex flex-col md:flex-row md:gap-4 md:justify-between">
+            <div className="flex flex-1 flex-col md:flex-row md:gap-4 md:justify-between items-center">
               {/* Left column - Title and interest */}
-              <div className="md:flex-1">
-                <h1 className="text-2xl font-semibold text-gray-900">
-                  {apartment.title}
-                </h1>
-                <p className="text-gray-600">
-                  {apartment.address}
-                </p>
-                <div className="flex items-center mt-2">
-                  <Badge>{apartment.isAvailable ? "Available Now" : "Coming Soon"}</Badge>
+              <div className="md:flex-1 flex flex-col gap-8">
+                <div className="flex flex-col">
+                  <h1 className="text-2xl font-semibold text-gray-900">
+                    {apartment.title}
+                  </h1>
+                  <p className="text-gray-600">{apartment.address}</p>
+                  <div className="flex items-center mt-2">
+                    <Badge>
+                      {apartment.isAvailable ? "Available Now" : "Coming Soon"}
+                    </Badge>
+                  </div>
                 </div>
-                
+
                 {/* People who saved this listing */}
-                <div className="mt-4">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">People interested in this listing</h3>
+                <div className="flex flex-col">
+                  <h3 className="text-sm font-medium text-gray-700 mb-2">
+                    People interested in this listing
+                  </h3>
                   <div className="flex -space-x-2 overflow-hidden">
                     {[1, 2, 3, 4, 5].map((index) => (
-                      <div 
-                        key={index} 
+                      <div
+                        key={index}
                         className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
                         style={{
-                          backgroundColor: ['#FFA07A', '#98FB98', '#87CEFA', '#FFD700', '#FF69B4'][index % 5],
-                          zIndex: 10 - index
+                          backgroundColor: [
+                            "#FFA07A",
+                            "#98FB98",
+                            "#87CEFA",
+                            "#FFD700",
+                            "#FF69B4",
+                          ][index % 5],
+                          zIndex: 10 - index,
                         }}
                       >
                         <span className="sr-only">User {index}</span>
@@ -146,17 +160,19 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
                   </p>
                 </div>
               </div>
-              
+
               {/* Right column - Price and details (only visible on md+ screens) */}
-              <div className="hidden md:block md:w-[220px] md:flex-none">
+              <div className="hidden md:block md:w-[320px] flex flex-1">
                 <div className="bg-gray-50 p-4 rounded-lg h-full">
                   <div className="flex flex-col h-full justify-between">
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-lg font-semibold text-gray-900">${apartment.price}</span>
+                    <div className="flex flex-col">
+                      <div className="flex justify-between md:justify-start items-center mb-2 gap-1">
+                        <span className="text-2xl font-semibold text-gray-900">
+                          ${apartment.price}
+                        </span>
                         <span className="text-gray-500">/month</span>
                       </div>
-                      <div className="grid grid-cols-1 gap-2 mb-4">
+                      <div className="grid grid-cols-2 gap-2 mb-4">
                         <div className="flex items-center">
                           <Home className="h-4 w-4 mr-2 text-gray-500" />
                           <span>{apartment.bedrooms} bed</span>
@@ -188,15 +204,17 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
                 </div>
               </div>
             </div>
-            
+
             <Separator />
-            
+
             {/* Price and details - Mobile only */}
             <div className="md:hidden w-full">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="flex flex-col">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-lg font-semibold text-gray-900">${apartment.price}</span>
+                    <span className="text-lg font-semibold text-gray-900">
+                      ${apartment.price}
+                    </span>
                     <span className="text-gray-500">/month</span>
                   </div>
                   <div className="grid grid-cols-2 gap-4 mb-4">
@@ -230,16 +248,24 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
               </div>
             </div>
 
-            <Separator />
-
             {/* Description */}
             <div className="w-full">
-              <h3 className="text-lg font-semibold mb-2">About this apartment</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                About this apartment
+              </h3>
               <p className="text-gray-700 whitespace-pre-line">
-                {apartment.description || 
-                  `This beautiful ${apartment.bedrooms}-bedroom, ${apartment.bathrooms}-bathroom apartment 
-                  features modern amenities and a spacious layout${apartment.squareFeet ? ` with ${apartment.squareFeet} square feet of living space` : ''}. 
-                  Located in ${apartment.location} with easy access to transportation, shopping, and dining.`}
+                {apartment.description ||
+                  `This beautiful ${apartment.bedrooms}-bedroom, ${
+                    apartment.bathrooms
+                  }-bathroom apartment 
+                  features modern amenities and a spacious layout${
+                    apartment.squareFeet
+                      ? ` with ${apartment.squareFeet} square feet of living space`
+                      : ""
+                  }. 
+                  Located in ${
+                    apartment.location
+                  } with easy access to transportation, shopping, and dining.`}
               </p>
             </div>
 
@@ -247,7 +273,9 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
 
             {/* Amenities */}
             <div className="w-full">
-              <h3 className="text-lg font-semibold mb-3">What this place offers</h3>
+              <h3 className="text-lg font-semibold mb-3">
+                What this place offers
+              </h3>
               <div className="grid grid-cols-2 gap-4">
                 {apartment.amenities && apartment.amenities.length > 0 ? (
                   apartment.amenities.slice(0, 4).map((amenity, index) => (
@@ -290,8 +318,8 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
             <div className="w-full">
               <h3 className="text-lg font-semibold mb-3">Location</h3>
               <div className="h-[200px] bg-gray-100 rounded-lg overflow-hidden">
-                <img 
-                  src={`https://maps.googleapis.com/maps/api/staticmap?center=${apartment.latitude},${apartment.longitude}&zoom=14&size=600x300&markers=color:red%7C${apartment.latitude},${apartment.longitude}`} 
+                <img
+                  src={`https://maps.googleapis.com/maps/api/staticmap?center=${apartment.latitude},${apartment.longitude}&zoom=14&size=600x300&markers=color:red%7C${apartment.latitude},${apartment.longitude}`}
                   alt="Location map"
                   className="w-full h-full object-cover rounded-lg"
                 />
@@ -310,7 +338,9 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
               <span className="text-lg font-semibold">${apartment.price}</span>
               <span className="text-gray-500">/month</span>
             </div>
-            <Button size="sm" className="px-6">Apply Now</Button>
+            <Button size="sm" className="px-6">
+              Apply Now
+            </Button>
           </div>
         </div>
       </div>
