@@ -11,7 +11,7 @@ import {
   Menu,
   ChevronLeft,
   ChevronRight,
-  CircleUserRound,
+  ListPlus,
   Home,
   Flower2,
   Train,
@@ -19,7 +19,7 @@ import {
   Building2,
   Waves,
   Star,
-  PlusCircle,
+  GalleryVerticalEnd,
   ChevronDown
 } from "lucide-react";
 import { Apartment, FilterSettings, ActiveFilters } from "../types";
@@ -210,7 +210,7 @@ const Listings2 = () => {
               </button>
             ))}
             
-            {/* Add Collection Button */}
+            {/* Add Collection Button 
             <button
               className="flex flex-col items-center px-4 py-2 whitespace-nowrap mr-4 text-gray-500 hover:text-gray-800 border-dashed border-gray-300 hover:border-gray-400 rounded-lg"
               onClick={handleAddCollection}
@@ -219,7 +219,7 @@ const Listings2 = () => {
                 <PlusCircle className="h-4 w-4" />
               </div>
               <span className="text-sm">Add Collection</span>
-            </button>
+            </button>*/}
             
             {/* View All Button - Only shows when collections might overflow */}
             {mightCollectionsOverflow && (
@@ -227,17 +227,19 @@ const Listings2 = () => {
                 className="flex items-center ml-2 px-4 py-2 border border-gray-200 rounded-full text-gray-700 whitespace-nowrap hover:bg-gray-50"
                 onClick={handleOpenAllCollectionsModal}
               >
+                <GalleryVerticalEnd className="h-4 w-4" />
                 <span className="text-sm font-medium mr-1">View All</span>
-                <ChevronDown className="h-4 w-4" />
               </button>
             )}
             
-            {/* Filters Button */}
             <button
-              className="flex items-center ml-auto px-4 py-2 border border-gray-300 rounded-full text-gray-700 whitespace-nowrap"
+              className="flex items-center ml-auto px-4 py-2 font-medium rounded-full text-gray-700 whitespace-nowrap items-center gap-2 bg-primary text-white"
+              onClick={handleAddCollection}
             >
-              <Sliders className="h-4 w-4 mr-2" />
-              Filters
+              <div className="flex items-center">
+                <ListPlus className="h-4 w-4" />
+              </div>
+              <span className="flex text-sm">New Collection</span>
             </button>
           </div>
         </div>

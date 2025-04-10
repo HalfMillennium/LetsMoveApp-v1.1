@@ -59,9 +59,6 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
               <X className="h-5 w-5" />
             </Button>
           </div>
-          <div className="mt-2 text-xs text-gray-500 flex items-center">
-            <X className="h-3 w-3 mr-1" /> Click to close
-          </div>
         </div>
 
         {/* Content */}
@@ -194,10 +191,10 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
                       </div>
                     </div>
                     <Button
-                      className="w-full"
+                      className="w-full rounded-full"
                       onClick={() => onAddToSearchParty?.(apartment.id)}
                     >
-                      <Plus className="h-4 w-4 mr-2" />
+                      <Plus className="h-4 w-4" />
                       Add to Search Party
                     </Button>
                   </div>
