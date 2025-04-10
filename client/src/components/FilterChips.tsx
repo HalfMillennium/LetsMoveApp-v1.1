@@ -1,6 +1,10 @@
-import { useState } from 'react';
-import { PRICE_RANGES, BEDROOM_OPTIONS, DISTANCE_OPTIONS } from '../lib/constants';
-import { DollarSign, Bed, Map, PawPrint } from 'lucide-react';
+import { useState } from "react";
+import {
+  PRICE_RANGES,
+  BEDROOM_OPTIONS,
+  DISTANCE_OPTIONS,
+} from "../lib/constants";
+import { DollarSign, Bed, Map, PawPrint } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -11,45 +15,54 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { FilterSettings, ActiveFilters } from '../types';
+import { FilterSettings, ActiveFilters } from "../types";
 
 interface FilterChipsProps {
   onFilterChange: (filters: FilterSettings) => void;
   updateActiveFilters: (filters: ActiveFilters) => void;
 }
 
-const FilterChips = ({ onFilterChange, updateActiveFilters }: FilterChipsProps) => {
+const FilterChips = ({
+  onFilterChange,
+  updateActiveFilters,
+}: FilterChipsProps) => {
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({});
 
   const handleFilterChange = (filterType: string, value: any) => {
     const newFilters = { ...activeFilters };
-    
+
     if (value === "clear") {
       delete newFilters[filterType as keyof typeof newFilters];
     } else {
-      if (filterType === 'price') {
-        const selectedRange = PRICE_RANGES.find(range => range.label === value);
+      if (filterType === "price") {
+        const selectedRange = PRICE_RANGES.find(
+          (range) => range.label === value,
+        );
         if (selectedRange) {
           newFilters.price = selectedRange;
         }
-      } else if (filterType === 'bedrooms') {
-        const selectedOption = BEDROOM_OPTIONS.find(option => option.label === value);
+      } else if (filterType === "bedrooms") {
+        const selectedOption = BEDROOM_OPTIONS.find(
+          (option) => option.label === value,
+        );
         if (selectedOption) {
           newFilters.bedrooms = selectedOption.value;
         }
-      } else if (filterType === 'distance') {
-        const selectedOption = DISTANCE_OPTIONS.find(option => option.label === value);
+      } else if (filterType === "distance") {
+        const selectedOption = DISTANCE_OPTIONS.find(
+          (option) => option.label === value,
+        );
         if (selectedOption) {
           newFilters.distance = selectedOption.value;
         }
-      } else if (filterType === 'petFriendly') {
-        newFilters.petFriendly = value === 'yes';
+      } else if (filterType === "petFriendly") {
+        newFilters.petFriendly = value === "yes";
       }
     }
-    
+
     setActiveFilters(newFilters);
     updateActiveFilters(newFilters);
-    
+
     // Convert to FilterSettings format
     const filterSettings: FilterSettings = {};
     if (newFilters.price) {
@@ -65,7 +78,7 @@ const FilterChips = ({ onFilterChange, updateActiveFilters }: FilterChipsProps) 
     if (newFilters.petFriendly) {
       filterSettings.petFriendly = true;
     }
-    
+
     onFilterChange(filterSettings);
   };
 
@@ -78,7 +91,7 @@ const FilterChips = ({ onFilterChange, updateActiveFilters }: FilterChipsProps) 
     }
     setActiveFilters(newFilters);
     updateActiveFilters(newFilters);
-    
+
     // Convert to FilterSettings format
     const filterSettings: FilterSettings = {};
     if (newFilters.price) {
@@ -94,7 +107,7 @@ const FilterChips = ({ onFilterChange, updateActiveFilters }: FilterChipsProps) 
     if (newFilters.petFriendly) {
       filterSettings.petFriendly = true;
     }
-    
+
     onFilterChange(filterSettings);
   };
 
@@ -106,27 +119,39 @@ const FilterChips = ({ onFilterChange, updateActiveFilters }: FilterChipsProps) 
 
   // Helper to get the current selected value for each dropdown
   const getCurrentValue = (filterType: string): string => {
-    if (filterType === 'price' && activeFilters.price) {
-      return PRICE_RANGES.find(r => 
-        r.min === activeFilters.price?.min && 
-        r.max === activeFilters.price?.max
-      )?.label || '';
-    } else if (filterType === 'bedrooms' && activeFilters.bedrooms !== undefined) {
-      return BEDROOM_OPTIONS.find(o => o.value === activeFilters.bedrooms)?.label || '';
-    } else if (filterType === 'distance' && activeFilters.distance) {
-      return DISTANCE_OPTIONS.find(o => o.value === activeFilters.distance)?.label || '';
+    if (filterType === "price" && activeFilters.price) {
+      return (
+        PRICE_RANGES.find(
+          (r) =>
+            r.min === activeFilters.price?.min &&
+            r.max === activeFilters.price?.max,
+        )?.label || ""
+      );
+    } else if (
+      filterType === "bedrooms" &&
+      activeFilters.bedrooms !== undefined
+    ) {
+      return (
+        BEDROOM_OPTIONS.find((o) => o.value === activeFilters.bedrooms)
+          ?.label || ""
+      );
+    } else if (filterType === "distance" && activeFilters.distance) {
+      return (
+        DISTANCE_OPTIONS.find((o) => o.value === activeFilters.distance)
+          ?.label || ""
+      );
     }
-    return '';
+    return "";
   };
 
   return (
-    <div className="mb-6">
+    <div className="flex">
       <div className="flex flex-wrap gap-3 items-center mb-4">
         {/* Price Range Dropdown */}
         <div className="relative">
-          <Select 
-            value={getCurrentValue('price') || undefined}
-            onValueChange={(value) => handleFilterChange('price', value)}
+          <Select
+            value={getCurrentValue("price") || undefined}
+            onValueChange={(value) => handleFilterChange("price", value)}
           >
             <SelectTrigger className="w-[160px] bg-white border-[#C9DAD0]">
               <div className="flex items-center gap-2">
@@ -152,9 +177,9 @@ const FilterChips = ({ onFilterChange, updateActiveFilters }: FilterChipsProps) 
 
         {/* Bedrooms Dropdown */}
         <div className="relative">
-          <Select 
-            value={getCurrentValue('bedrooms') || undefined}
-            onValueChange={(value) => handleFilterChange('bedrooms', value)}
+          <Select
+            value={getCurrentValue("bedrooms") || undefined}
+            onValueChange={(value) => handleFilterChange("bedrooms", value)}
           >
             <SelectTrigger className="w-[160px] bg-white border-[#C9DAD0]">
               <div className="flex items-center gap-2">
@@ -180,9 +205,9 @@ const FilterChips = ({ onFilterChange, updateActiveFilters }: FilterChipsProps) 
 
         {/* Distance Dropdown */}
         <div className="relative">
-          <Select 
-            value={getCurrentValue('distance') || undefined}
-            onValueChange={(value) => handleFilterChange('distance', value)}
+          <Select
+            value={getCurrentValue("distance") || undefined}
+            onValueChange={(value) => handleFilterChange("distance", value)}
           >
             <SelectTrigger className="w-[160px] bg-white border-[#C9DAD0]">
               <div className="flex items-center gap-2">
@@ -212,9 +237,10 @@ const FilterChips = ({ onFilterChange, updateActiveFilters }: FilterChipsProps) 
           size="sm"
           className={`
             flex items-center gap-2 rounded-full h-10
-            ${activeFilters.petFriendly 
-              ? 'bg-[#E9927E] hover:bg-[#E9927E]/90 text-white' 
-              : 'border-[#C9DAD0] text-[#1A4A4A] hover:bg-[#C9DAD0]/10'
+            ${
+              activeFilters.petFriendly
+                ? "bg-[#E9927E] hover:bg-[#E9927E]/90 text-white"
+                : "border-[#C9DAD0] text-[#1A4A4A] hover:bg-[#C9DAD0]/10"
             }
           `}
           onClick={togglePetFriendly}
