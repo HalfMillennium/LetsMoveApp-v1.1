@@ -39,16 +39,9 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
 
   return (
     <>
-      {/* Backdrop Overlay */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40"
-          onClick={onClose}
-        />
-      )}
       <div
-        className={`fixed inset-y-0 right-0 z-50 flex flex-col w-full md:w-[450px] lg:w-[550px] bg-white shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col w-full md:w-1/2 lg:w-1/2 bg-white border-r shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Header */}
@@ -59,10 +52,13 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="rounded-full"
+              className="rounded-full hover:bg-gray-100 transition-colors"
             >
               <X className="h-5 w-5" />
             </Button>
+          </div>
+          <div className="mt-2 text-xs text-gray-500 flex items-center">
+            <X className="h-3 w-3 mr-1" /> Click to close
           </div>
         </div>
 
