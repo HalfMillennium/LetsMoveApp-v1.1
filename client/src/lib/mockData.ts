@@ -105,17 +105,17 @@ export const exampleFavorites: Favorite[] = [
 export const exampleSearchParties: SearchParty[] = [
   {
     id: 1,
-    name: "Downtown Adventure",
-    description: "Looking for the perfect downtown apartment with friends",
-    createdAt: "2025-03-01T12:00:00Z",
+    name: "Roommate Search",
+    description: "Looking for the perfect downtown apartment with roommates",
+    createdAt: "2025-04-08T12:00:00Z", // 2 days ago
     createdById: 1,
     members: []
   },
   {
     id: 2,
-    name: "Family Home Hunt",
+    name: "House Hunt",
     description: "Searching for a family-friendly home in the suburbs",
-    createdAt: "2025-03-05T14:30:00Z",
+    createdAt: "2025-04-05T14:30:00Z", // 5 days ago
     createdById: 2,
     members: []
   },
@@ -228,53 +228,100 @@ exampleSearchParties.forEach(searchParty => {
 
 // Example Search Party Listings
 export const exampleSearchPartyListings: SearchPartyListing[] = [
+  // Roommate Search listings (matching the screenshot)
   {
     id: 1,
     searchPartyId: 1,
     apartmentId: 1,
     addedById: 1,
-    addedAt: "2025-03-02T14:25:00Z",
-    notes: "Great downtown option with modern style",
-    apartment: exampleApartments[0]
+    addedAt: "2025-04-08T14:25:00Z",
+    notes: "Great option in New York",
+    apartment: {
+      ...exampleApartments[0],
+      bedrooms: 2,
+      bathrooms: 1,
+      location: "New York, NY",
+      images: ["https://source.unsplash.com/random/300x200/?apartment,1"]
+    }
   },
   {
     id: 2,
     searchPartyId: 1,
     apartmentId: 3,
     addedById: 3,
-    addedAt: "2025-03-03T09:15:00Z",
-    notes: "Luxurious option but at a premium price",
-    apartment: exampleApartments[2]
+    addedAt: "2025-04-08T09:15:00Z",
+    notes: "Nice studio in Brooklyn",
+    apartment: {
+      ...exampleApartments[2],
+      bedrooms: 1,
+      bathrooms: 1,
+      location: "Brooklyn, NY",
+      images: ["https://source.unsplash.com/random/300x200/?apartment,2"]
+    }
   },
   {
     id: 3,
     searchPartyId: 1,
     apartmentId: 4,
     addedById: 5,
-    addedAt: "2025-03-04T16:30:00Z",
-    notes: "Compact but efficient and well-located",
-    apartment: exampleApartments[3]
+    addedAt: "2025-04-08T16:30:00Z",
+    notes: "Spacious place in Jersey City",
+    apartment: {
+      ...exampleApartments[3],
+      bedrooms: 3,
+      bathrooms: 2,
+      location: "Jersey City, NJ",
+      images: ["https://source.unsplash.com/random/300x200/?apartment,3"]
+    }
   },
+  // House Hunt listings (matching the screenshot)
   {
     id: 4,
     searchPartyId: 2,
     apartmentId: 2,
     addedById: 2,
-    addedAt: "2025-03-06T11:45:00Z",
-    notes: "Perfect suburban home for a family",
-    apartment: exampleApartments[1]
+    addedAt: "2025-04-05T11:45:00Z",
+    notes: "Large house in Tampa",
+    apartment: {
+      ...exampleApartments[1],
+      bedrooms: 4,
+      bathrooms: 2,
+      location: "Tampa, FL",
+      images: ["https://source.unsplash.com/random/300x200/?house,1"]
+    }
   },
   {
     id: 5,
     searchPartyId: 2,
     apartmentId: 5,
     addedById: 4,
-    addedAt: "2025-03-07T13:20:00Z",
-    notes: "Beautiful historic brownstone with character",
-    apartment: exampleApartments[4]
+    addedAt: "2025-04-05T13:20:00Z",
+    notes: "Nice place in Austin",
+    apartment: {
+      ...exampleApartments[4],
+      bedrooms: 3,
+      bathrooms: 2,
+      location: "Austin, TX",
+      images: ["https://source.unsplash.com/random/300x200/?house,2"]
+    }
   },
   {
     id: 6,
+    searchPartyId: 2,
+    apartmentId: 6,
+    addedById: 2,
+    addedAt: "2025-04-05T15:10:00Z",
+    notes: "Cozy home in Portland",
+    apartment: {
+      ...exampleApartments[5],
+      bedrooms: 3,
+      bathrooms: 1,
+      location: "Portland, OR",
+      images: ["https://source.unsplash.com/random/300x200/?house,3"]
+    }
+  },
+  {
+    id: 7,
     searchPartyId: 3,
     apartmentId: 3,
     addedById: 3,
@@ -283,7 +330,7 @@ export const exampleSearchPartyListings: SearchPartyListing[] = [
     apartment: exampleApartments[2]
   },
   {
-    id: 7,
+    id: 11,
     searchPartyId: 3,
     apartmentId: 6,
     addedById: 1,
