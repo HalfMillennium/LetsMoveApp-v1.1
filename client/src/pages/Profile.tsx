@@ -3,26 +3,20 @@ import { useToast } from "@/hooks/use-toast";
 import { DEFAULT_USER } from "../lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Check, Archive, Eye, X } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Profile = () => {
   const { toast } = useToast();
   const [user, setUser] = useState(DEFAULT_USER);
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: user.fullName || "",
+    firstName: user.fullName?.split(" ")[0] || "",
+    lastName: user.fullName?.split(" ")[1] || "",
     email: user.email || "",
-    password: "",
-    confirmPassword: "",
+    username: user.username || "",
+    country: "United States",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,26 +24,14 @@ const Profile = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (formData.password && formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Passwords do not match",
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const handleSave = () => {
     // Update user (in a real app, would send to server)
     setUser((prev) => ({
       ...prev,
-      fullName: formData.fullName,
+      fullName: `${formData.firstName} ${formData.lastName}`,
       email: formData.email,
+      username: formData.username,
     }));
-
-    setEditing(false);
 
     toast({
       title: "Profile Updated",
@@ -57,251 +39,205 @@ const Profile = () => {
     });
   };
 
+  // Mock data for profile stats
+  const profileStats = {
+    firstSeen: "1 Mar, 2025",
+    firstPurchase: "4 Mar, 2025",
+    revenue: "$118.00",
+    mrr: "$0.00",
+  };
+
   return (
-    <div className="py-8 bg-[#FFF9F2] flex flex-1">
-      <div className="container mx-auto px-4">
-        <h2 className="text-2xl font-bold text-[#1A4A4A] mb-6">Your Profile</h2>
+    <div className="py-8 flex flex-1 justify-center">
+      <div className="w-full max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        {/* Banner Image + Close Button */}
+        <div className="relative h-32 bg-gradient-to-r from-purple-300 to-yellow-200">
+          <button className="absolute top-4 right-4 text-gray-700 hover:text-gray-900">
+            <X size={20} />
+          </button>
+        </div>
 
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="p-6">
-              <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                <Avatar className="w-24 h-24">
-                  <AvatarImage src={user.profileImage} alt={user.fullName} />
-                  <AvatarFallback>
-                    {user.fullName?.charAt(0) || user.username.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
+        {/* Main Content Area */}
+        <div className="px-8 pb-8">
+          {/* Profile Image + Action Buttons */}
+          <div className="flex justify-between items-start -mt-16 mb-4">
+            <div className="relative">
+              <Avatar className="w-24 h-24 border-4 border-white rounded-full">
+                <AvatarImage 
+                  src={user.profileImage} 
+                  alt={user.fullName}
+                  className="object-cover" 
+                />
+                <AvatarFallback>
+                  {user.fullName?.charAt(0) || user.username.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="absolute bottom-0 right-0 bg-blue-500 rounded-full p-1">
+                <Check className="h-4 w-4 text-white" />
+              </div>
+            </div>
+            
+            <div className="flex space-x-2 mt-4">
+              <Button variant="outline" className="flex items-center space-x-2">
+                <Archive size={16} />
+                <span>Archive</span>
+              </Button>
+              <Button variant="outline" className="flex items-center space-x-2">
+                <Eye size={16} />
+                <span>View orders</span>
+              </Button>
+            </div>
+          </div>
 
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-[#1A4A4A]">
-                    {user.fullName || user.username}
-                  </h3>
-                  <p className="text-[#1A4A4A]/70">{user.email}</p>
+          {/* User Info */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold">{user.fullName}</h1>
+            <p className="text-gray-600">{user.email}</p>
+            
+            <div className="mt-2">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                Subscribed
+              </span>
+            </div>
+          </div>
 
-                  {!editing ? (
-                    <Button
-                      variant="outline"
-                      className="mt-4"
-                      onClick={() => setEditing(true)}
-                    >
-                      Edit Profile
-                    </Button>
-                  ) : (
-                    <form onSubmit={handleSave} className="mt-4 space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-[#1A4A4A]">
-                          Full Name
-                        </label>
-                        <Input
-                          name="fullName"
-                          value={formData.fullName}
-                          onChange={handleInputChange}
-                          className="mt-1"
-                        />
-                      </div>
+          {/* Stats Bar */}
+          <div className="grid grid-cols-4 gap-4 mb-8 border-b border-t py-4">
+            <div>
+              <p className="text-sm text-gray-500">First seen</p>
+              <p className="font-medium">{profileStats.firstSeen}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">First purchase</p>
+              <p className="font-medium">{profileStats.firstPurchase}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Revenue</p>
+              <p className="font-medium">{profileStats.revenue}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">MRR</p>
+              <p className="font-medium">{profileStats.mrr}</p>
+            </div>
+          </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-[#1A4A4A]">
-                          Email
-                        </label>
-                        <Input
-                          name="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          className="mt-1"
-                        />
-                      </div>
+          {/* Form Fields */}
+          <div className="space-y-6">
+            {/* Name Fields */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Name
+              </label>
+              <div className="grid grid-cols-2 gap-4">
+                <Input
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  placeholder="First name"
+                  className="w-full"
+                />
+                <Input
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  placeholder="Last name"
+                  className="w-full"
+                />
+              </div>
+            </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-[#1A4A4A]">
-                          New Password
-                        </label>
-                        <Input
-                          name="password"
-                          type="password"
-                          value={formData.password}
-                          onChange={handleInputChange}
-                          className="mt-1"
-                        />
-                      </div>
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email address
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-gray-500 sm:text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="4" width="20" height="16" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                  </span>
+                </div>
+                <Input
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="pl-10 w-full"
+                />
+              </div>
+              <div className="mt-2 flex items-center text-sm text-gray-500">
+                <div className="mr-1 bg-blue-100 text-blue-800 p-1 rounded-full">
+                  <Check size={12} />
+                </div>
+                <span>VERIFIED 2 JAN, 2025</span>
+              </div>
+            </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-[#1A4A4A]">
-                          Confirm Password
-                        </label>
-                        <Input
-                          name="confirmPassword"
-                          type="password"
-                          value={formData.confirmPassword}
-                          onChange={handleInputChange}
-                          className="mt-1"
-                        />
-                      </div>
+            {/* Country */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Country
+              </label>
+              <Select defaultValue={formData.country}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a country" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="United States">
+                    <div className="flex items-center">
+                      <span className="mr-2">🇺🇸</span>
+                      United States
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="Canada">
+                    <div className="flex items-center">
+                      <span className="mr-2">🇨🇦</span>
+                      Canada
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="United Kingdom">
+                    <div className="flex items-center">
+                      <span className="mr-2">🇬🇧</span>
+                      United Kingdom
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-                      <div className="flex gap-2">
-                        <Button
-                          type="submit"
-                          className="bg-[#E9927E] hover:bg-[#E9927E]/90"
-                        >
-                          Save
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setEditing(false)}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </form>
-                  )}
+            {/* Username */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Username
+              </label>
+              <div className="flex rounded-md">
+                <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                  untitledui.com/
+                </span>
+                <Input
+                  name="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  className="flex-grow rounded-none rounded-r-md"
+                />
+                <div className="ml-2 p-2 bg-blue-100 text-blue-800 rounded-full">
+                  <Check size={16} />
                 </div>
               </div>
             </div>
 
-            <Tabs defaultValue="preferences" className="px-6 pb-6">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="preferences">Preferences</TabsTrigger>
-                <TabsTrigger value="account">Account</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="preferences">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Search Preferences</CardTitle>
-                    <CardDescription>
-                      Set your default search preferences for apartment
-                      listings.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-[#1A4A4A]">
-                          Min Price
-                        </label>
-                        <Input
-                          type="number"
-                          placeholder="$0"
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#1A4A4A]">
-                          Max Price
-                        </label>
-                        <Input
-                          type="number"
-                          placeholder="$3000"
-                          className="mt-1"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-[#1A4A4A]">
-                        Preferred Neighborhoods
-                      </label>
-                      <Input
-                        placeholder="E.g., Chelsea, West Village"
-                        className="mt-1"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-[#1A4A4A]">
-                          Bedrooms
-                        </label>
-                        <Input type="number" placeholder="1" className="mt-1" />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#1A4A4A]">
-                          Bathrooms
-                        </label>
-                        <Input type="number" placeholder="1" className="mt-1" />
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button className="bg-[#1A4A4A] hover:bg-[#1A4A4A]/90">
-                      Save Preferences
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="account">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Account Settings</CardTitle>
-                    <CardDescription>
-                      Manage your account settings and notifications.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium text-[#1A4A4A]">
-                          Email Notifications
-                        </h4>
-                        <p className="text-sm text-[#1A4A4A]/70">
-                          Receive email updates about new listings
-                        </p>
-                      </div>
-                      <div className="flex items-center h-5">
-                        <input
-                          id="email-notifications"
-                          type="checkbox"
-                          className="h-4 w-4 rounded border-gray-300 text-[#E9927E] focus:ring-[#E9927E]"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium text-[#1A4A4A]">
-                          SMS Notifications
-                        </h4>
-                        <p className="text-sm text-[#1A4A4A]/70">
-                          Receive text messages about search party updates
-                        </p>
-                      </div>
-                      <div className="flex items-center h-5">
-                        <input
-                          id="sms-notifications"
-                          type="checkbox"
-                          className="h-4 w-4 rounded border-gray-300 text-[#E9927E] focus:ring-[#E9927E]"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="pt-4">
-                      <h4 className="font-medium text-[#1A4A4A] mb-2">
-                        Delete Account
-                      </h4>
-                      <p className="text-sm text-[#1A4A4A]/70 mb-4">
-                        Permanently delete your account and all associated data.
-                      </p>
-                      <Button
-                        variant="destructive"
-                        onClick={() => {
-                          toast({
-                            title: "Are you sure?",
-                            description: "This action cannot be undone.",
-                            variant: "destructive",
-                          });
-                        }}
-                      >
-                        Delete Account
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
+            {/* Form Actions */}
+            <div className="flex justify-end space-x-3 pt-6">
+              <Button variant="outline" onClick={() => setEditing(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSave}>
+                Save changes
+              </Button>
+            </div>
           </div>
         </div>
       </div>
