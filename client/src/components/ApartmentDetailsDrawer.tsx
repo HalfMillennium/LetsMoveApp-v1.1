@@ -41,14 +41,14 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
     <>
       {/* Overlay that appears behind the drawer */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/20 z-30 top-[53px]"
           onClick={onClose}
         ></div>
       )}
-      
+
       <div
-        className={`fixed top-[53px] bottom-0 left-0 z-40 flex flex-col w-full md:w-1/3 lg:w-1/3 bg-white border-r shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto ${
+        className={`fixed top-[60px] bottom-0 left-0 z-40 flex flex-col w-full md:w-1/3 lg:w-1/3 bg-white border-r shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
