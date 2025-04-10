@@ -3,34 +3,44 @@ import { useToast } from "@/hooks/use-toast";
 import { DEFAULT_USER } from "../lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Check, Archive, Eye, X } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ExternalLink, Sun, MessageSquare, Bell, User, Edit, X, Plus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const Profile = () => {
   const { toast } = useToast();
   const [user, setUser] = useState(DEFAULT_USER);
-  const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: user.fullName?.split(" ")[0] || "",
-    lastName: user.fullName?.split(" ")[1] || "",
+    fullName: user.fullName || "",
     email: user.email || "",
-    username: user.username || "",
-    country: "United States",
+    mobileNumber: "+966 5502938123",
+    role: "Senior Product designer",
+    bio: "Hey, I'm a product designer specialized in user interface designs (Web & Mobile) with 10 years of experience. Last year I have been ranked as a top-rated designer on Upwork working for over +3,750 hours with high clients satisfaction, on-time delivery and top quality output."
   });
+  
+  // Industry/Interests tags
+  const [interests, setInterests] = useState([
+    "UI Design", "Framer", "Startups", "UX", "Crypto", "Mobile Apps", "Webflow"
+  ]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Social media accounts
+  const [socialAccounts, setSocialAccounts] = useState([
+    { icon: "twitter", url: "https://twitter.com/ShaltOni" },
+    { icon: "instagram", url: "https://instagram.com/shaltoni" },
+    { icon: "linkedin", url: "https://www.linkedin.com/in/aymanshaltoni/" }
+  ]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSave = () => {
-    // Update user (in a real app, would send to server)
     setUser((prev) => ({
       ...prev,
-      fullName: `${formData.firstName} ${formData.lastName}`,
+      fullName: formData.fullName,
       email: formData.email,
-      username: formData.username,
     }));
 
     toast({
@@ -39,203 +49,195 @@ const Profile = () => {
     });
   };
 
-  // Mock data for profile stats
-  const profileStats = {
-    firstSeen: "1 Mar, 2025",
-    firstPurchase: "4 Mar, 2025",
-    revenue: "$118.00",
-    mrr: "$0.00",
+  const handleRemoveInterest = (interest: string) => {
+    setInterests(interests.filter(item => item !== interest));
   };
 
   return (
-    <div className="py-8 flex flex-1 justify-center">
-      <div className="w-full max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-        {/* Banner Image + Close Button */}
-        <div className="relative h-32 bg-gradient-to-r from-purple-300 to-yellow-200">
-          <button className="absolute top-4 right-4 text-gray-700 hover:text-gray-900">
-            <X size={20} />
-          </button>
+    <div className="py-8 px-4 flex flex-1">
+      <div className="w-full max-w-6xl mx-auto">
+        {/* Header with Title and Buttons */}
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center">
+            <h1 className="text-3xl font-bold mr-4">Edit User Profile</h1>
+            <Button variant="outline" className="flex items-center space-x-2">
+              <span>Preview</span>
+              <ExternalLink size={16} />
+            </Button>
+          </div>
+          <div className="flex space-x-4">
+            <Button variant="ghost" size="icon">
+              <Sun className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <MessageSquare className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Bell className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
 
-        {/* Main Content Area */}
-        <div className="px-8 pb-8">
-          {/* Profile Image + Action Buttons */}
-          <div className="flex justify-between items-start -mt-16 mb-4">
-            <div className="relative">
-              <Avatar className="w-24 h-24 border-4 border-white rounded-full">
-                <AvatarImage 
-                  src={user.profileImage} 
-                  alt={user.fullName}
-                  className="object-cover" 
-                />
-                <AvatarFallback>
-                  {user.fullName?.charAt(0) || user.username.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="absolute bottom-0 right-0 bg-blue-500 rounded-full p-1">
-                <Check className="h-4 w-4 text-white" />
-              </div>
-            </div>
-            
-            <div className="flex space-x-2 mt-4">
-              <Button variant="outline" className="flex items-center space-x-2">
-                <Archive size={16} />
-                <span>Archive</span>
-              </Button>
-              <Button variant="outline" className="flex items-center space-x-2">
-                <Eye size={16} />
-                <span>View orders</span>
-              </Button>
-            </div>
-          </div>
-
-          {/* User Info */}
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold">{user.fullName}</h1>
-            <p className="text-gray-600">{user.email}</p>
-            
-            <div className="mt-2">
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Subscribed
-              </span>
-            </div>
-          </div>
-
-          {/* Stats Bar */}
-          <div className="grid grid-cols-4 gap-4 mb-8 border-b border-t py-4">
-            <div>
-              <p className="text-sm text-gray-500">First seen</p>
-              <p className="font-medium">{profileStats.firstSeen}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">First purchase</p>
-              <p className="font-medium">{profileStats.firstPurchase}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Revenue</p>
-              <p className="font-medium">{profileStats.revenue}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">MRR</p>
-              <p className="font-medium">{profileStats.mrr}</p>
-            </div>
-          </div>
-
-          {/* Form Fields */}
+        {/* Two-column Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Left Column - Personal Information */}
           <div className="space-y-6">
-            {/* Name Fields */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name
-              </label>
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  placeholder="First name"
-                  className="w-full"
-                />
-                <Input
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  placeholder="Last name"
-                  className="w-full"
-                />
-              </div>
-            </div>
-
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 sm:text-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="2" y="4" width="20" height="16" rx="2" />
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
-                  </span>
+            {/* Photo Upload Section */}
+            <div className="bg-gray-50 rounded-lg p-6">
+              <div className="flex flex-col items-center relative mb-4">
+                <div className="w-full bg-gradient-to-r from-purple-200 via-teal-200 to-orange-200 h-24 rounded-t-lg"></div>
+                <div className="relative -mt-12">
+                  <Avatar className="w-24 h-24 border-4 border-white rounded-full bg-white overflow-hidden">
+                    <AvatarImage 
+                      src={user.profileImage} 
+                      alt={user.fullName}
+                      className="object-cover" 
+                    />
+                    <AvatarFallback>
+                      {user.fullName?.charAt(0) || user.username.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <button className="absolute bottom-0 right-0 bg-white p-1 rounded-full border border-gray-200 shadow-sm">
+                    <Edit size={16} className="text-gray-600" />
+                  </button>
                 </div>
-                <Input
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="pl-10 w-full"
-                />
               </div>
-              <div className="mt-2 flex items-center text-sm text-gray-500">
-                <div className="mr-1 bg-blue-100 text-blue-800 p-1 rounded-full">
-                  <Check size={12} />
+              <div className="text-center mb-4">
+                <h3 className="font-medium">Your Photo</h3>
+                <p className="text-sm text-gray-500">This will be displayed on your profile</p>
+              </div>
+              <div className="flex justify-center space-x-2">
+                <Button variant="outline" size="sm">Upload New</Button>
+                <Button variant="default" size="sm">Save</Button>
+              </div>
+            </div>
+
+            {/* Personal Information Form */}
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h2 className="text-xl font-semibold mb-4">Personal information</h2>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <User size={16} className="text-gray-400" />
+                    </div>
+                    <Input
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      className="pl-10 w-full"
+                    />
+                  </div>
                 </div>
-                <span>VERIFIED 2 JAN, 2025</span>
-              </div>
-            </div>
 
-            {/* Country */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Country
-              </label>
-              <Select defaultValue={formData.country}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a country" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="United States">
-                    <div className="flex items-center">
-                      <span className="mr-2">🇺🇸</span>
-                      United States
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="Canada">
-                    <div className="flex items-center">
-                      <span className="mr-2">🇨🇦</span>
-                      Canada
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="United Kingdom">
-                    <div className="flex items-center">
-                      <span className="mr-2">🇬🇧</span>
-                      United Kingdom
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email address
+                  </label>
+                  <Input
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full"
+                  />
+                </div>
 
-            {/* Username */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Username
-              </label>
-              <div className="flex rounded-md">
-                <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                  untitledui.com/
-                </span>
-                <Input
-                  name="username"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  className="flex-grow rounded-none rounded-r-md"
-                />
-                <div className="ml-2 p-2 bg-blue-100 text-blue-800 rounded-full">
-                  <Check size={16} />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Mobile number
+                  </label>
+                  <div className="flex">
+                    <Button variant="outline" className="rounded-r-none border-r-0 w-20">
+                      +966
+                    </Button>
+                    <Input
+                      name="mobileNumber"
+                      value="5502938123"
+                      onChange={handleInputChange}
+                      className="rounded-l-none w-full"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Role
+                  </label>
+                  <Input
+                    name="role"
+                    value={formData.role}
+                    onChange={handleInputChange}
+                    className="w-full"
+                  />
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Form Actions */}
-            <div className="flex justify-end space-x-3 pt-6">
-              <Button variant="outline" onClick={() => setEditing(false)}>
-                Cancel
+          {/* Right Column - Bio, Interests, Social */}
+          <div className="space-y-6">
+            {/* Bio Section */}
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h2 className="text-xl font-semibold mb-4">Bio</h2>
+              <Textarea
+                name="bio"
+                value={formData.bio}
+                onChange={handleInputChange}
+                className="min-h-32 resize-none w-full"
+                placeholder="Write a short bio about yourself..."
+              />
+            </div>
+
+            {/* Industry/Interests Section */}
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h2 className="text-xl font-semibold mb-4">Industry/Interests</h2>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {interests.map((interest, index) => (
+                  <Badge 
+                    key={index} 
+                    variant="secondary"
+                    className="flex items-center gap-1 py-1 px-2 bg-gray-100 hover:bg-gray-200"
+                  >
+                    {interest}
+                    <button onClick={() => handleRemoveInterest(interest)}>
+                      <X size={14} className="ml-1" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+              <Button variant="outline" className="w-full flex items-center justify-center">
+                <Plus size={16} className="mr-2" />
+                Add more
               </Button>
-              <Button onClick={handleSave}>
-                Save changes
+            </div>
+
+            {/* Social Media Accounts */}
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h2 className="text-xl font-semibold mb-4">Social Media accounts</h2>
+              <div className="space-y-3">
+                {socialAccounts.map((account, index) => (
+                  <div key={index} className="flex items-center gap-2 border border-gray-200 rounded p-2">
+                    <span className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full">
+                      {account.icon === "twitter" && <span>🐦</span>}
+                      {account.icon === "instagram" && <span>📸</span>}
+                      {account.icon === "linkedin" && <span>🔗</span>}
+                    </span>
+                    <Input 
+                      value={account.url} 
+                      readOnly 
+                      className="flex-1 bg-transparent border-none focus:ring-0"
+                    />
+                  </div>
+                ))}
+              </div>
+              <Button variant="outline" className="w-full flex items-center justify-center mt-4">
+                <Plus size={16} className="mr-2" />
+                Add more
               </Button>
             </div>
           </div>
