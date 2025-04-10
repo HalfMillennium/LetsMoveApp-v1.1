@@ -127,7 +127,7 @@ const Listings2 = () => {
     const collectionIcons = [
       <Home className="h-4 w-4" />,
       <Building2 className="h-4 w-4" />,
-      <Map className="h-4 w-4" />,
+      <MapIcon className="h-4 w-4" />,
       <MapPin className="h-4 w-4" />,
       <Flower2 className="h-4 w-4" />,
       <Star className="h-4 w-4" />,
@@ -360,6 +360,22 @@ const Listings2 = () => {
             description: "Apartment has been added to your active search party",
           });
         }}
+      />
+      
+      {/* Create Collection Modal */}
+      <CreateCollectionModal
+        isOpen={createCollectionModalOpen}
+        onClose={() => setCreateCollectionModalOpen(false)}
+        onCreateCollection={handleCreateCollection}
+      />
+      
+      {/* All Collections Modal */}
+      <AllCollectionsModal
+        isOpen={allCollectionsModalOpen}
+        onClose={() => setAllCollectionsModalOpen(false)}
+        collections={apartmentCollections}
+        onSelectCollection={handleCategoryChange}
+        onAddCollection={handleAddCollection}
       />
     </>
   );

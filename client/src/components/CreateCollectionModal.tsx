@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Check, X, Plus, Home, Building, Map, MapPin, Trees, Sparkles, Briefcase, Utensils, ShoppingBag } from "lucide-react";
+import { Check, X, Plus, Home, Building, MapPin, Trees, Sparkles, Briefcase, Utensils, ShoppingBag, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 const COLLECTION_ICONS = [
   { icon: <Home className="h-6 w-6" />, name: "Home" },
   { icon: <Building className="h-6 w-6" />, name: "Building" },
-  { icon: <Map className="h-6 w-6" />, name: "Map" },
+  { icon: <Globe className="h-6 w-6" />, name: "Map" },
   { icon: <MapPin className="h-6 w-6" />, name: "Location" },
   { icon: <Trees className="h-6 w-6" />, name: "Nature" },
   { icon: <Sparkles className="h-6 w-6" />, name: "Featured" },
