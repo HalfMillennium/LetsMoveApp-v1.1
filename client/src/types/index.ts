@@ -17,6 +17,7 @@ export interface Apartment {
   isAvailable: boolean;
   createdById?: number;
   distance?: string;
+  neighborhood?: string;
 }
 
 export interface ActiveFilters {

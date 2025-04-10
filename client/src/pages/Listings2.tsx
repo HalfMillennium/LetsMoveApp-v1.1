@@ -28,6 +28,7 @@ import { GoogleMapComponent } from "../components/GoogleMap";
 import { useGeolocation } from "../lib/useGeolocation";
 import { PRICE_RANGES, BEDROOM_OPTIONS } from "../lib/constants";
 import FilterChips from "../components/FilterChips";
+import ApartmentDetailsDrawer from "../components/ApartmentDetailsDrawer";
 import { exampleApartments } from "../lib/utils";
 
 const Listings2 = () => {
@@ -37,6 +38,8 @@ const Listings2 = () => {
   const [selectedApartmentId, setSelectedApartmentId] = useState<
     number | undefined
   >();
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [selectedApartment, setSelectedApartment] = useState<Apartment | null>(null);
   const [searchParams] = useState(() => {
     const urlParams = new URLSearchParams(window.location.search);
     return {
@@ -71,9 +74,23 @@ const Listings2 = () => {
     refetch();
   };
 
-  // Handle apartment selection from map
+  // Handle apartment selection from map or list
   const handleApartmentSelect = (apartmentId: number) => {
     setSelectedApartmentId(apartmentId);
+    const apartment = apartments.find(apt => apt.id === apartmentId);
+    if (apartment) {
+      setSelectedApartment(apartment);
+      setIsDrawerOpen(true);
+    }
+  };
+  
+  // Close the apartment details drawer
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+    // Keep a small delay before removing the apartment data
+    setTimeout(() => {
+      setSelectedApartment(null);
+    }, 300);
   };
 
   // Toggle map expansion
@@ -255,6 +272,13 @@ const Listings2 = () => {
           </div>
         </div>
       </main>
+
+      {/* Apartment Details Drawer */}
+      <ApartmentDetailsDrawer
+        apartment={selectedApartment}
+        isOpen={isDrawerOpen}
+        onClose={closeDrawer}
+      />
     </div>
   );
 };
