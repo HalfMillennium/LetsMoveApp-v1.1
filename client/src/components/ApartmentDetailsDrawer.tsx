@@ -40,7 +40,7 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
   return (
     <>
       <div
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col w-full md:w-1/2 lg:w-1/2 bg-white border-r shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto ${
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col w-full md:w-1/3 lg:w-1/3 bg-white border-r shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -65,37 +65,48 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
           {/* Images */}
-          <div className="relative">
-            <div className="aspect-w-16 aspect-h-9 w-full">
+          <div className="relative overflow-hidden group">
+            <div className="w-full">
               <img
                 src={apartment.images[0]}
                 alt={apartment.title}
-                className="w-full h-[300px] object-cover"
+                className="w-full h-[280px] object-cover transition duration-700 ease-in-out group-hover:scale-105"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-50"></div>
             </div>
             <div className="absolute right-4 bottom-4 flex space-x-2">
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-white rounded-full"
+                className="bg-white/90 hover:bg-white rounded-full shadow-sm transition-all"
                 onClick={() => onAddToFavorites?.(apartment.id)}
               >
-                <Heart className="h-4 w-4 mr-2" />
+                <Heart className="h-4 w-4 mr-2 text-rose-500" />
                 Save
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-white rounded-full"
+                className="bg-white/90 hover:bg-white rounded-full shadow-sm transition-all"
               >
-                <Share2 className="h-4 w-4 mr-2" />
+                <Share2 className="h-4 w-4 mr-2 text-blue-500" />
                 Share
               </Button>
+            </div>
+            
+            {/* Image pagination dots */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1">
+              {[0, 1, 2, 3].map((index) => (
+                <div 
+                  key={index} 
+                  className={`w-2 h-2 rounded-full ${index === 0 ? 'bg-white' : 'bg-white/50'}`}
+                />
+              ))}
             </div>
           </div>
 
           {/* Main apartment details */}
-          <div className="p-6 space-y-6">
+          <div className="p-6 space-y-6 max-w-md mx-auto md:mx-4 lg:mx-6">
             <div>
               <h1 className="text-2xl font-semibold text-gray-900">
                 {apartment.title}
@@ -104,12 +115,33 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
                 {apartment.address}
               </p>
               <div className="flex items-center mt-2">
-                <span className="mr-1">★</span>
-                <span>{(4.8).toFixed(1)}</span>
-                <span className="ml-1 text-gray-500">(42 reviews)</span>
-                <span className="mx-2">•</span>
                 <Badge>{apartment.isAvailable ? "Available Now" : "Coming Soon"}</Badge>
               </div>
+            </div>
+            
+            {/* People who saved this listing */}
+            <div className="mt-4">
+              <h3 className="text-sm font-medium text-gray-700 mb-2">People interested in this listing</h3>
+              <div className="flex -space-x-2 overflow-hidden">
+                {[1, 2, 3, 4, 5].map((index) => (
+                  <div 
+                    key={index} 
+                    className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
+                    style={{
+                      backgroundColor: ['#FFA07A', '#98FB98', '#87CEFA', '#FFD700', '#FF69B4'][index % 5],
+                      zIndex: 10 - index
+                    }}
+                  >
+                    <span className="sr-only">User {index}</span>
+                  </div>
+                ))}
+                <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gray-200 ring-2 ring-white text-xs font-medium text-gray-500">
+                  +8
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                This apartment is in 3 search parties
+              </p>
             </div>
 
             <Separator />
@@ -214,7 +246,7 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
                 <img 
                   src={`https://maps.googleapis.com/maps/api/staticmap?center=${apartment.latitude},${apartment.longitude}&zoom=14&size=600x300&markers=color:red%7C${apartment.latitude},${apartment.longitude}`} 
                   alt="Location map"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-lg"
                 />
               </div>
               <p className="mt-2 text-gray-700">
