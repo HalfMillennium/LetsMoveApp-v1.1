@@ -141,7 +141,7 @@ const Listings2 = () => {
 
   return (
     <>
-      <div className={`flex flex-col min-h-screen bg-white w-full transition-all duration-300 ${isDetailsDrawerOpen ? 'md:ml-[50%] lg:ml-[50%]' : ''}`}>
+      <div className={`flex flex-col min-h-screen bg-white w-full transition-all duration-300 ${isDetailsDrawerOpen ? 'md:ml-[33.333%] lg:ml-[33.333%]' : ''}`}>
         {/* Custom Apartment Collections Tabs */}
         <div className="border-b border-gray-200">
           <div className="container mx-auto px-6 py-4 flex items-center overflow-x-auto scrollbar-hide">
