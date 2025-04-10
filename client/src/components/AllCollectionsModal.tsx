@@ -41,7 +41,7 @@ export const AllCollectionsModal: React.FC<AllCollectionsModalProps> = ({
         <div className="py-4">
           <div className="grid grid-cols-3 gap-4">
             <div
-              className="flex flex-col items-center justify-center p-4 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+              className="flex flex-col items-center justify-center p-4 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors h-[100px]"
               onClick={onAddCollection}
             >
               <PlusCircle className="h-8 w-8 text-gray-400 mb-2" />
@@ -51,10 +51,15 @@ export const AllCollectionsModal: React.FC<AllCollectionsModalProps> = ({
             {collections.map((collection, index) => (
               <div
                 key={index}
-                className="flex flex-col items-center justify-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => onSelectCollection(collection.name)}
+                className="flex flex-col items-center justify-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-gray-300 hover:bg-gray-50 transition-all h-[100px]"
+                onClick={() => {
+                  onSelectCollection(collection.name);
+                  onClose();
+                }}
               >
-                <div className="mb-2">{collection.icon}</div>
+                <div className="h-8 w-8 flex items-center justify-center mb-2">
+                  {React.cloneElement(collection.icon as React.ReactElement, { className: 'h-6 w-6' })}
+                </div>
                 <span className="text-sm font-medium text-center line-clamp-1">
                   {collection.name}
                 </span>
