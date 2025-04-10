@@ -5,7 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ExternalLink, Sun, MessageSquare, Bell, User, Edit, X, Plus } from "lucide-react";
+import {
+  ExternalLink,
+  Sun,
+  MessageSquare,
+  Bell,
+  User,
+  Edit,
+  X,
+  Plus,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const Profile = () => {
@@ -16,22 +25,30 @@ const Profile = () => {
     email: user.email || "",
     mobileNumber: "+966 5502938123",
     role: "Senior Product designer",
-    bio: "Hey, I'm a product designer specialized in user interface designs (Web & Mobile) with 10 years of experience. Last year I have been ranked as a top-rated designer on Upwork working for over +3,750 hours with high clients satisfaction, on-time delivery and top quality output."
+    bio: "Hey, I'm a product designer specialized in user interface designs (Web & Mobile) with 10 years of experience. Last year I have been ranked as a top-rated designer on Upwork working for over +3,750 hours with high clients satisfaction, on-time delivery and top quality output.",
   });
-  
+
   // Industry/Interests tags
   const [interests, setInterests] = useState([
-    "UI Design", "Framer", "Startups", "UX", "Crypto", "Mobile Apps", "Webflow"
+    "UI Design",
+    "Framer",
+    "Startups",
+    "UX",
+    "Crypto",
+    "Mobile Apps",
+    "Webflow",
   ]);
 
   // Social media accounts
   const [socialAccounts, setSocialAccounts] = useState([
     { icon: "twitter", url: "https://twitter.com/ShaltOni" },
     { icon: "instagram", url: "https://instagram.com/shaltoni" },
-    { icon: "linkedin", url: "https://www.linkedin.com/in/aymanshaltoni/" }
+    { icon: "linkedin", url: "https://www.linkedin.com/in/aymanshaltoni/" },
   ]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -50,7 +67,7 @@ const Profile = () => {
   };
 
   const handleRemoveInterest = (interest: string) => {
-    setInterests(interests.filter(item => item !== interest));
+    setInterests(interests.filter((item) => item !== interest));
   };
 
   return (
@@ -59,22 +76,7 @@ const Profile = () => {
         {/* Header with Title and Buttons */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center">
-            <h1 className="text-3xl font-bold mr-4">Edit User Profile</h1>
-            <Button variant="outline" className="flex items-center space-x-2">
-              <span>Preview</span>
-              <ExternalLink size={16} />
-            </Button>
-          </div>
-          <div className="flex space-x-4">
-            <Button variant="ghost" size="icon">
-              <Sun className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <MessageSquare className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" />
-            </Button>
+            <h1 className="text-3xl font-bold mr-4">Your Profile</h1>
           </div>
         </div>
 
@@ -85,13 +87,13 @@ const Profile = () => {
             {/* Photo Upload Section */}
             <div className="bg-gray-50 rounded-lg p-6">
               <div className="flex flex-col items-center relative mb-4">
-                <div className="w-full bg-gradient-to-r from-purple-200 via-teal-200 to-orange-200 h-24 rounded-t-lg"></div>
+                <div className="w-full bg-gradient-to-r from-purple-200 via-teal-200 to-orange-200 h-24 rounded-md"></div>
                 <div className="relative -mt-12">
                   <Avatar className="w-24 h-24 border-4 border-white rounded-full bg-white overflow-hidden">
-                    <AvatarImage 
-                      src={user.profileImage} 
+                    <AvatarImage
+                      src={user.profileImage}
                       alt={user.fullName}
-                      className="object-cover" 
+                      className="object-cover"
                     />
                     <AvatarFallback>
                       {user.fullName?.charAt(0) || user.username.charAt(0)}
@@ -104,18 +106,26 @@ const Profile = () => {
               </div>
               <div className="text-center mb-4">
                 <h3 className="font-medium">Your Photo</h3>
-                <p className="text-sm text-gray-500">This will be displayed on your profile</p>
+                <p className="text-sm text-gray-500">
+                  This will be displayed on your profile
+                </p>
               </div>
               <div className="flex justify-center space-x-2">
-                <Button variant="outline" size="sm">Upload New</Button>
-                <Button variant="default" size="sm">Save</Button>
+                <Button variant="outline" size="sm">
+                  Upload New
+                </Button>
+                <Button variant="default" size="sm">
+                  Save
+                </Button>
               </div>
             </div>
 
             {/* Personal Information Form */}
             <div className="bg-gray-50 rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Personal information</h2>
-              
+              <h2 className="text-xl font-semibold mb-4">
+                Personal information
+              </h2>
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -152,7 +162,10 @@ const Profile = () => {
                     Mobile number
                   </label>
                   <div className="flex">
-                    <Button variant="outline" className="rounded-r-none border-r-0 w-20">
+                    <Button
+                      variant="outline"
+                      className="rounded-r-none border-r-0 w-20"
+                    >
                       +966
                     </Button>
                     <Input
@@ -198,8 +211,8 @@ const Profile = () => {
               <h2 className="text-xl font-semibold mb-4">Industry/Interests</h2>
               <div className="flex flex-wrap gap-2 mb-4">
                 {interests.map((interest, index) => (
-                  <Badge 
-                    key={index} 
+                  <Badge
+                    key={index}
                     variant="secondary"
                     className="flex items-center gap-1 py-1 px-2 bg-gray-100 hover:bg-gray-200"
                   >
@@ -210,7 +223,10 @@ const Profile = () => {
                   </Badge>
                 ))}
               </div>
-              <Button variant="outline" className="w-full flex items-center justify-center">
+              <Button
+                variant="outline"
+                className="w-full flex items-center justify-center"
+              >
                 <Plus size={16} className="mr-2" />
                 Add more
               </Button>
@@ -218,24 +234,32 @@ const Profile = () => {
 
             {/* Social Media Accounts */}
             <div className="bg-gray-50 rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Social Media accounts</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                Social Media accounts
+              </h2>
               <div className="space-y-3">
                 {socialAccounts.map((account, index) => (
-                  <div key={index} className="flex items-center gap-2 border border-gray-200 rounded p-2">
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 border border-gray-200 rounded p-2"
+                  >
                     <span className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full">
                       {account.icon === "twitter" && <span>🐦</span>}
                       {account.icon === "instagram" && <span>📸</span>}
                       {account.icon === "linkedin" && <span>🔗</span>}
                     </span>
-                    <Input 
-                      value={account.url} 
-                      readOnly 
+                    <Input
+                      value={account.url}
+                      readOnly
                       className="flex-1 bg-transparent border-none focus:ring-0"
                     />
                   </div>
                 ))}
               </div>
-              <Button variant="outline" className="w-full flex items-center justify-center mt-4">
+              <Button
+                variant="outline"
+                className="w-full flex items-center justify-center mt-4"
+              >
                 <Plus size={16} className="mr-2" />
                 Add more
               </Button>
