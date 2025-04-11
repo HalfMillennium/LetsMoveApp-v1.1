@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, Link } from "wouter";
+import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import {
   Heart,
   Search,
@@ -21,8 +22,10 @@ import {
   Star,
   GalleryVerticalEnd,
   ChevronDown,
+  GripVertical,
+  Users,
 } from "lucide-react";
-import { Apartment, FilterSettings, ActiveFilters } from "../types";
+import { Apartment, FilterSettings, ActiveFilters, SearchParty } from "../types";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -34,10 +37,14 @@ import { exampleApartments } from "../lib/utils";
 import ApartmentDetailsDrawer from "../components/ApartmentDetailsDrawer";
 import CreateCollectionModal from "../components/CreateCollectionModal";
 import AllCollectionsModal from "../components/AllCollectionsModal";
+import AddToSearchPartyModal from "../components/AddToSearchPartyModal";
+import SearchPartyDropZone from "../components/SearchPartyDropZone";
+import { useSearchParty } from "../context/SearchPartyContext";
 
 const Listings2 = () => {
   const [location] = useLocation();
   const { toast } = useToast();
+  const { searchParties } = useSearchParty();
   const [filters, setFilters] = useState<FilterSettings>({});
   const [selectedApartmentId, setSelectedApartmentId] = useState<
     number | undefined
@@ -54,6 +61,20 @@ const Listings2 = () => {
   const [activeCategory, setActiveCategory] =
     useState<string>("All Apartments");
   const [mapExpanded, setMapExpanded] = useState<boolean>(false);
+
+  // Search party dragging states
+  const [showSearchPartyOverlay, setShowSearchPartyOverlay] = useState<boolean>(false);
+  const [activeSearchParty, setActiveSearchParty] = useState<SearchParty | null>(null);
+  const [draggingApartmentId, setDraggingApartmentId] = useState<number | null>(null);
+  const [addToPartyModalOpen, setAddToPartyModalOpen] = useState<boolean>(false);
+  const [apartmentToAdd, setApartmentToAdd] = useState<Apartment | undefined>();
+
+  // Initialize active search party if any exist
+  useEffect(() => {
+    if (searchParties && searchParties.length > 0 && !activeSearchParty) {
+      setActiveSearchParty(searchParties[0]);
+    }
+  }, [searchParties, activeSearchParty]);
 
   // Used to show number of experiences/listings
   const totalListings = 235;
@@ -201,7 +222,7 @@ const Listings2 = () => {
         className={`flex flex-col min-h-screen bg-white w-full transition-all duration-300 ${isDetailsDrawerOpen ? "md:ml-[33.333%] lg:ml-[33.333%]" : ""}`}
       >
         {/* Custom Apartment Collections Tabs */}
-        <div className="border-b border-gray-200">
+        <div>
           <div className="container mx-auto px-6 py-4 flex items-center overflow-x-auto scrollbar-hide">
             {apartmentCollections.map((collection) => (
               <button
@@ -274,45 +295,107 @@ const Listings2 = () => {
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {apartments.map((apartment, index) => (
-                    <div
-                      key={apartment.id}
-                      className="space-y-2 group cursor-pointer"
-                      onClick={() => handleApartmentSelect(apartment.id)}
-                    >
-                      <div className="relative overflow-hidden rounded-lg h-48">
-                        <img
-                          src={apartment.images[0]}
-                          alt={apartment.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                        />
-                        <button className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white">
-                          <Heart className="h-4 w-4 text-gray-700" />
-                        </button>
-                      </div>
-                      <div className="flex justify-between items-start">
-                        <h3 className="font-semibold text-gray-900 line-clamp-1">
-                          {apartment.title}
-                        </h3>
-                        <div className="flex items-center text-sm">
-                          <span className="mr-1">★</span>
-                          <span>{formatRating(getListingRating(index))}</span>
-                          <span className="ml-1 text-gray-500">
-                            ({getListingReviews(index)})
-                          </span>
-                        </div>
-                      </div>
-                      <p className="text-gray-500 text-sm">
-                        {apartment.bedrooms} bed • {apartment.bathrooms} bath •{" "}
-                        {apartment.squareFeet} sq ft
-                      </p>
-                      <p className="text-gray-900 font-medium">
-                        ${apartment.price}/month
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                <DragDropContext
+                  onDragStart={(start) => {
+                    // Set the dragging apartment ID
+                    const apartmentId = parseInt(start.draggableId.replace('apartment-', ''));
+                    setDraggingApartmentId(apartmentId);
+                    
+                    // Show the search party overlay when dragging starts
+                    setShowSearchPartyOverlay(true);
+                  }}
+                  onDragEnd={(result) => {
+                    // Hide the search party overlay
+                    setShowSearchPartyOverlay(false);
+                    setDraggingApartmentId(null);
+                    
+                    // If the drop was outside a droppable area or not completed, return
+                    if (!result.destination || result.destination.droppableId !== 'search-party-drop-zone') {
+                      return;
+                    }
+                    
+                    // Get the apartment ID from the draggable ID
+                    const apartmentId = parseInt(result.draggableId.replace('apartment-', ''));
+                    
+                    // Find the apartment to add
+                    const apartment = apartments.find(a => a.id === apartmentId);
+                    if (apartment) {
+                      setApartmentToAdd(apartment);
+                      setAddToPartyModalOpen(true);
+                    }
+                  }}
+                >
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {apartments.map((apartment, index) => (
+                      <Draggable 
+                        key={`apartment-${apartment.id}`} 
+                        draggableId={`apartment-${apartment.id}`} 
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            className={`space-y-2 group ${snapshot.isDragging ? 'opacity-50' : ''}`}
+                            onClick={(e) => {
+                              // Prevent click when dragging
+                              if (!snapshot.isDragging) {
+                                handleApartmentSelect(apartment.id);
+                              }
+                            }}
+                          >
+                            <div className="relative overflow-hidden rounded-lg h-48">
+                              <img
+                                src={apartment.images[0]}
+                                alt={apartment.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                              />
+                              <button 
+                                className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  // Handle favorite toggle
+                                  toast({
+                                    title: "Added to favorites",
+                                    description: "Apartment has been added to your favorites",
+                                  });
+                                }}
+                              >
+                                <Heart className="h-4 w-4 text-gray-700" />
+                              </button>
+                              <div
+                                {...provided.dragHandleProps}
+                                className="absolute top-3 left-3 p-2 rounded-full bg-white/90 hover:bg-white cursor-grab"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <GripVertical className="h-4 w-4 text-gray-700" />
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-start">
+                              <h3 className="font-semibold text-gray-900 line-clamp-1">
+                                {apartment.title}
+                              </h3>
+                              <div className="flex items-center text-sm">
+                                <span className="mr-1">★</span>
+                                <span>{formatRating(getListingRating(index))}</span>
+                                <span className="ml-1 text-gray-500">
+                                  ({getListingReviews(index)})
+                                </span>
+                              </div>
+                            </div>
+                            <p className="text-gray-500 text-sm">
+                              {apartment.bedrooms} bed • {apartment.bathrooms} bath •{" "}
+                              {apartment.squareFeet} sq ft
+                            </p>
+                            <p className="text-gray-900 font-medium">
+                              ${apartment.price}/month
+                            </p>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                  </div>
+                </DragDropContext>
               )}
             </div>
 
@@ -379,6 +462,44 @@ const Listings2 = () => {
         onSelectCollection={handleCategoryChange}
         onAddCollection={handleAddCollection}
       />
+
+      {/* Search Party Floating Overlay */}
+      {showSearchPartyOverlay && activeSearchParty && (
+        <SearchPartyDropZone
+          onAddToParty={(apartmentId) => {
+            const apartment = apartments.find(a => a.id === apartmentId);
+            if (apartment) {
+              setApartmentToAdd(apartment);
+              setAddToPartyModalOpen(true);
+            }
+          }}
+          onClose={() => setShowSearchPartyOverlay(false)}
+          currentSearchParty={activeSearchParty}
+        />
+      )}
+
+      {/* Add to Search Party Modal */}
+      <AddToSearchPartyModal
+        apartment={apartmentToAdd}
+        isOpen={addToPartyModalOpen}
+        onClose={() => {
+          setAddToPartyModalOpen(false);
+          setApartmentToAdd(undefined);
+        }}
+      />
+
+      {/* Select Search Party Toggle Button */}
+      {!showSearchPartyOverlay && searchParties && searchParties.length > 0 && (
+        <div className="fixed bottom-8 right-8 z-40">
+          <Button
+            className="bg-[#E9927E] hover:bg-[#E9927E]/90 text-white flex items-center gap-2 px-4 py-2 rounded-full shadow-lg"
+            onClick={() => setShowSearchPartyOverlay(true)}
+          >
+            <Users size={18} />
+            <span className="font-medium">Search Party</span>
+          </Button>
+        </div>
+      )}
     </>
   );
 };

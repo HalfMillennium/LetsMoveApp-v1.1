@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, ChevronRight } from "lucide-react";
+import { Plus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 import { exampleApartments } from "../lib/utils";
 
 const SearchParty = () => {
@@ -59,7 +58,7 @@ const SearchParty = () => {
     "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80",
     "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80",
     "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80",
-    "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80"
+    "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80",
   ];
 
   return (
@@ -83,7 +82,10 @@ const SearchParty = () => {
                 </DialogHeader>
                 <form onSubmit={handleCreateParty} className="space-y-4 mt-4">
                   <div>
-                    <label htmlFor="party-name" className="block text-[#1A4A4A] text-sm mb-2">
+                    <label
+                      htmlFor="party-name"
+                      className="block text-[#1A4A4A] text-sm mb-2"
+                    >
                       Search Party Name
                     </label>
                     <Input
@@ -96,7 +98,10 @@ const SearchParty = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="invites" className="block text-[#1A4A4A] text-sm mb-2">
+                    <label
+                      htmlFor="invites"
+                      className="block text-[#1A4A4A] text-sm mb-2"
+                    >
                       Invite Members (Email or Phone)
                     </label>
                     <Textarea
@@ -130,87 +135,110 @@ const SearchParty = () => {
               {searchParties.map((searchParty) => {
                 // Show 3 sample apartments per search party
                 const listings = searchParty.listings || [];
-                const listingCount = listings.length || Math.floor(Math.random() * 10) + 1;
-                
+                const listingCount =
+                  listings.length || Math.floor(Math.random() * 10) + 1;
+
                 // Mock data for days ago
                 const daysAgo = Math.floor(Math.random() * 7) + 1;
-                
+
                 return (
-                  <div key={searchParty.id} className="glass-card rounded-xl overflow-hidden border border-white/40">
+                  <div
+                    key={searchParty.id}
+                    className="glass-card rounded-xl overflow-hidden border border-white/40"
+                  >
                     <div className="p-6">
                       <div className="flex justify-between items-center mb-2">
-                        <h2 className="text-xl font-semibold text-[#1A4A4A]">{searchParty.name}</h2>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="bg-white/50 border-white/40 hover:bg-white/80 text-[#1A4A4A]">
+                        <h2 className="text-xl font-semibold text-[#1A4A4A]">
+                          {searchParty.name}
+                        </h2>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-white/50 border-white/40 hover:bg-white/80 text-[#1A4A4A]"
+                        >
                           View Listings
                         </Button>
                       </div>
-                      
+
                       <div className="text-sm text-gray-600 mb-4">
                         {listingCount} listings • Updated {daysAgo} days ago
                       </div>
-                      
+
                       {/* Members circle avatars */}
                       <div className="flex -space-x-2 mb-4">
                         {mockUserImages.slice(0, 4).map((img, idx) => (
-                          <img 
-                            key={idx} 
-                            src={img} 
+                          <img
+                            key={idx}
+                            src={img}
                             alt={`Member ${idx + 1}`}
                             className="w-10 h-10 rounded-full border-2 border-white/90 object-cover shadow-sm"
                           />
                         ))}
                       </div>
-                      
+
                       {/* Listings grid */}
                       <div className="grid grid-cols-3 gap-3">
-                        {listings.length > 0 ? (
-                          listings.slice(0, 3).map((listing, idx) => (
-                            <div key={idx} className="rounded-lg overflow-hidden shadow-sm">
-                              <div className="relative">
-                                <img 
-                                  src={listing.apartment?.images[0] || `https://source.unsplash.com/random/300x200/?apartment,${idx}`} 
-                                  alt="Apartment" 
-                                  className="w-full h-24 object-cover"
-                                />
-                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 backdrop-blur-sm">
-                                  <div className="text-white text-xs font-medium">
-                                    {listing.apartment?.bedrooms || (idx % 3) + 1} Bed, {listing.apartment?.bathrooms || 1} Bath
-                                  </div>
-                                  <div className="text-white text-xs">
-                                    {listing.apartment?.location || (idx === 0 ? "New York, NY" : idx === 1 ? "Brooklyn, NY" : "Jersey City, NJ")}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          // Use example apartments from the listings page
-                          [0, 3, 5].map((idx) => {
-                            const apartment = exampleApartments[idx];
-                            return (
-                              <div key={idx} className="rounded-lg overflow-hidden shadow-sm">
+                        {listings.length > 0
+                          ? listings.slice(0, 3).map((listing, idx) => (
+                              <div
+                                key={idx}
+                                className="rounded-lg overflow-hidden shadow-sm"
+                              >
                                 <div className="relative">
-                                  <img 
-                                    src={apartment.images[0]} 
-                                    alt={apartment.title} 
+                                  <img
+                                    src={
+                                      listing.apartment?.images[0] ||
+                                      `https://source.unsplash.com/random/300x200/?apartment,${idx}`
+                                    }
+                                    alt="Apartment"
                                     className="w-full h-24 object-cover"
                                   />
                                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 backdrop-blur-sm">
                                     <div className="text-white text-xs font-medium">
-                                      {apartment.bedrooms} Bed, {apartment.bathrooms} Bath
+                                      {listing.apartment?.bedrooms ||
+                                        (idx % 3) + 1}{" "}
+                                      Bed, {listing.apartment?.bathrooms || 1}{" "}
+                                      Bath
                                     </div>
                                     <div className="text-white text-xs">
-                                      {apartment.location}
+                                      {listing.apartment?.location ||
+                                        (idx === 0
+                                          ? "New York, NY"
+                                          : idx === 1
+                                            ? "Brooklyn, NY"
+                                            : "Jersey City, NJ")}
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            );
-                          })
-                        )}
+                            ))
+                          : // Use example apartments from the listings page
+                            [0, 3, 5].map((idx) => {
+                              const apartment = exampleApartments[idx];
+                              return (
+                                <div
+                                  key={idx}
+                                  className="rounded-lg overflow-hidden shadow-sm"
+                                >
+                                  <div className="relative">
+                                    <img
+                                      src={apartment.images[0]}
+                                      alt={apartment.title}
+                                      className="w-full h-24 object-cover"
+                                    />
+                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 backdrop-blur-sm">
+                                      <div className="text-white text-xs font-medium">
+                                        {apartment.bedrooms} Bed,{" "}
+                                        {apartment.bathrooms} Bath
+                                      </div>
+                                      <div className="text-white text-xs">
+                                        {apartment.location}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
                       </div>
                     </div>
                   </div>
@@ -226,7 +254,7 @@ const SearchParty = () => {
                 You don't have any search parties. Create one to start
                 collaborating with friends and roommates on your apartment hunt.
               </p>
-              <Button 
+              <Button
                 onClick={() => setCreateDialogOpen(true)}
                 className="bg-[#E9927E] hover:bg-[#E9927E]/90 text-white rounded-full"
               >
