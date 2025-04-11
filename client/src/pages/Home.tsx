@@ -24,7 +24,6 @@ const Home = () => {
             <h2 className="text-[#1A4A4A] text-4xl md:text-5xl font-bold mb-8 leading-tight">
               Hyper-local apartment search
             </h2>
-
             <SearchBar onSearch={handleSearch} />
           </div>
 
