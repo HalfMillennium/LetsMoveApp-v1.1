@@ -62,9 +62,9 @@ const SearchParty = () => {
   ];
 
   return (
-    <section className="py-8 bg-[#FFF5E6] flex flex-1">
+    <section className="py-8 bg-gradient-to-br from-[#FFF9F2] to-[#FFE8D0] flex flex-1">
       <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-[#1A4A4A]">
               Your Search Parties
@@ -76,7 +76,7 @@ const SearchParty = () => {
                   Create New
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="glass-card bg-white/60 backdrop-blur-md border border-white/40">
                 <DialogHeader>
                   <DialogTitle>Create a Search Party</DialogTitle>
                 </DialogHeader>
@@ -89,7 +89,7 @@ const SearchParty = () => {
                       id="party-name"
                       value={newPartyName}
                       onChange={(e) => setNewPartyName(e.target.value)}
-                      className="w-full px-4 py-2 border border-[#C9DAD0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E9927E]"
+                      className="w-full px-4 py-2 bg-white/50 border border-white/40 focus:border-[#E9927E]/70 focus:ring-[#E9927E]/30 rounded-lg"
                       placeholder="e.g., NYC Summer 2025 Hunt"
                     />
                   </div>
@@ -102,7 +102,7 @@ const SearchParty = () => {
                       id="invites"
                       value={invites}
                       onChange={(e) => setInvites(e.target.value)}
-                      className="w-full px-4 py-2 border border-[#C9DAD0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E9927E]"
+                      className="w-full px-4 py-2 bg-white/50 border border-white/40 focus:border-[#E9927E]/70 focus:ring-[#E9927E]/30 rounded-lg"
                       placeholder="Enter email addresses or phone numbers separated by commas"
                       rows={3}
                     />
@@ -121,8 +121,8 @@ const SearchParty = () => {
 
           {isLoading ? (
             <div className="space-y-6">
-              <Skeleton className="h-64 w-full rounded-lg" />
-              <Skeleton className="h-64 w-full rounded-lg" />
+              <Skeleton className="h-64 w-full rounded-xl" />
+              <Skeleton className="h-64 w-full rounded-xl" />
             </div>
           ) : searchParties.length > 0 ? (
             <div className="space-y-6">
@@ -135,16 +135,19 @@ const SearchParty = () => {
                 const daysAgo = Math.floor(Math.random() * 7) + 1;
                 
                 return (
-                  <div key={searchParty.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div className="p-5">
+                  <div key={searchParty.id} className="glass-card rounded-xl overflow-hidden border border-white/40">
+                    <div className="p-6">
                       <div className="flex justify-between items-center mb-2">
                         <h2 className="text-xl font-semibold text-[#1A4A4A]">{searchParty.name}</h2>
-                        <Button variant="outline" size="sm" className="text-blue-600 border-blue-600 hover:bg-blue-50">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="bg-white/50 border-white/40 hover:bg-white/80 text-[#1A4A4A]">
                           View Listings
                         </Button>
                       </div>
                       
-                      <div className="text-sm text-gray-500 mb-4">
+                      <div className="text-sm text-gray-600 mb-4">
                         {listingCount} listings • Updated {daysAgo} days ago
                       </div>
                       
@@ -155,7 +158,7 @@ const SearchParty = () => {
                             key={idx} 
                             src={img} 
                             alt={`Member ${idx + 1}`}
-                            className="w-10 h-10 rounded-full border-2 border-white object-cover"
+                            className="w-10 h-10 rounded-full border-2 border-white/90 object-cover shadow-sm"
                           />
                         ))}
                       </div>
@@ -164,14 +167,14 @@ const SearchParty = () => {
                       <div className="grid grid-cols-3 gap-3">
                         {listings.length > 0 ? (
                           listings.slice(0, 3).map((listing, idx) => (
-                            <div key={idx} className="rounded-lg overflow-hidden">
+                            <div key={idx} className="rounded-lg overflow-hidden shadow-sm">
                               <div className="relative">
                                 <img 
                                   src={listing.apartment?.images[0] || `https://source.unsplash.com/random/300x200/?apartment,${idx}`} 
                                   alt="Apartment" 
                                   className="w-full h-24 object-cover"
                                 />
-                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 backdrop-blur-sm">
                                   <div className="text-white text-xs font-medium">
                                     {listing.apartment?.bedrooms || (idx % 3) + 1} Bed, {listing.apartment?.bathrooms || 1} Bath
                                   </div>
@@ -189,14 +192,14 @@ const SearchParty = () => {
                             { beds: 1, baths: 1, location: "Brooklyn, NY" },
                             { beds: 3, baths: 2, location: "Jersey City, NJ" }
                           ].map((item, idx) => (
-                            <div key={idx} className="rounded-lg overflow-hidden">
+                            <div key={idx} className="rounded-lg overflow-hidden shadow-sm">
                               <div className="relative">
                                 <img 
                                   src={`https://source.unsplash.com/random/300x200/?apartment,${idx}`} 
                                   alt="Apartment" 
                                   className="w-full h-24 object-cover"
                                 />
-                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 backdrop-blur-sm">
                                   <div className="text-white text-xs font-medium">
                                     {item.beds} Bed, {item.baths} Bath
                                   </div>
@@ -215,7 +218,7 @@ const SearchParty = () => {
               })}
             </div>
           ) : (
-            <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="glass-card rounded-xl p-6 border border-white/40">
               <h3 className="text-xl font-semibold text-[#1A4A4A] mb-4">
                 No Search Parties Yet
               </h3>
@@ -225,7 +228,7 @@ const SearchParty = () => {
               </p>
               <Button 
                 onClick={() => setCreateDialogOpen(true)}
-                className="bg-[#E9927E] text-white hover:bg-[#E9927E]/90"
+                className="bg-[#E9927E] hover:bg-[#E9927E]/90 text-white rounded-full"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Create Your First Search Party
