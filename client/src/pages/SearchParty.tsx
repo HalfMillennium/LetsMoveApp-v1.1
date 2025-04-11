@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { exampleApartments } from "../lib/utils";
 
 const SearchParty = () => {
   const { searchParties, isLoading, createSearchParty } = useSearchParty();
@@ -186,30 +187,29 @@ const SearchParty = () => {
                             </div>
                           ))
                         ) : (
-                          // Mock data when no listings are available
-                          [
-                            { beds: 2, baths: 1, location: "New York, NY" },
-                            { beds: 1, baths: 1, location: "Brooklyn, NY" },
-                            { beds: 3, baths: 2, location: "Jersey City, NJ" }
-                          ].map((item, idx) => (
-                            <div key={idx} className="rounded-lg overflow-hidden shadow-sm">
-                              <div className="relative">
-                                <img 
-                                  src={`https://source.unsplash.com/random/300x200/?apartment,${idx}`} 
-                                  alt="Apartment" 
-                                  className="w-full h-24 object-cover"
-                                />
-                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 backdrop-blur-sm">
-                                  <div className="text-white text-xs font-medium">
-                                    {item.beds} Bed, {item.baths} Bath
-                                  </div>
-                                  <div className="text-white text-xs">
-                                    {item.location}
+                          // Use example apartments from the listings page
+                          [0, 3, 5].map((idx) => {
+                            const apartment = exampleApartments[idx];
+                            return (
+                              <div key={idx} className="rounded-lg overflow-hidden shadow-sm">
+                                <div className="relative">
+                                  <img 
+                                    src={apartment.images[0]} 
+                                    alt={apartment.title} 
+                                    className="w-full h-24 object-cover"
+                                  />
+                                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 backdrop-blur-sm">
+                                    <div className="text-white text-xs font-medium">
+                                      {apartment.bedrooms} Bed, {apartment.bathrooms} Bath
+                                    </div>
+                                    <div className="text-white text-xs">
+                                      {apartment.location}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          ))
+                            );
+                          })
                         )}
                       </div>
                     </div>
