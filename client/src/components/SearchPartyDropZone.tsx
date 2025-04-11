@@ -54,51 +54,34 @@ const SearchPartyDropZone: React.FC<SearchPartyDropZoneProps> = ({
 
         {/* Dropzone Area */}
         {isExpanded && (
-          <Droppable droppableId="search-party-drop-zone">
-            {(provided, snapshot) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                className={`p-4 min-h-[120px] flex flex-col items-center justify-center transition-colors ${
-                  snapshot.isDraggingOver ? 'bg-[#E9927E]/10' : 'bg-white/10'
-                }`}
-              >
-                {snapshot.isDraggingOver ? (
-                  <div className="text-center p-4 border-2 border-dashed border-[#E9927E]/50 rounded-lg bg-[#E9927E]/5 w-full">
-                    <p className="text-sm font-medium text-[#E9927E]">Drop to add to search party</p>
+          <div className="p-4 min-h-[120px] flex flex-col items-center justify-center transition-colors bg-white/10">
+            <div className="text-center space-y-2">
+              <p className="text-sm text-gray-500">Drag apartments here to add to this search party</p>
+              <div className="flex -space-x-2 justify-center">
+                {currentSearchParty.members && currentSearchParty.members.slice(0, 3).map((member, index) => (
+                  <div key={index} className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white overflow-hidden">
+                    {member.user?.profileImage ? (
+                      <img 
+                        src={member.user.profileImage} 
+                        alt={member.user?.username || 'Member'} 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <UserCircle2 className="w-full h-full text-gray-400" />
+                    )}
                   </div>
-                ) : (
-                  <div className="text-center space-y-2">
-                    <p className="text-sm text-gray-500">Drag apartments here to add to this search party</p>
-                    <div className="flex -space-x-2 justify-center">
-                      {currentSearchParty.members && currentSearchParty.members.slice(0, 3).map((member, index) => (
-                        <div key={index} className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white overflow-hidden">
-                          {member.user?.profileImage ? (
-                            <img 
-                              src={member.user.profileImage} 
-                              alt={member.user?.username || 'Member'} 
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <UserCircle2 className="w-full h-full text-gray-400" />
-                          )}
-                        </div>
-                      ))}
-                      {(!currentSearchParty.members || currentSearchParty.members.length === 0) && (
-                        <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center">
-                          <UserCircle2 className="w-5 h-5 text-gray-400" />
-                        </div>
-                      )}
-                      <Button variant="outline" size="icon" className="w-8 h-8 rounded-full bg-white border-2 border-white flex items-center justify-center">
-                        <Plus className="h-3 w-3" />
-                      </Button>
-                    </div>
+                ))}
+                {(!currentSearchParty.members || currentSearchParty.members.length === 0) && (
+                  <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center">
+                    <UserCircle2 className="w-5 h-5 text-gray-400" />
                   </div>
                 )}
-                {provided.placeholder}
+                <Button variant="outline" size="icon" className="w-8 h-8 rounded-full bg-white border-2 border-white flex items-center justify-center">
+                  <Plus className="h-3 w-3" />
+                </Button>
               </div>
-            )}
-          </Droppable>
+            </div>
+          </div>
         )}
 
         {/* Recent Listings */}

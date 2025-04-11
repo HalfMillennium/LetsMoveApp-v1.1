@@ -295,107 +295,66 @@ const Listings2 = () => {
                   ))}
                 </div>
               ) : (
-                <DragDropContext
-                  onDragStart={(start) => {
-                    // Set the dragging apartment ID
-                    const apartmentId = parseInt(start.draggableId.replace('apartment-', ''));
-                    setDraggingApartmentId(apartmentId);
-                    
-                    // Show the search party overlay when dragging starts
-                    setShowSearchPartyOverlay(true);
-                  }}
-                  onDragEnd={(result) => {
-                    // Hide the search party overlay
-                    setShowSearchPartyOverlay(false);
-                    setDraggingApartmentId(null);
-                    
-                    // If the drop was outside a droppable area or not completed, return
-                    if (!result.destination || result.destination.droppableId !== 'search-party-drop-zone') {
-                      return;
-                    }
-                    
-                    // Get the apartment ID from the draggable ID
-                    const apartmentId = parseInt(result.draggableId.replace('apartment-', ''));
-                    
-                    // Find the apartment to add
-                    const apartment = apartments.find(a => a.id === apartmentId);
-                    if (apartment) {
-                      setApartmentToAdd(apartment);
-                      setAddToPartyModalOpen(true);
-                    }
-                  }}
-                >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {apartments.map((apartment, index) => (
-                      <Draggable 
-                        key={`apartment-${apartment.id}`} 
-                        draggableId={`apartment-${apartment.id}`} 
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            className={`space-y-2 group ${snapshot.isDragging ? 'opacity-50' : ''}`}
-                            onClick={(e) => {
-                              // Prevent click when dragging
-                              if (!snapshot.isDragging) {
-                                handleApartmentSelect(apartment.id);
-                              }
-                            }}
-                          >
-                            <div className="relative overflow-hidden rounded-lg h-48">
-                              <img
-                                src={apartment.images[0]}
-                                alt={apartment.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                              />
-                              <button 
-                                className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  // Handle favorite toggle
-                                  toast({
-                                    title: "Added to favorites",
-                                    description: "Apartment has been added to your favorites",
-                                  });
-                                }}
-                              >
-                                <Heart className="h-4 w-4 text-gray-700" />
-                              </button>
-                              <div
-                                {...provided.dragHandleProps}
-                                className="absolute top-3 left-3 p-2 rounded-full bg-white/90 hover:bg-white cursor-grab"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <GripVertical className="h-4 w-4 text-gray-700" />
-                              </div>
-                            </div>
-                            <div className="flex justify-between items-start">
-                              <h3 className="font-semibold text-gray-900 line-clamp-1">
-                                {apartment.title}
-                              </h3>
-                              <div className="flex items-center text-sm">
-                                <span className="mr-1">★</span>
-                                <span>{formatRating(getListingRating(index))}</span>
-                                <span className="ml-1 text-gray-500">
-                                  ({getListingReviews(index)})
-                                </span>
-                              </div>
-                            </div>
-                            <p className="text-gray-500 text-sm">
-                              {apartment.bedrooms} bed • {apartment.bathrooms} bath •{" "}
-                              {apartment.squareFeet} sq ft
-                            </p>
-                            <p className="text-gray-900 font-medium">
-                              ${apartment.price}/month
-                            </p>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                  </div>
-                </DragDropContext>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {apartments.map((apartment, index) => (
+                    <div
+                      key={apartment.id}
+                      className="space-y-2 group cursor-pointer relative"
+                      onClick={() => handleApartmentSelect(apartment.id)}
+                    >
+                      <div className="relative overflow-hidden rounded-lg h-48">
+                        <img
+                          src={apartment.images[0]}
+                          alt={apartment.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                        />
+                        <button 
+                          className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Handle favorite toggle
+                            toast({
+                              title: "Added to favorites",
+                              description: "Apartment has been added to your favorites",
+                            });
+                          }}
+                        >
+                          <Heart className="h-4 w-4 text-gray-700" />
+                        </button>
+                        <button
+                          className="absolute top-3 left-3 p-2 rounded-full bg-white/90 hover:bg-white cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setApartmentToAdd(apartment);
+                            setAddToPartyModalOpen(true);
+                            setShowSearchPartyOverlay(true);
+                          }}
+                        >
+                          <Users className="h-4 w-4 text-gray-700" />
+                        </button>
+                      </div>
+                      <div className="flex justify-between items-start">
+                        <h3 className="font-semibold text-gray-900 line-clamp-1">
+                          {apartment.title}
+                        </h3>
+                        <div className="flex items-center text-sm">
+                          <span className="mr-1">★</span>
+                          <span>{formatRating(getListingRating(index))}</span>
+                          <span className="ml-1 text-gray-500">
+                            ({getListingReviews(index)})
+                          </span>
+                        </div>
+                      </div>
+                      <p className="text-gray-500 text-sm">
+                        {apartment.bedrooms} bed • {apartment.bathrooms} bath •{" "}
+                        {apartment.squareFeet} sq ft
+                      </p>
+                      <p className="text-gray-900 font-medium">
+                        ${apartment.price}/month
+                      </p>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
 
