@@ -3,6 +3,7 @@ import {
   SearchPartyListing,
   SearchPartyContextType,
 } from "../types";
+import { exampleApartments } from "../lib/utils";
 
 export const exampleSearchPartyContext: SearchPartyContextType = {
   // Initialize with two example search parties.
@@ -19,6 +20,7 @@ export const exampleSearchPartyContext: SearchPartyContextType = {
           searchPartyId: 1,
           apartmentId: 101,
           addedById: 1,
+          apartment: exampleApartments[0],
           addedAt: new Date().toISOString(),
           notes: "Close to public transit and parks",
         },
@@ -27,6 +29,7 @@ export const exampleSearchPartyContext: SearchPartyContextType = {
           searchPartyId: 1,
           apartmentId: 102,
           addedById: 2,
+          apartment: exampleApartments[1],
           addedAt: new Date().toISOString(),
           notes: "Spacious layout with modern amenities",
         },
@@ -44,6 +47,7 @@ export const exampleSearchPartyContext: SearchPartyContextType = {
           searchPartyId: 2,
           apartmentId: 201,
           addedById: 2,
+          apartment: exampleApartments[4],
           addedAt: new Date().toISOString(),
           notes: "High-end finishes and breathtaking views",
         },

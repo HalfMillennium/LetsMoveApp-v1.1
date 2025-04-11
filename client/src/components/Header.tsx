@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, Search, CircleUserRound } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -13,7 +12,7 @@ const Header = () => {
   const isActive = (path: string) => location === path;
 
   return (
-    <header className="sticky top-0 z-50 bg-[#FFF5E6] shadow-sm">
+    <header className="sticky top-0 z-50 shadow-sm backdrop-blur-lg bg-white backdrop-opacity-20">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link href="/">
           <img src={appLogo} className="h-8 cursor-pointer" />
