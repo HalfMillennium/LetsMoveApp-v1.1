@@ -40,7 +40,7 @@ const Favorites = () => {
             ))}
           </div>
         ) : favorites.length === 0 ? (
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
+          <div className="glass-card rounded-xl border border-white/40 p-6 rounded-lg shadow-md text-center">
             <h3 className="text-xl font-semibold text-[#1A4A4A] mb-3">
               No Favorites Yet
             </h3>
@@ -49,7 +49,7 @@ const Favorites = () => {
             </p>
             <Button
               onClick={() => (window.location.href = "/listings")}
-              className="bg-[#E9927E] text-white hover:bg-[#E9927E]/90"
+              className="bg-[#E9927E] text-white hover:bg-[#E9927E]/90 rounded-full"
             >
               Browse Apartments
             </Button>
