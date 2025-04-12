@@ -6,9 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSearchParty } from "../context/SearchPartyContext";
-import { 
-  Progress 
-} from "@/components/ui/progress";
 import {
   ExternalLink,
   Home,
@@ -743,7 +740,12 @@ const Profile = () => {
                             {Math.floor(Math.random() * 50) + 50}%
                           </span>
                         </div>
-                        <Progress value={Math.floor(Math.random() * 50) + 50} className="h-2 bg-white/50" indicatorClassName="bg-[#E9927E]" />
+                        <div className="h-2 w-full bg-white/50 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-[#E9927E]" 
+                            style={{ width: `${Math.floor(Math.random() * 50) + 50}%` }}
+                          ></div>
+                        </div>
                       </div>
                     </div>
                   ))
