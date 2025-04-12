@@ -145,8 +145,8 @@ const FilterChips = ({
   };
 
   return (
-    <div className="flex">
-      <div className="flex flex-wrap gap-3 items-center mb-4">
+    <div className="flex w-full md:w-auto">
+      <div style={{scrollbarWidth: 'none'}} className="flex flex-1 overflow-auto md:overflow-hidden gap-3 items-center mb-4">
         {/* Price Range Dropdown */}
         <div className="relative">
           <Select
