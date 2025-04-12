@@ -23,6 +23,7 @@ import {
   ChevronDown,
   GripVertical,
   Users,
+  Filter,
 } from "lucide-react";
 import { Apartment, FilterSettings, ActiveFilters, SearchParty } from "../types";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,7 @@ import CreateCollectionModal from "../components/CreateCollectionModal";
 import AllCollectionsModal from "../components/AllCollectionsModal";
 import AddToSearchPartyModal from "../components/AddToSearchPartyModal";
 import SearchPartyDropZone from "../components/SearchPartyDropZone";
+import CollectionsPopover from "../components/CollectionsPopover";
 import { useSearchParty } from "../context/SearchPartyContext";
 
 const Listings2 = () => {
@@ -231,44 +233,43 @@ const Listings2 = () => {
       <div
         className={`flex flex-col min-h-screen bg-white w-full transition-all duration-300 ${isDetailsDrawerOpen ? "md:ml-[33.333%] lg:ml-[33.333%]" : ""}`}
       >
-        {/* Custom Apartment Collections Tabs */}
-        <div>
-          <div className="container mx-auto px-6 py-4 flex items-center overflow-x-auto scrollbar-hide">
-            {apartmentCollections.map((collection) => (
-              <button
-                key={collection.name}
-                className={`flex flex-col items-center px-4 py-2 whitespace-nowrap mr-4 transition-all ${
-                  activeCategory === collection.name
-                    ? "border-b-2 border-gray-800 text-gray-800"
-                    : "text-gray-500 hover:text-gray-800 hover:border-b-2 hover:border-gray-300"
-                }`}
-                onClick={() => handleCategoryChange(collection.name)}
-              >
-                <div className="flex items-center mb-1">{collection.icon}</div>
-                <span className="text-sm">{collection.name}</span>
-              </button>
-            ))}
-
-            {/* View All Button - Only shows when collections might overflow */}
-            {mightCollectionsOverflow && (
-              <button
-                className="flex items-center ml-2 px-4 py-2 border border-gray-200 rounded-full text-gray-700 whitespace-nowrap hover:bg-gray-50 gap-2"
-                onClick={handleOpenAllCollectionsModal}
-              >
-                <GalleryVerticalEnd className="h-4 w-4" />
-                <span className="text-sm font-medium mr-1">View All</span>
-              </button>
-            )}
-
-            <button
-              className="flex items-center ml-auto px-4 py-2 font-medium rounded-full text-gray-700 whitespace-nowrap items-center gap-2 bg-primary text-white"
-              onClick={handleAddCollection}
-            >
-              <div className="flex items-center">
-                <ListPlus className="h-4 w-4" />
+        {/* Mobile-friendly Collections Popover */}
+        <div className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm">
+          <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <CollectionsPopover 
+                collections={apartmentCollections}
+                activeCategory={activeCategory}
+                onSelectCollection={handleCategoryChange}
+                onAddCollection={handleAddCollection}
+              />
+              
+              <div className="hidden md:flex md:items-center md:gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full border-gray-200"
+                  onClick={() => {
+                    // Handle filters
+                  }}
+                >
+                  <Filter className="h-4 w-4 mr-2" />
+                  <span>Filters</span>
+                </Button>
               </div>
-              <span className="flex text-sm">New Collection</span>
-            </button>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full flex items-center gap-2 border-gray-200 bg-white/90 hover:bg-white"
+                onClick={handleAddCollection}
+              >
+                <ListPlus className="h-4 w-4" />
+                <span className="text-sm hidden sm:inline">New Collection</span>
+              </Button>
+            </div>
           </div>
         </div>
 
