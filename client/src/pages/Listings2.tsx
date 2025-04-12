@@ -264,8 +264,8 @@ const Listings2 = () => {
 
         {/* Main Content */}
         <main className="flex-1 container mx-auto px-6 py-6">
-          <div className="flex flex-1 items-end justify-between">
-            <div className="flex flex-col">
+          <div className="flex flex-1 flex-col md:flex-row items-start md:items-center justify-between">
+            <div className="flex flex-col flex-1">
               <p className="text-sm text-gray-600">
                 {apartments.length} listings available
               </p>
@@ -360,23 +360,8 @@ const Listings2 = () => {
 
             {/* Map View */}
             <div
-              className={`lg:sticky lg:top-20 h-[70vh] rounded-lg overflow-hidden shadow-md border border-gray-200 
-                ${mapExpanded ? "col-span-2" : ""}`}
+              className="lg:sticky lg:top-20 h-[70vh] rounded-lg overflow-hidden shadow-md border border-gray-200"
             >
-              <div className="absolute top-4 left-4 z-10 bg-white rounded-lg shadow-md p-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={toggleMapExpansion}
-                  className="text-gray-700 hover:bg-gray-100"
-                >
-                  {mapExpanded ? (
-                    <ChevronRight className="h-4 w-4" />
-                  ) : (
-                    <ChevronLeft className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
               <GoogleMapComponent
                 apartments={apartments}
                 onApartmentSelect={handleApartmentSelect}
