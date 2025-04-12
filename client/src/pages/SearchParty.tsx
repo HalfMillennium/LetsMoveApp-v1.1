@@ -154,7 +154,7 @@ const SearchParty = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="bg-white/50 border-white/40 hover:bg-white/80 text-[#1A4A4A]"
+                          className="bg-white/50 border-white/40 hover:bg-white/80 text-[#1A4A4A] rounded-full"
                         >
                           View Listings
                         </Button>
