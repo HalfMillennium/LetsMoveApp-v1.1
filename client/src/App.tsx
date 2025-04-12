@@ -11,6 +11,7 @@ import Listings2 from "./pages/Listings2";
 import SearchParty from "./pages/SearchParty";
 import Favorites from "./pages/Favorites";
 import Profile from "./pages/Profile";
+import HomeFooter from "./components/HomeFooter";
 
 function Router() {
   return (
@@ -27,15 +28,15 @@ function Router() {
 
 function AppContent() {
   const [location] = useLocation();
-  const isListings2Page = location === "/listings2";
+  const isListings2Page = location === "/listings";
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {!isListings2Page && <Header />}
+    <div className="flex flex-col min-h-screen bg-[#0D2436]">
+      <Header />
       <main className={`flex-1 ${isListings2Page ? "" : "flex"}`}>
         <Router />
       </main>
-      {!isListings2Page && <Footer />}
+      <HomeFooter />
       {!isListings2Page && <MobileNavBar />}
       <Toaster />
     </div>
