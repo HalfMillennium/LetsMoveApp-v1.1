@@ -146,7 +146,7 @@ const Profile = () => {
             <Button
               variant="default"
               size="sm"
-              className="bg-[#E9927E] hover:bg-[#E9927E]/90"
+              className="bg-[#E9927E] hover:bg-[#E9927E]/90 text-white rounded-full"
               onClick={handleSave}
             >
               Save Changes
@@ -156,17 +156,17 @@ const Profile = () => {
 
         {/* Tabs for different sections */}
         <Tabs defaultValue="profile" className="mb-6">
-          <TabsList className="grid grid-cols-4 mb-6 bg-white/50 backdrop-blur-sm border border-white/40">
-            <TabsTrigger value="profile" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white">
+          <TabsList className="grid grid-cols-4 mb-6 bg-transparent">
+            <TabsTrigger value="profile" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-2">
               Profile
             </TabsTrigger>
-            <TabsTrigger value="preferences" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white">
+            <TabsTrigger value="preferences" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-2">
               Housing Preferences
             </TabsTrigger>
-            <TabsTrigger value="collections" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white">
+            <TabsTrigger value="collections" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-2">
               Collections
             </TabsTrigger>
-            <TabsTrigger value="search-parties" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white">
+            <TabsTrigger value="search-parties" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-2">
               Search Parties
             </TabsTrigger>
           </TabsList>
@@ -237,36 +237,6 @@ const Profile = () => {
                           className="pl-10 w-full bg-white/50 border-white/40 focus:border-[#E9927E]/70 focus:ring-[#E9927E]/30"
                         />
                       </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Email Address
-                      </label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <UserCircle size={16} className="text-gray-500" />
-                        </div>
-                        <Input
-                          name="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          className="pl-10 w-full bg-white/50 border-white/40 focus:border-[#E9927E]/70 focus:ring-[#E9927E]/30"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Mobile Number
-                      </label>
-                      <Input
-                        name="mobileNumber"
-                        value={formData.mobileNumber}
-                        onChange={handleInputChange}
-                        className="w-full bg-white/50 border-white/40 focus:border-[#E9927E]/70 focus:ring-[#E9927E]/30"
-                      />
                     </div>
 
                     <div>
