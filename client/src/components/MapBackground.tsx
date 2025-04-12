@@ -13,6 +13,7 @@ const MapBackground = ({ children, variant = "map" }: MapBackgroundProps) => {
       <div
         className="flex-1 flex flex-col justify-center items-center bg-cover bg-center"
         style={{
+          backdropFilter: "blur(3px)",
           backgroundImage:
             variant === "cityscape" ? cityscapeBgImage : undefined,
           backgroundColor: variant === "cityscape" ? undefined : "#FFF5E6",
