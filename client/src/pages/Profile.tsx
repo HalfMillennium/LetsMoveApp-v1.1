@@ -47,7 +47,7 @@ const Profile = () => {
   ]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -71,16 +71,16 @@ const Profile = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-[#FFF9F2] to-[#FFE8D0] py-8 px-4 flex flex-1">
-      <div className="w-full max-w-6xl mx-auto">
+    <div className="py-8 bg-[#FFF9F2] flex flex-1">
+      <div className="container mx-auto px-4">
         {/* Header with Title and Buttons */}
         <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center">
-            <h1 className="text-3xl font-bold mr-4 text-[#1A4A4A]">Your Profile</h1>
+          <div className="flex flex-col">
+            <h2 className="text-2xl font-bold text-[#1A4A4A]">Your Profile</h2>
+            <p className="text-[#1A4A4A]/70 mt-2">
+              View and edit your profile information
+            </p>
           </div>
-          <Button className="rounded-full bg-[#E9927E] hover:bg-[#E9927E]/90">
-            Save Changes
-          </Button>
         </div>
 
         {/* Two-column Layout */}
@@ -114,10 +114,18 @@ const Profile = () => {
                 </p>
               </div>
               <div className="flex justify-center space-x-2">
-                <Button variant="outline" size="sm" className="backdrop-blur-sm bg-white/50 border-white/50">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="backdrop-blur-sm bg-white/50 border-white/50"
+                >
                   Upload New
                 </Button>
-                <Button variant="default" size="sm" className="bg-[#E9927E] hover:bg-[#E9927E]/90">
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="bg-[#E9927E] hover:bg-[#E9927E]/90"
+                >
                   Save
                 </Button>
               </div>
@@ -211,7 +219,9 @@ const Profile = () => {
 
             {/* Industry/Interests Section */}
             <div className="glass-card rounded-xl p-6 border border-white/40">
-              <h2 className="text-xl font-semibold mb-4 text-[#1A4A4A]">Industry/Interests</h2>
+              <h2 className="text-xl font-semibold mb-4 text-[#1A4A4A]">
+                Industry/Interests
+              </h2>
               <div className="flex flex-wrap gap-2 mb-4">
                 {interests.map((interest, index) => (
                   <Badge
