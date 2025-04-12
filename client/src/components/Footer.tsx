@@ -1,9 +1,9 @@
 import { Link } from "wouter";
 import { Mail } from "lucide-react";
 
-const HomeFooter = () => {
+const Footer = () => {
   return (
-    <div className="container mx-auto px-4 bg-[#0D2436]">
+    <div className="container mx-auto p-4 bg-[#0D2436]">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-16">
         {/* Logo and Tagline */}
         <div className="md:col-span-1">
@@ -110,4 +110,4 @@ const HomeFooter = () => {
   );
 };
 
-export default HomeFooter;
+export default Footer;

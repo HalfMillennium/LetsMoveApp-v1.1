@@ -2,7 +2,6 @@ import { useLocation } from "wouter";
 import MapBackground from "../components/MapBackground";
 import SearchBar from "../components/SearchBar";
 import { Navigation } from "../components/Navigation";
-import HomeFooter from "../components/HomeFooter";
 
 const Home = () => {
   const [, navigate] = useLocation();
@@ -21,9 +20,9 @@ const Home = () => {
         {/* Main Content */}
         <div className="w-full max-w-3xl text-center">
           <h1 className="text-[#FFEFD4] text-5xl md:text-7xl font-bold mb-8 leading-tight">
-            Hyper-local
+            Find your place—
             <br />
-            apartment search
+            together in the city
           </h1>
 
           {/* Search Bar (Dark Mode) */}
