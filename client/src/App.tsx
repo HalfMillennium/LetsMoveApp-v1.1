@@ -5,13 +5,12 @@ import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Header from "./components/Header";
 import MobileNavBar from "./components/MobileNavBar";
-import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Listings2 from "./pages/Listings2";
 import SearchParty from "./pages/SearchParty";
 import Favorites from "./pages/Favorites";
 import Profile from "./pages/Profile";
-import HomeFooter from "./components/HomeFooter";
+import HomeFooter from "./components/Footer";
 
 function Router() {
   return (
