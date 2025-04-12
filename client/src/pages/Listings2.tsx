@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, Link } from "wouter";
-import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import {
   Heart,
   Search,
@@ -62,10 +61,9 @@ const Listings2 = () => {
     useState<string>("All Apartments");
   const [mapExpanded, setMapExpanded] = useState<boolean>(false);
 
-  // Search party dragging states
+  // Search party states
   const [showSearchPartyOverlay, setShowSearchPartyOverlay] = useState<boolean>(false);
   const [activeSearchParty, setActiveSearchParty] = useState<SearchParty | null>(null);
-  const [draggingApartmentId, setDraggingApartmentId] = useState<number | null>(null);
   const [addToPartyModalOpen, setAddToPartyModalOpen] = useState<boolean>(false);
   const [apartmentToAdd, setApartmentToAdd] = useState<Apartment | undefined>();
 
@@ -216,6 +214,18 @@ const Listings2 = () => {
     return prices[index % prices.length];
   };
 
+  // Handle adding apartment to search party
+  const handleAddToSearchParty = (apartment: Apartment) => {
+    setApartmentToAdd(apartment);
+    setAddToPartyModalOpen(true);
+    setShowSearchPartyOverlay(true);
+    
+    toast({
+      title: "Adding to search party",
+      description: "Preparing to add apartment to search party",
+    });
+  };
+
   return (
     <>
       <div
@@ -325,9 +335,7 @@ const Listings2 = () => {
                           className="absolute top-3 left-3 p-2 rounded-full bg-white/90 hover:bg-white cursor-pointer"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setApartmentToAdd(apartment);
-                            setAddToPartyModalOpen(true);
-                            setShowSearchPartyOverlay(true);
+                            handleAddToSearchParty(apartment);
                           }}
                         >
                           <Users className="h-4 w-4 text-gray-700" />
