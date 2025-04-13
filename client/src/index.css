@@ -1,14 +1,4 @@
 @import './assets/fonts.css';
-@import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Onest:wght@100..900&family=Special+Gothic+Expanded+One&display=swap');
-
-@font-face {
-  font-family: "Medium";
-  src: url("./fonts/diatype/black.otf") format("opentype");
-}
-
-* {
-  font-family: 'Medium', sans-serif;
-}
 
 @tailwind base;
 @tailwind components;
@@ -16,7 +6,7 @@
 
 /* Glass effect component styles */
 .glass-card {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -35,14 +25,11 @@
 
 @layer utilities {
   .scrollbar-hide {
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
-
+  
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-    /* Chrome, Safari and Opera */
+    display: none;  /* Chrome, Safari and Opera */
   }
 }
