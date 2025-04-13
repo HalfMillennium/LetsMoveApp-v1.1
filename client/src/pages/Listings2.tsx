@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, Link } from "wouter";
 import {
@@ -25,7 +25,12 @@ import {
   Users,
   Filter,
 } from "lucide-react";
-import { Apartment, FilterSettings, ActiveFilters, SearchParty } from "../types";
+import {
+  Apartment,
+  FilterSettings,
+  ActiveFilters,
+  SearchParty,
+} from "../types";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -64,9 +69,12 @@ const Listings2 = () => {
   const [mapExpanded, setMapExpanded] = useState<boolean>(false);
 
   // Search party states
-  const [showSearchPartyOverlay, setShowSearchPartyOverlay] = useState<boolean>(false);
-  const [activeSearchParty, setActiveSearchParty] = useState<SearchParty | null>(null);
-  const [addToPartyModalOpen, setAddToPartyModalOpen] = useState<boolean>(false);
+  const [showSearchPartyOverlay, setShowSearchPartyOverlay] =
+    useState<boolean>(false);
+  const [activeSearchParty, setActiveSearchParty] =
+    useState<SearchParty | null>(null);
+  const [addToPartyModalOpen, setAddToPartyModalOpen] =
+    useState<boolean>(false);
   const [apartmentToAdd, setApartmentToAdd] = useState<Apartment | undefined>();
 
   // Initialize active search party if any exist
@@ -216,12 +224,72 @@ const Listings2 = () => {
     return prices[index % prices.length];
   };
 
+  // Animation refs
+  const headerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const listingsContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const apartmentRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const collectionRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // Reset apartment refs whenever apartments change
+  useEffect(() => {
+    apartmentRefs.current = apartmentRefs.current.slice(0, apartments.length);
+  }, [apartments]);
+  
+  // Apply animations when component mounts using CSS transitions
+  useEffect(() => {
+    // Animate header elements
+    setTimeout(() => {
+      if (headerRef.current) {
+        headerRef.current.style.opacity = '1';
+        headerRef.current.style.transform = 'translateY(0)';
+      }
+    }, 100);
+
+    setTimeout(() => {
+      if (titleRef.current) {
+        titleRef.current.style.opacity = '1';
+        titleRef.current.style.transform = 'translateY(0)';
+      }
+    }, 300);
+    
+    // Animate map
+    setTimeout(() => {
+      if (mapRef.current) {
+        mapRef.current.style.opacity = '1';
+      }
+    }, 400);
+    
+    // Animate collection tabs with stagger effect
+    const tabButtons = collectionRefs.current.filter(Boolean) as HTMLButtonElement[];
+    tabButtons.forEach((button, index) => {
+      setTimeout(() => {
+        if (button) {
+          button.style.opacity = '1';
+          button.style.transform = 'translateY(0)';
+        }
+      }, 300 + (index * 40));
+    });
+    
+    // Animate apartment cards with stagger effect
+    const cards = apartmentRefs.current.filter(Boolean) as HTMLDivElement[];
+    cards.forEach((card, index) => {
+      setTimeout(() => {
+        if (card) {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0) scale(1)';
+        }
+      }, 500 + (index * 70));
+    });
+  }, [apartments, isLoading]);
+  
   // Handle adding apartment to search party
   const handleAddToSearchParty = (apartment: Apartment) => {
     setApartmentToAdd(apartment);
     setAddToPartyModalOpen(true);
     setShowSearchPartyOverlay(true);
-    
+
     toast({
       title: "Adding to search party",
       description: "Preparing to add apartment to search party",
@@ -234,19 +302,16 @@ const Listings2 = () => {
         className={`flex flex-col min-h-screen bg-white w-full transition-all duration-300 ${isDetailsDrawerOpen ? "md:ml-[33.333%] lg:ml-[33.333%]" : ""}`}
       >
         {/* Responsive Collection Navigation */}
-        <div className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm">
+        <div ref={headerRef} className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm opacity-0 transform -translate-y-4 transition-all duration-500">
           {/* Mobile Collections Popover - Only visible on small screens */}
           <div className="md:hidden container mx-auto px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <CollectionsPopover 
+              <CollectionsPopover
                 collections={apartmentCollections}
                 activeCategory={activeCategory}
                 onSelectCollection={handleCategoryChange}
                 onAddCollection={handleAddCollection}
               />
-            </div>
-            
-            <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -255,33 +320,26 @@ const Listings2 = () => {
               >
                 <ListPlus className="h-4 w-4" />
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="rounded-full border-gray-200"
-                onClick={() => {
-                  // Handle filters
-                }}
-              >
-                <Filter className="h-4 w-4" />
-              </Button>
             </div>
           </div>
 
           {/* Desktop Collections Tabs - Only visible on medium screens and up */}
           <div className="hidden md:block">
             <div className="container mx-auto px-6 py-4 flex items-center overflow-x-auto scrollbar-hide">
-              {apartmentCollections.map((collection) => (
+              {apartmentCollections.map((collection, idx) => (
                 <button
                   key={collection.name}
-                  className={`flex flex-col items-center px-4 py-2 whitespace-nowrap mr-4 transition-all ${
+                  ref={el => collectionRefs.current[idx] = el}
+                  className={`flex flex-col items-center px-4 py-2 whitespace-nowrap mr-4 transition-all opacity-0 transform -translate-y-4 duration-500 ${
                     activeCategory === collection.name
                       ? "border-b-2 border-gray-800 text-gray-800"
                       : "text-gray-500 hover:text-gray-800 hover:border-b-2 hover:border-gray-300"
                   }`}
                   onClick={() => handleCategoryChange(collection.name)}
                 >
-                  <div className="flex items-center mb-1">{collection.icon}</div>
+                  <div className="flex items-center mb-1">
+                    {collection.icon}
+                  </div>
                   <span className="text-sm">{collection.name}</span>
                 </button>
               ))}
@@ -317,7 +375,7 @@ const Listings2 = () => {
               <p className="text-sm text-gray-600">
                 {apartments.length} listings available
               </p>
-              <h1 className="text-2xl font-semibold text-gray-900 mb-4">
+              <h1 ref={titleRef} className="text-2xl font-semibold text-gray-900 mb-4 opacity-0 transform translate-y-4 transition-all duration-700">
                 {activeCategory}
               </h1>
             </div>
@@ -347,7 +405,8 @@ const Listings2 = () => {
                   {apartments.map((apartment, index) => (
                     <div
                       key={apartment.id}
-                      className="space-y-2 group cursor-pointer relative"
+                      ref={el => apartmentRefs.current[index] = el}
+                      className="space-y-2 group cursor-pointer relative opacity-0 transform translate-y-4 scale-95 transition-all duration-700"
                       onClick={() => handleApartmentSelect(apartment.id)}
                     >
                       <div className="relative overflow-hidden rounded-lg h-48">
@@ -356,14 +415,15 @@ const Listings2 = () => {
                           alt={apartment.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                         />
-                        <button 
+                        <button
                           className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white"
                           onClick={(e) => {
                             e.stopPropagation();
                             // Handle favorite toggle
                             toast({
                               title: "Added to favorites",
-                              description: "Apartment has been added to your favorites",
+                              description:
+                                "Apartment has been added to your favorites",
                             });
                           }}
                         >
@@ -405,9 +465,7 @@ const Listings2 = () => {
             </div>
 
             {/* Map View */}
-            <div
-              className="lg:sticky lg:top-20 h-[70vh] rounded-lg overflow-hidden shadow-md border border-gray-200"
-            >
+            <div ref={mapRef} className="lg:sticky lg:top-20 h-[70vh] rounded-lg overflow-hidden shadow-md border border-gray-200 opacity-0 transition-opacity duration-700">
               <GoogleMapComponent
                 apartments={apartments}
                 onApartmentSelect={handleApartmentSelect}
@@ -457,7 +515,7 @@ const Listings2 = () => {
       {showSearchPartyOverlay && activeSearchParty && (
         <SearchPartyDropZone
           onAddToParty={(apartmentId) => {
-            const apartment = apartments.find(a => a.id === apartmentId);
+            const apartment = apartments.find((a) => a.id === apartmentId);
             if (apartment) {
               setApartmentToAdd(apartment);
               setAddToPartyModalOpen(true);
