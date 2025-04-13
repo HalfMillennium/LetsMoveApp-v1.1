@@ -119,17 +119,12 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
             {/* Basic info and price - responsive layout */}
             <div className="flex flex-1 flex-col md:flex-row md:gap-4 md:justify-between items-center">
               {/* Left column - Title and interest */}
-              <div className="md:flex-1 flex flex-col gap-8">
+              <div className="md:flex-1 flex md:flex-col gap-8">
                 <div className="flex flex-col">
                   <h1 className="text-2xl font-semibold text-gray-900">
                     {apartment.title}
                   </h1>
                   <p className="text-gray-600">{apartment.address}</p>
-                  <div className="flex items-center mt-2">
-                    <Badge>
-                      {apartment.isAvailable ? "Available Now" : "Coming Soon"}
-                    </Badge>
-                  </div>
                 </div>
 
                 {/* People who saved this listing */}

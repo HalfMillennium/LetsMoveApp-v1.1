@@ -155,21 +155,35 @@ const Profile = () => {
         </div>
 
         {/* Tabs for different sections */}
-        <Tabs defaultValue="profile" className="mb-6">
-          <TabsList className="grid grid-cols-4 mb-6 bg-transparent">
-            <TabsTrigger value="profile" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-2">
-              Profile
-            </TabsTrigger>
-            <TabsTrigger value="preferences" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-2">
-              Housing Preferences
-            </TabsTrigger>
-            <TabsTrigger value="collections" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-2">
-              Collections
-            </TabsTrigger>
-            <TabsTrigger value="search-parties" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-2">
-              Search Parties
-            </TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="profile" className="mb-6 profile-tabs">
+          <div className="flex justify-center mb-6">
+            <TabsList className="tabs-list">
+              <TabsTrigger 
+                value="profile" 
+                className="tab-trigger"
+              >
+                Profile
+              </TabsTrigger>
+              <TabsTrigger 
+                value="preferences" 
+                className="tab-trigger"
+              >
+                Housing
+              </TabsTrigger>
+              <TabsTrigger 
+                value="collections" 
+                className="tab-trigger"
+              >
+                Collections
+              </TabsTrigger>
+              <TabsTrigger 
+                value="search-parties" 
+                className="tab-trigger"
+              >
+                Search Parties
+              </TabsTrigger>
+            </TabsList>
+          </div>
           
           {/* Profile Tab Content */}
           <TabsContent value="profile" className="space-y-6">
