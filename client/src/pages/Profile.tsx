@@ -38,12 +38,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Profile = () => {
   const { toast } = useToast();
@@ -54,7 +49,7 @@ const Profile = () => {
     email: user.email || "",
     mobileNumber: "+1 555-123-4567",
     location: "New York, NY",
-    bio: "Looking for a 2-bedroom apartment in downtown with access to public transportation. I work as a software engineer and need a home office. I enjoy properties with natural light and outdoor space."
+    bio: "Looking for a 2-bedroom apartment in downtown with access to public transportation. I work as a software engineer and need a home office. I enjoy properties with natural light and outdoor space.",
   });
 
   // Housing preferences
@@ -68,7 +63,7 @@ const Profile = () => {
     furnished: false,
     laundry: true,
     airConditioning: true,
-    dishwasher: true
+    dishwasher: true,
   });
 
   // Neighborhood preferences tags
@@ -79,7 +74,7 @@ const Profile = () => {
     "Parks Nearby",
     "Coffee Shops",
     "Quiet Street",
-    "Safe Neighborhood"
+    "Safe Neighborhood",
   ]);
 
   // User collections
@@ -87,19 +82,39 @@ const Profile = () => {
     { name: "Downtown Favorites", count: 12, icon: "building" },
     { name: "Affordable 2BR", count: 8, icon: "home" },
     { name: "Luxury Options", count: 5, icon: "dollar" },
-    { name: "Near Office", count: 7, icon: "map" }
+    { name: "Near Office", count: 7, icon: "map" },
   ]);
 
   // Friends/Roommates
   const [friends, setFriends] = useState([
-    { id: 1, name: "Alex Johnson", profileImage: "https://i.pravatar.cc/150?img=1", status: "active" },
-    { id: 2, name: "Jamie Smith", profileImage: "https://i.pravatar.cc/150?img=2", status: "active" },
-    { id: 3, name: "Taylor Wilson", profileImage: "https://i.pravatar.cc/150?img=3", status: "active" },
-    { id: 4, name: "Jordan Lee", profileImage: "https://i.pravatar.cc/150?img=4", status: "pending" }
+    {
+      id: 1,
+      name: "Alex Johnson",
+      profileImage: "https://i.pravatar.cc/150?img=1",
+      status: "active",
+    },
+    {
+      id: 2,
+      name: "Jamie Smith",
+      profileImage: "https://i.pravatar.cc/150?img=2",
+      status: "active",
+    },
+    {
+      id: 3,
+      name: "Taylor Wilson",
+      profileImage: "https://i.pravatar.cc/150?img=3",
+      status: "active",
+    },
+    {
+      id: 4,
+      name: "Jordan Lee",
+      profileImage: "https://i.pravatar.cc/150?img=4",
+      status: "pending",
+    },
   ]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -120,14 +135,18 @@ const Profile = () => {
 
   // Function to handle removing a neighborhood preference
   const handleRemoveNeighborhoodPreference = (preference: string) => {
-    setNeighborhoodPreferences(neighborhoodPreferences.filter(item => item !== preference));
+    setNeighborhoodPreferences(
+      neighborhoodPreferences.filter((item) => item !== preference),
+    );
   };
-  
+
   // Function to toggle a housing preference
-  const handleToggleHousingPreference = (preference: keyof typeof apartmentPreferences) => {
-    setApartmentPreferences(prev => ({
+  const handleToggleHousingPreference = (
+    preference: keyof typeof apartmentPreferences,
+  ) => {
+    setApartmentPreferences((prev) => ({
       ...prev,
-      [preference]: !prev[preference]
+      [preference]: !prev[preference],
     }));
   };
 
@@ -145,8 +164,7 @@ const Profile = () => {
           <div>
             <Button
               variant="default"
-              size="sm"
-              className="bg-[#E9927E] hover:bg-[#E9927E]/90 text-white rounded-full"
+              className="bg-[#E9927E] hover:bg-[#E9927E]/90 text-white rounded-full p-4 px-12"
               onClick={handleSave}
             >
               Save Changes
@@ -156,21 +174,33 @@ const Profile = () => {
 
         {/* Tabs for different sections */}
         <Tabs defaultValue="profile" className="mb-6">
-          <TabsList className="grid grid-cols-4 mb-6 bg-transparent">
-            <TabsTrigger value="profile" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-2">
+          <TabsList className="grid grid-cols-4 mb-12 bg-transparent">
+            <TabsTrigger
+              value="profile"
+              className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-4"
+            >
               Profile
             </TabsTrigger>
-            <TabsTrigger value="preferences" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-2">
+            <TabsTrigger
+              value="preferences"
+              className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-4"
+            >
               Housing Preferences
             </TabsTrigger>
-            <TabsTrigger value="collections" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-2">
+            <TabsTrigger
+              value="collections"
+              className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-4"
+            >
               Collections
             </TabsTrigger>
-            <TabsTrigger value="search-parties" className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-2">
+            <TabsTrigger
+              value="search-parties"
+              className="data-[state=active]:bg-[#E9927E] data-[state=active]:text-white rounded-full p-4"
+            >
               Search Parties
             </TabsTrigger>
           </TabsList>
-          
+
           {/* Profile Tab Content */}
           <TabsContent value="profile" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -263,7 +293,9 @@ const Profile = () => {
               <div className="space-y-6">
                 {/* Bio Section */}
                 <div className="glass-card rounded-xl p-6 border border-white/40">
-                  <h2 className="text-xl font-semibold mb-4 text-[#1A4A4A]">Housing Preferences Bio</h2>
+                  <h2 className="text-xl font-semibold mb-4 text-[#1A4A4A]">
+                    Housing Preferences Bio
+                  </h2>
                   <Textarea
                     name="bio"
                     value={formData.bio}
@@ -288,7 +320,7 @@ const Profile = () => {
                       Add
                     </Button>
                   </div>
-                  
+
                   <div className="space-y-3">
                     {friends.map((friend) => (
                       <div
@@ -296,20 +328,27 @@ const Profile = () => {
                         className="flex items-center gap-3 p-2 bg-white/40 backdrop-blur-sm rounded-lg border border-white/40"
                       >
                         <Avatar className="h-10 w-10">
-                          <AvatarImage src={friend.profileImage} alt={friend.name} />
-                          <AvatarFallback>{friend.name.charAt(0)}</AvatarFallback>
+                          <AvatarImage
+                            src={friend.profileImage}
+                            alt={friend.name}
+                          />
+                          <AvatarFallback>
+                            {friend.name.charAt(0)}
+                          </AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
                           <p className="font-medium text-sm">{friend.name}</p>
                           <p className="text-xs text-gray-500">
-                            {friend.status === 'active' ? 'Active Member' : 'Invite Pending'}
+                            {friend.status === "active"
+                              ? "Active Member"
+                              : "Invite Pending"}
                           </p>
                         </div>
-                        <Badge 
+                        <Badge
                           variant="outline"
-                          className={`${friend.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} border-0`}
+                          className={`${friend.status === "active" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"} border-0`}
                         >
-                          {friend.status === 'active' ? 'Active' : 'Pending'}
+                          {friend.status === "active" ? "Active" : "Pending"}
                         </Badge>
                       </div>
                     ))}
@@ -318,7 +357,7 @@ const Profile = () => {
               </div>
             </div>
           </TabsContent>
-          
+
           {/* Housing Preferences Tab Content */}
           <TabsContent value="preferences" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -328,7 +367,7 @@ const Profile = () => {
                   <h2 className="text-xl font-semibold mb-4 text-[#1A4A4A]">
                     Apartment Preferences
                   </h2>
-                  
+
                   <div className="space-y-6">
                     {/* Bedrooms */}
                     <div>
@@ -347,12 +386,17 @@ const Profile = () => {
                           min={0}
                           max={5}
                           step={1}
-                          onValueChange={(value) => setApartmentPreferences({...apartmentPreferences, minBedrooms: value[0]})}
+                          onValueChange={(value) =>
+                            setApartmentPreferences({
+                              ...apartmentPreferences,
+                              minBedrooms: value[0],
+                            })
+                          }
                           className="flex-1"
                         />
                       </div>
                     </div>
-                    
+
                     {/* Bathrooms */}
                     <div>
                       <div className="flex justify-between items-center mb-2">
@@ -370,12 +414,17 @@ const Profile = () => {
                           min={1}
                           max={4}
                           step={0.5}
-                          onValueChange={(value) => setApartmentPreferences({...apartmentPreferences, minBathrooms: value[0]})}
+                          onValueChange={(value) =>
+                            setApartmentPreferences({
+                              ...apartmentPreferences,
+                              minBathrooms: value[0],
+                            })
+                          }
                           className="flex-1"
                         />
                       </div>
                     </div>
-                    
+
                     {/* Size */}
                     <div>
                       <div className="flex justify-between items-center mb-2">
@@ -393,12 +442,17 @@ const Profile = () => {
                           min={400}
                           max={2000}
                           step={50}
-                          onValueChange={(value) => setApartmentPreferences({...apartmentPreferences, minSquareFeet: value[0]})}
+                          onValueChange={(value) =>
+                            setApartmentPreferences({
+                              ...apartmentPreferences,
+                              minSquareFeet: value[0],
+                            })
+                          }
                           className="flex-1"
                         />
                       </div>
                     </div>
-                    
+
                     {/* Budget */}
                     <div>
                       <div className="flex justify-between items-center mb-2">
@@ -416,91 +470,126 @@ const Profile = () => {
                           min={500}
                           max={5000}
                           step={100}
-                          onValueChange={(value) => setApartmentPreferences({...apartmentPreferences, maxPrice: value[0]})}
+                          onValueChange={(value) =>
+                            setApartmentPreferences({
+                              ...apartmentPreferences,
+                              maxPrice: value[0],
+                            })
+                          }
                           className="flex-1"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Amenities */}
                 <div className="glass-card rounded-xl p-6 border border-white/40">
                   <h2 className="text-xl font-semibold mb-4 text-[#1A4A4A]">
                     Must-Have Amenities
                   </h2>
-                  
+
                   <div className="grid grid-cols-2 gap-3">
-                    <div 
-                      className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer ${apartmentPreferences.petFriendly ? 'bg-[#E9927E]/10 border-[#E9927E]/30' : 'bg-white/40 border-white/40'}`}
-                      onClick={() => handleToggleHousingPreference('petFriendly')}
+                    <div
+                      className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer ${apartmentPreferences.petFriendly ? "bg-[#E9927E]/10 border-[#E9927E]/30" : "bg-white/40 border-white/40"}`}
+                      onClick={() =>
+                        handleToggleHousingPreference("petFriendly")
+                      }
                     >
-                      <div className={`h-5 w-5 rounded flex items-center justify-center ${apartmentPreferences.petFriendly ? 'bg-[#E9927E] text-white' : 'bg-white border border-gray-300'}`}>
-                        {apartmentPreferences.petFriendly && <Check className="h-3 w-3" />}
+                      <div
+                        className={`h-5 w-5 rounded flex items-center justify-center ${apartmentPreferences.petFriendly ? "bg-[#E9927E] text-white" : "bg-white border border-gray-300"}`}
+                      >
+                        {apartmentPreferences.petFriendly && (
+                          <Check className="h-3 w-3" />
+                        )}
                       </div>
                       <span className="text-sm">Pet Friendly</span>
                     </div>
-                    
-                    <div 
-                      className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer ${apartmentPreferences.parking ? 'bg-[#E9927E]/10 border-[#E9927E]/30' : 'bg-white/40 border-white/40'}`}
-                      onClick={() => handleToggleHousingPreference('parking')}
+
+                    <div
+                      className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer ${apartmentPreferences.parking ? "bg-[#E9927E]/10 border-[#E9927E]/30" : "bg-white/40 border-white/40"}`}
+                      onClick={() => handleToggleHousingPreference("parking")}
                     >
-                      <div className={`h-5 w-5 rounded flex items-center justify-center ${apartmentPreferences.parking ? 'bg-[#E9927E] text-white' : 'bg-white border border-gray-300'}`}>
-                        {apartmentPreferences.parking && <Check className="h-3 w-3" />}
+                      <div
+                        className={`h-5 w-5 rounded flex items-center justify-center ${apartmentPreferences.parking ? "bg-[#E9927E] text-white" : "bg-white border border-gray-300"}`}
+                      >
+                        {apartmentPreferences.parking && (
+                          <Check className="h-3 w-3" />
+                        )}
                       </div>
                       <span className="text-sm">Parking</span>
                     </div>
-                    
-                    <div 
-                      className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer ${apartmentPreferences.laundry ? 'bg-[#E9927E]/10 border-[#E9927E]/30' : 'bg-white/40 border-white/40'}`}
-                      onClick={() => handleToggleHousingPreference('laundry')}
+
+                    <div
+                      className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer ${apartmentPreferences.laundry ? "bg-[#E9927E]/10 border-[#E9927E]/30" : "bg-white/40 border-white/40"}`}
+                      onClick={() => handleToggleHousingPreference("laundry")}
                     >
-                      <div className={`h-5 w-5 rounded flex items-center justify-center ${apartmentPreferences.laundry ? 'bg-[#E9927E] text-white' : 'bg-white border border-gray-300'}`}>
-                        {apartmentPreferences.laundry && <Check className="h-3 w-3" />}
+                      <div
+                        className={`h-5 w-5 rounded flex items-center justify-center ${apartmentPreferences.laundry ? "bg-[#E9927E] text-white" : "bg-white border border-gray-300"}`}
+                      >
+                        {apartmentPreferences.laundry && (
+                          <Check className="h-3 w-3" />
+                        )}
                       </div>
                       <span className="text-sm">In-unit Laundry</span>
                     </div>
-                    
-                    <div 
-                      className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer ${apartmentPreferences.airConditioning ? 'bg-[#E9927E]/10 border-[#E9927E]/30' : 'bg-white/40 border-white/40'}`}
-                      onClick={() => handleToggleHousingPreference('airConditioning')}
+
+                    <div
+                      className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer ${apartmentPreferences.airConditioning ? "bg-[#E9927E]/10 border-[#E9927E]/30" : "bg-white/40 border-white/40"}`}
+                      onClick={() =>
+                        handleToggleHousingPreference("airConditioning")
+                      }
                     >
-                      <div className={`h-5 w-5 rounded flex items-center justify-center ${apartmentPreferences.airConditioning ? 'bg-[#E9927E] text-white' : 'bg-white border border-gray-300'}`}>
-                        {apartmentPreferences.airConditioning && <Check className="h-3 w-3" />}
+                      <div
+                        className={`h-5 w-5 rounded flex items-center justify-center ${apartmentPreferences.airConditioning ? "bg-[#E9927E] text-white" : "bg-white border border-gray-300"}`}
+                      >
+                        {apartmentPreferences.airConditioning && (
+                          <Check className="h-3 w-3" />
+                        )}
                       </div>
                       <span className="text-sm">A/C</span>
                     </div>
-                    
-                    <div 
-                      className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer ${apartmentPreferences.dishwasher ? 'bg-[#E9927E]/10 border-[#E9927E]/30' : 'bg-white/40 border-white/40'}`}
-                      onClick={() => handleToggleHousingPreference('dishwasher')}
+
+                    <div
+                      className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer ${apartmentPreferences.dishwasher ? "bg-[#E9927E]/10 border-[#E9927E]/30" : "bg-white/40 border-white/40"}`}
+                      onClick={() =>
+                        handleToggleHousingPreference("dishwasher")
+                      }
                     >
-                      <div className={`h-5 w-5 rounded flex items-center justify-center ${apartmentPreferences.dishwasher ? 'bg-[#E9927E] text-white' : 'bg-white border border-gray-300'}`}>
-                        {apartmentPreferences.dishwasher && <Check className="h-3 w-3" />}
+                      <div
+                        className={`h-5 w-5 rounded flex items-center justify-center ${apartmentPreferences.dishwasher ? "bg-[#E9927E] text-white" : "bg-white border border-gray-300"}`}
+                      >
+                        {apartmentPreferences.dishwasher && (
+                          <Check className="h-3 w-3" />
+                        )}
                       </div>
                       <span className="text-sm">Dishwasher</span>
                     </div>
-                    
-                    <div 
-                      className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer ${apartmentPreferences.furnished ? 'bg-[#E9927E]/10 border-[#E9927E]/30' : 'bg-white/40 border-white/40'}`}
-                      onClick={() => handleToggleHousingPreference('furnished')}
+
+                    <div
+                      className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer ${apartmentPreferences.furnished ? "bg-[#E9927E]/10 border-[#E9927E]/30" : "bg-white/40 border-white/40"}`}
+                      onClick={() => handleToggleHousingPreference("furnished")}
                     >
-                      <div className={`h-5 w-5 rounded flex items-center justify-center ${apartmentPreferences.furnished ? 'bg-[#E9927E] text-white' : 'bg-white border border-gray-300'}`}>
-                        {apartmentPreferences.furnished && <Check className="h-3 w-3" />}
+                      <div
+                        className={`h-5 w-5 rounded flex items-center justify-center ${apartmentPreferences.furnished ? "bg-[#E9927E] text-white" : "bg-white border border-gray-300"}`}
+                      >
+                        {apartmentPreferences.furnished && (
+                          <Check className="h-3 w-3" />
+                        )}
                       </div>
                       <span className="text-sm">Furnished</span>
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               {/* Neighborhood Preferences */}
               <div className="space-y-6">
                 <div className="glass-card rounded-xl p-6 border border-white/40">
                   <h2 className="text-xl font-semibold mb-4 text-[#1A4A4A]">
                     Neighborhood Preferences
                   </h2>
-                  
+
                   <div className="flex flex-wrap gap-2 mb-4">
                     {neighborhoodPreferences.map((preference, index) => (
                       <Badge
@@ -509,13 +598,17 @@ const Profile = () => {
                         className="flex items-center gap-1 py-1 px-2 bg-white/60 backdrop-blur-sm hover:bg-white/80 text-[#1A4A4A]"
                       >
                         {preference}
-                        <button onClick={() => handleRemoveNeighborhoodPreference(preference)}>
+                        <button
+                          onClick={() =>
+                            handleRemoveNeighborhoodPreference(preference)
+                          }
+                        >
                           <X size={14} className="ml-1" />
                         </button>
                       </Badge>
                     ))}
                   </div>
-                  
+
                   <Button
                     variant="outline"
                     className="w-full flex items-center justify-center bg-white/50 border-white/40 hover:bg-white/80"
@@ -524,14 +617,18 @@ const Profile = () => {
                     Add More Preferences
                   </Button>
                 </div>
-                
+
                 {/* Map View Placeholder */}
                 <div className="glass-card rounded-xl p-6 border border-white/40 h-80 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gray-100 rounded-lg flex items-center justify-center">
                     <div className="text-center p-6">
                       <MapPin className="h-10 w-10 text-[#E9927E] mx-auto mb-2" />
-                      <h3 className="font-medium text-[#1A4A4A] mb-1">Preferred Neighborhoods</h3>
-                      <p className="text-sm text-gray-500 mb-4">Select your preferred areas on the map</p>
+                      <h3 className="font-medium text-[#1A4A4A] mb-1">
+                        Preferred Neighborhoods
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-4">
+                        Select your preferred areas on the map
+                      </p>
                       <Button
                         variant="default"
                         size="sm"
@@ -545,7 +642,7 @@ const Profile = () => {
               </div>
             </div>
           </TabsContent>
-          
+
           {/* Collections Tab Content */}
           <TabsContent value="collections" className="space-y-6">
             <div className="glass-card rounded-xl p-6 border border-white/40">
@@ -556,13 +653,13 @@ const Profile = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-white/50 border-white/40"
+                  className="bg-white/50 border-white/40 rounded-full"
                 >
                   <Plus size={16} className="mr-1" />
                   New Collection
                 </Button>
               </div>
-              
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {collections.map((collection, index) => (
                   <div
@@ -572,19 +669,31 @@ const Profile = () => {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center">
                         <div className="h-8 w-8 rounded-full bg-[#E9927E]/20 flex items-center justify-center text-[#E9927E] mr-2">
-                          {collection.icon === "building" && <Building className="h-4 w-4" />}
-                          {collection.icon === "home" && <Home className="h-4 w-4" />}
-                          {collection.icon === "dollar" && <DollarSign className="h-4 w-4" />}
-                          {collection.icon === "map" && <MapPin className="h-4 w-4" />}
+                          {collection.icon === "building" && (
+                            <Building className="h-4 w-4" />
+                          )}
+                          {collection.icon === "home" && (
+                            <Home className="h-4 w-4" />
+                          )}
+                          {collection.icon === "dollar" && (
+                            <DollarSign className="h-4 w-4" />
+                          )}
+                          {collection.icon === "map" && (
+                            <MapPin className="h-4 w-4" />
+                          )}
                         </div>
-                        <h3 className="font-medium text-[#1A4A4A]">{collection.name}</h3>
+                        <h3 className="font-medium text-[#1A4A4A]">
+                          {collection.name}
+                        </h3>
                       </div>
                       <Badge variant="secondary" className="bg-white/80">
                         {collection.count}
                       </Badge>
                     </div>
                     <div className="mt-3 pt-3 border-t border-white/40 flex justify-between items-center">
-                      <span className="text-xs text-gray-500">Last updated: 2 days ago</span>
+                      <span className="text-xs text-gray-500">
+                        Last updated: 2 days ago
+                      </span>
                       <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
                         <GripHorizontal className="h-4 w-4 text-gray-500" />
                       </Button>
@@ -593,23 +702,26 @@ const Profile = () => {
                 ))}
               </div>
             </div>
-            
+
             {/* Saved Apartments */}
             <div className="glass-card rounded-xl p-6 border border-white/40">
               <h2 className="text-xl font-semibold mb-4 text-[#1A4A4A]">
                 Recently Saved
               </h2>
-              
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[1, 2, 3, 4].map((item) => (
-                  <div key={item} className="rounded-lg overflow-hidden bg-white/30 border border-white/30">
+                  <div
+                    key={item}
+                    className="rounded-lg overflow-hidden bg-white/30 border border-white/30"
+                  >
                     <div className="h-36 overflow-hidden relative">
-                      <img 
-                        src={`https://picsum.photos/seed/${item}/300/200`} 
-                        alt="Apartment" 
+                      <img
+                        src={`https://picsum.photos/seed/${item}/300/200`}
+                        alt="Apartment"
                         className="w-full h-full object-cover"
                       />
-                      <Button 
+                      <Button
                         variant="ghost"
                         size="sm"
                         className="absolute top-2 right-2 h-8 w-8 rounded-full bg-white/70 p-0 hover:bg-white"
@@ -619,17 +731,19 @@ const Profile = () => {
                     </div>
                     <div className="p-3">
                       <h3 className="font-medium text-sm text-[#1A4A4A] mb-1 truncate">
-                        Modern {item+1}-Bedroom Apartment
+                        Modern {item + 1}-Bedroom Apartment
                       </h3>
                       <div className="flex items-center text-xs text-gray-500 mb-2 justify-between">
                         <div className="flex items-center">
                           <Bed className="h-3 w-3 mr-1" />
-                          <span>{item+1}</span>
+                          <span>{item + 1}</span>
                           <span className="mx-1">•</span>
                           <Bath className="h-3 w-3 mr-1" />
                           <span>{item}</span>
                         </div>
-                        <span className="font-medium text-[#1A4A4A]">${1000 + (item * 500)}</span>
+                        <span className="font-medium text-[#1A4A4A]">
+                          ${1000 + item * 500}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -637,7 +751,7 @@ const Profile = () => {
               </div>
             </div>
           </TabsContent>
-          
+
           {/* Search Parties Tab Content */}
           <TabsContent value="search-parties" className="space-y-6">
             <div className="glass-card rounded-xl p-6 border border-white/40">
@@ -654,7 +768,7 @@ const Profile = () => {
                   New Search Party
                 </Button>
               </div>
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {searchParties && searchParties.length > 0 ? (
                   searchParties.map((party) => (
@@ -663,25 +777,32 @@ const Profile = () => {
                       className="p-4 bg-white/40 backdrop-blur-sm rounded-lg border border-white/40"
                     >
                       <div className="flex justify-between">
-                        <h3 className="font-medium text-[#1A4A4A]">{party.name}</h3>
+                        <h3 className="font-medium text-[#1A4A4A]">
+                          {party.name}
+                        </h3>
                         <span className="text-xs text-gray-500">
-                          Created {new Date(party.createdAt).toLocaleDateString()}
+                          Created{" "}
+                          {new Date(party.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      
+
                       <div className="flex mt-3 justify-between">
                         <div className="flex -space-x-2">
-                          {party.members && party.members.slice(0, 3).map((member, idx) => (
-                            <Avatar key={idx} className="h-8 w-8 border-2 border-white">
-                              {member.user?.profileImage ? (
-                                <AvatarImage src={member.user.profileImage} />
-                              ) : (
-                                <AvatarFallback>
-                                  {member.user?.username?.charAt(0) || 'U'}
-                                </AvatarFallback>
-                              )}
-                            </Avatar>
-                          ))}
+                          {party.members &&
+                            party.members.slice(0, 3).map((member, idx) => (
+                              <Avatar
+                                key={idx}
+                                className="h-8 w-8 border-2 border-white"
+                              >
+                                {member.user?.profileImage ? (
+                                  <AvatarImage src={member.user.profileImage} />
+                                ) : (
+                                  <AvatarFallback>
+                                    {member.user?.username?.charAt(0) || "U"}
+                                  </AvatarFallback>
+                                )}
+                              </Avatar>
+                            ))}
                           {(!party.members || party.members.length === 0) && (
                             <Avatar className="h-8 w-8 border-2 border-white">
                               <AvatarFallback>U</AvatarFallback>
@@ -691,29 +812,37 @@ const Profile = () => {
                             <Plus className="h-4 w-4 text-[#E9927E]" />
                           </div>
                         </div>
-                        
+
                         <div className="space-x-1">
                           <Badge variant="outline" className="bg-white/60">
                             {party.listings?.length || 0} Listings
                           </Badge>
-                          <Button variant="ghost" size="sm" className="h-8 p-0 w-8">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 p-0 w-8"
+                          >
                             <GripHorizontal className="h-4 w-4 text-gray-500" />
                           </Button>
                         </div>
                       </div>
-                      
+
                       {/* Progress bar showing apartment matching rate */}
                       <div className="mt-4">
                         <div className="flex justify-between text-xs mb-1">
-                          <span className="text-gray-600">Matching preferences</span>
+                          <span className="text-gray-600">
+                            Matching preferences
+                          </span>
                           <span className="text-[#E9927E] font-medium">
                             {Math.floor(Math.random() * 50) + 50}%
                           </span>
                         </div>
                         <div className="h-2 w-full bg-white/50 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-[#E9927E]" 
-                            style={{ width: `${Math.floor(Math.random() * 50) + 50}%` }}
+                          <div
+                            className="h-full bg-[#E9927E]"
+                            style={{
+                              width: `${Math.floor(Math.random() * 50) + 50}%`,
+                            }}
                           ></div>
                         </div>
                       </div>
@@ -722,8 +851,12 @@ const Profile = () => {
                 ) : (
                   <div className="col-span-2 text-center py-8">
                     <Users className="h-12 w-12 mx-auto text-gray-300 mb-2" />
-                    <h3 className="text-lg font-medium text-gray-700 mb-1">No Search Parties Yet</h3>
-                    <p className="text-gray-500 mb-4">Create your first search party to collaborate with friends</p>
+                    <h3 className="text-lg font-medium text-gray-700 mb-1">
+                      No Search Parties Yet
+                    </h3>
+                    <p className="text-gray-500 mb-4">
+                      Create your first search party to collaborate with friends
+                    </p>
                     <Button
                       variant="default"
                       className="bg-[#E9927E] hover:bg-[#E9927E]/90"
@@ -735,13 +868,13 @@ const Profile = () => {
                 )}
               </div>
             </div>
-            
+
             {/* Invitations */}
             <div className="glass-card rounded-xl p-6 border border-white/40">
               <h2 className="text-xl font-semibold mb-4 text-[#1A4A4A]">
                 Pending Invitations
               </h2>
-              
+
               <div className="space-y-3">
                 <div className="p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-white/40">
                   <div className="flex items-center justify-between">
@@ -751,20 +884,24 @@ const Profile = () => {
                         <AvatarFallback>JD</AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="font-medium text-[#1A4A4A]">Jordan Davis</p>
-                        <p className="text-xs text-gray-500">Invited you to "NYC Apartment Hunt"</p>
+                        <p className="font-medium text-[#1A4A4A]">
+                          Jordan Davis
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Invited you to "NYC Apartment Hunt"
+                        </p>
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         className="h-8 bg-white/70 border-white/40"
                       >
                         Decline
                       </Button>
-                      <Button 
-                        variant="default" 
+                      <Button
+                        variant="default"
                         size="sm"
                         className="h-8 bg-[#E9927E] hover:bg-[#E9927E]/90"
                       >
