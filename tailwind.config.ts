@@ -5,6 +5,11 @@ export default {
   content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        'primary': ['"ABC Diatype"', 'Inter', 'sans-serif'],
+        'secondary': ['"DM Sans"', 'sans-serif'],
+        'sans': ['"ABC Diatype"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

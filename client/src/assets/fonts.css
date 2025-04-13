@@ -1,0 +1,95 @@
+/* Import fallback fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap');
+
+/* ABC Diatype font declarations - uncomment when font files are available */
+/*
+@font-face {
+  font-family: 'ABC Diatype';
+  src: url('./fonts/ABCDiatype-Regular.woff2') format('woff2'),
+       url('./fonts/ABCDiatype-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABC Diatype';
+  src: url('./fonts/ABCDiatype-Medium.woff2') format('woff2'),
+       url('./fonts/ABCDiatype-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABC Diatype';
+  src: url('./fonts/ABCDiatype-Bold.woff2') format('woff2'),
+       url('./fonts/ABCDiatype-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
+/* Font clamp utility classes */
+.text-clamp-sm {
+  font-size: clamp(0.875rem, calc(0.8rem + 0.2vw), 1rem);
+}
+
+.text-clamp-base {
+  font-size: clamp(1rem, calc(0.95rem + 0.25vw), 1.125rem);
+}
+
+.text-clamp-lg {
+  font-size: clamp(1.125rem, calc(1rem + 0.5vw), 1.25rem);
+}
+
+.text-clamp-xl {
+  font-size: clamp(1.25rem, calc(1.1rem + 0.75vw), 1.5rem);
+}
+
+.text-clamp-2xl {
+  font-size: clamp(1.5rem, calc(1.3rem + 1vw), 1.875rem);
+}
+
+.text-clamp-3xl {
+  font-size: clamp(1.875rem, calc(1.5rem + 1.5vw), 2.25rem);
+}
+
+.text-clamp-4xl {
+  font-size: clamp(2.25rem, calc(1.8rem + 2vw), 3rem);
+}
+
+.text-clamp-5xl {
+  font-size: clamp(3rem, calc(2.25rem + 3vw), 4rem);
+}
+
+.text-clamp-6xl {
+  font-size: clamp(3.75rem, calc(3rem + 3.5vw), 5rem);
+}
+
+.text-clamp-7xl {
+  font-size: clamp(4.5rem, calc(3.5rem + 4vw), 6rem);
+}
+
+/* Create line-height classes for each clamp size */
+.leading-clamp-sm {
+  line-height: calc(1.4em + 0.1vw);
+}
+
+.leading-clamp-base {
+  line-height: calc(1.5em + 0.1vw);
+}
+
+.leading-clamp-lg {
+  line-height: calc(1.4em + 0.1vw);
+}
+
+.leading-clamp-xl {
+  line-height: calc(1.35em + 0.1vw);
+}
+
+.leading-clamp-2xl, .leading-clamp-3xl, .leading-clamp-4xl, .leading-clamp-5xl, 
+.leading-clamp-6xl, .leading-clamp-7xl {
+  line-height: calc(1.2em + 0.05vw);
+}
