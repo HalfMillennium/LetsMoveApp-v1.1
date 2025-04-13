@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import {
@@ -14,7 +14,8 @@ import {
   Building2,
   Star,
   GalleryVerticalEnd,
-  Users
+  Users,
+  Puzzle,
 } from "lucide-react";
 import {
   Apartment,
@@ -28,6 +29,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { GoogleMapComponent } from "../components/GoogleMap";
 import FilterChips from "../components/FilterChips";
 import { exampleApartments } from "../lib/utils";
+import { ListingCollection } from "../types";
 import ApartmentDetailsDrawer from "../components/ApartmentDetailsDrawer";
 import CreateCollectionModal from "../components/CreateCollectionModal";
 import AllCollectionsModal from "../components/AllCollectionsModal";
@@ -53,8 +55,41 @@ const Listings2 = () => {
       type: urlParams.get("type") || "",
     };
   });
-  const [activeCategory, setActiveCategory] =
-    useState<string>("All Apartments");
+  // Default built-in collections
+  const [allCollections, setAllCollections] = useState<{
+    [id: string]: ListingCollection;
+  }>({
+    all: {
+      id: "all",
+      title: "All Apartments",
+      icon: <Home className="h-4 w-4" />,
+    },
+    "2": {
+      id: "2",
+      title: "Close to Parks",
+      icon: <Flower2 className="h-4 w-4" />,
+    },
+    "3": {
+      id: "3",
+      title: "Close to Subway",
+      icon: <Train className="h-4 w-4" />,
+    },
+    "4": { id: "4", title: "Pet Friendly", icon: <Dog className="h-4 w-4" /> },
+    "5": {
+      id: "5",
+      title: "New Construction",
+      icon: <Building2 className="h-4 w-4" />,
+    },
+  });
+
+  useEffect(
+    () => console.log("allCollections updated", allCollections),
+    [allCollections],
+  );
+
+  const [activeCollection, setActiveCollection] = useState<ListingCollection>(
+    allCollections["all"],
+  );
   const [mapExpanded, setMapExpanded] = useState<boolean>(false);
 
   // Search party states
@@ -125,29 +160,28 @@ const Listings2 = () => {
     useState(false);
   const [allCollectionsModalOpen, setAllCollectionsModalOpen] = useState(false);
 
-  // Default built-in collections
-  const defaultCollections = [
-    { name: "All Apartments", icon: <Home className="h-4 w-4" /> },
-    { name: "Close to Parks", icon: <Flower2 className="h-4 w-4" /> },
-    { name: "Close to Subway", icon: <Train className="h-4 w-4" /> },
-    { name: "Pet Friendly", icon: <Dog className="h-4 w-4" /> },
-    { name: "New Construction", icon: <Building2 className="h-4 w-4" /> },
-  ];
-
   // User-created collections saved in state
-  const [userCollections, setUserCollections] = useState<
-    Array<{ name: string; icon: React.ReactNode }>
-  >([]);
+  const [userCollections, setUserCollections] = useState<ListingCollection[]>(
+    [],
+  );
 
   // All collections combined
-  const apartmentCollections = [...defaultCollections, ...userCollections];
+  const apartmentCollections = useMemo<ListingCollection[]>(
+    () => [...Object.values(allCollections), ...userCollections],
+    [allCollections],
+  );
+
+  useEffect(
+    () => console.log("apartmentCollections updated", allCollections),
+    [apartmentCollections],
+  );
 
   // Collection modification handlers
   const handleAddCollection = () => {
     setCreateCollectionModalOpen(true);
   };
 
-  const handleCreateCollection = (name: string, iconIndex: number) => {
+  const handleCreateCollection = (title: string, iconIndex: number) => {
     const collectionIcons = [
       <Home className="h-4 w-4" />,
       <Building2 className="h-4 w-4" />,
@@ -161,15 +195,20 @@ const Listings2 = () => {
     ];
 
     const newCollection = {
-      name,
+      id: crypto.randomUUID(),
+      title,
       icon: collectionIcons[iconIndex],
     };
 
     setUserCollections([...userCollections, newCollection]);
+    setAllCollections((prevCollections) => ({
+      ...prevCollections,
+      [newCollection.id]: newCollection,
+    }));
 
     toast({
       title: "Collection created",
-      description: `Your "${name}" collection has been created`,
+      description: `Your "${title}" collection has been created`,
     });
   };
 
@@ -180,9 +219,10 @@ const Listings2 = () => {
   // Helper to check if collections might overflow
   const mightCollectionsOverflow = apartmentCollections.length > 5;
 
-  // Handle category change
-  const handleCategoryChange = (category: string) => {
-    setActiveCategory(category);
+  // Handle collection change
+  const handleCollectionChange = (collectionId: string) => {
+    const newCollection = allCollections[collectionId];
+    setActiveCollection(newCollection);
   };
 
   const updateActiveFilters = (activeFilters: ActiveFilters) => {
@@ -225,54 +265,62 @@ const Listings2 = () => {
   useEffect(() => {
     apartmentRefs.current = apartmentRefs.current.slice(0, apartments.length);
   }, [apartments]);
-  
+
   // Apply animations when component mounts using CSS transitions
   useEffect(() => {
     // Animate header elements
     setTimeout(() => {
       if (headerRef.current) {
-        headerRef.current.style.opacity = '1';
-        headerRef.current.style.transform = 'translateY(0)';
+        headerRef.current.style.opacity = "1";
+        headerRef.current.style.transform = "translateY(0)";
       }
     }, 100);
 
     setTimeout(() => {
       if (titleRef.current) {
-        titleRef.current.style.opacity = '1';
-        titleRef.current.style.transform = 'translateY(0)';
+        titleRef.current.style.opacity = "1";
+        titleRef.current.style.transform = "translateY(0)";
       }
     }, 300);
-    
+
     // Animate map
     setTimeout(() => {
       if (mapRef.current) {
-        mapRef.current.style.opacity = '1';
+        mapRef.current.style.opacity = "1";
       }
     }, 400);
-    
+
     // Animate collection tabs with stagger effect
-    const tabButtons = collectionRefs.current.filter(Boolean) as HTMLButtonElement[];
+    const tabButtons = collectionRefs.current.filter(
+      Boolean,
+    ) as HTMLButtonElement[];
     tabButtons.forEach((button, index) => {
-      setTimeout(() => {
-        if (button) {
-          button.style.opacity = '1';
-          button.style.transform = 'translateY(0)';
-        }
-      }, 300 + (index * 40));
+      setTimeout(
+        () => {
+          if (button) {
+            button.style.opacity = "1";
+            button.style.transform = "translateY(0)";
+          }
+        },
+        300 + index * 40,
+      );
     });
-    
+
     // Animate apartment cards with stagger effect
     const cards = apartmentRefs.current.filter(Boolean) as HTMLDivElement[];
     cards.forEach((card, index) => {
-      setTimeout(() => {
-        if (card) {
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0) scale(1)';
-        }
-      }, 500 + (index * 70));
+      setTimeout(
+        () => {
+          if (card) {
+            card.style.opacity = "1";
+            card.style.transform = "translateY(0) scale(1)";
+          }
+        },
+        500 + index * 70,
+      );
     });
   }, [apartments, isLoading]);
-  
+
   // Handle adding apartment to search party
   const handleAddToSearchParty = (apartment: Apartment) => {
     setApartmentToAdd(apartment);
@@ -291,14 +339,17 @@ const Listings2 = () => {
         className={`flex flex-col min-h-screen bg-white w-full transition-all duration-300 ${isDetailsDrawerOpen ? "md:ml-[33.333%] lg:ml-[33.333%]" : ""}`}
       >
         {/* Responsive Collection Navigation */}
-        <div ref={headerRef} className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm opacity-0 transform -translate-y-4 transition-all duration-500">
+        <div
+          ref={headerRef}
+          className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm opacity-0 transform -translate-y-4 transition-all duration-500"
+        >
           {/* Mobile Collections Popover - Only visible on small screens */}
           <div className="md:hidden container mx-auto px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <CollectionsPopover
                 collections={apartmentCollections}
-                activeCategory={activeCategory}
-                onSelectCollection={handleCategoryChange}
+                activeCollection={activeCollection}
+                onSelectCollection={handleCollectionChange}
                 onAddCollection={handleAddCollection}
               />
               <Button
@@ -317,19 +368,21 @@ const Listings2 = () => {
             <div className="container mx-auto px-6 py-4 flex items-center overflow-x-auto scrollbar-hide">
               {apartmentCollections.map((collection, idx) => (
                 <button
-                  key={collection.name}
-                  ref={el => collectionRefs.current[idx] = el}
+                  key={collection.id}
+                  ref={(el) => (collectionRefs.current[idx] = el)}
                   className={`flex flex-col items-center px-4 py-2 whitespace-nowrap mr-4 transition-all opacity-0 transform -translate-y-4 duration-500 ${
-                    activeCategory === collection.name
+                    activeCollection.id === collection.id
                       ? "border-b-2 border-gray-800 text-gray-800"
                       : "text-gray-500 hover:text-gray-800 hover:border-b-2 hover:border-gray-300"
                   }`}
-                  onClick={() => handleCategoryChange(collection.name)}
+                  onClick={() => handleCollectionChange(collection.id)}
                 >
                   <div className="flex items-center mb-1">
                     {collection.icon}
                   </div>
-                  <span className="text-clamp-sm font-primary">{collection.name}</span>
+                  <span className="text-clamp-sm font-primary">
+                    {collection.title}
+                  </span>
                 </button>
               ))}
 
@@ -364,9 +417,19 @@ const Listings2 = () => {
               <p className="text-sm text-gray-600">
                 {apartments.length} listings available
               </p>
-              <h1 ref={titleRef} className="text-clamp-3xl font-semibold text-gray-900 mb-4 opacity-0 transform translate-y-4 transition-all duration-700 font-primary">
-                {activeCategory}
-              </h1>
+              <div className="flex items-center gap-1 mb-4 gap-2">
+                {activeCollection.id !== "all" && (
+                  <div className="flex items-center justify-center p-2 bg-[#E9927E40] rounded-full">
+                    <Puzzle className="h-4 w-4 text-gray-700" />
+                  </div>
+                )}
+                <h1
+                  ref={titleRef}
+                  className="text-clamp-3xl font-semibold text-gray-900 opacity-0 transform translate-y-4 transition-all duration-700 font-primary"
+                >
+                  {activeCollection.title}
+                </h1>
+              </div>
             </div>
             <FilterChips
               onFilterChange={handleFilterChange}
@@ -394,7 +457,7 @@ const Listings2 = () => {
                   {apartments.map((apartment, index) => (
                     <div
                       key={apartment.id}
-                      ref={el => apartmentRefs.current[index] = el}
+                      ref={(el) => (apartmentRefs.current[index] = el)}
                       className="space-y-2 group cursor-pointer relative opacity-0 transform translate-y-4 scale-95 transition-all duration-700"
                       onClick={() => handleApartmentSelect(apartment.id)}
                     >
@@ -454,7 +517,10 @@ const Listings2 = () => {
             </div>
 
             {/* Map View */}
-            <div ref={mapRef} className="lg:sticky lg:top-20 h-[70vh] rounded-lg overflow-hidden shadow-md border border-gray-200 opacity-0 transition-opacity duration-700">
+            <div
+              ref={mapRef}
+              className="lg:sticky lg:top-20 h-[70vh] rounded-lg overflow-hidden shadow-md border border-gray-200 opacity-0 transition-opacity duration-700"
+            >
               <GoogleMapComponent
                 apartments={apartments}
                 onApartmentSelect={handleApartmentSelect}
@@ -496,7 +562,7 @@ const Listings2 = () => {
         isOpen={allCollectionsModalOpen}
         onClose={() => setAllCollectionsModalOpen(false)}
         collections={apartmentCollections}
-        onSelectCollection={handleCategoryChange}
+        onSelectCollection={handleCollectionChange}
         onAddCollection={handleAddCollection}
       />
 

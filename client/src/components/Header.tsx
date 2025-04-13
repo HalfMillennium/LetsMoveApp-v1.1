@@ -64,15 +64,6 @@ const Header = () => {
                 Favorites
               </span>
             </Link>
-            <Link href="/profile" className="flex flex-1 w-full cursor-pointer">
-              <span
-                className={`w-full text-[#1A4A4A] font-medium ${
-                  isActive("/profile") ? "text-[#E9927E]" : ""
-                }`}
-              >
-                Profile
-              </span>
-            </Link>
           </div>
         )}
 
