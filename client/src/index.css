@@ -1,4 +1,15 @@
 @import './assets/fonts.css';
+@import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Onest:wght@100..900&family=Special+Gothic+Expanded+One&display=swap');
+
+* {
+  font-family: 'Special Gothic Expanded One', sans-serif;
+}
+
+@font-face {
+  font-family: "Medium";
+  /*Can be any text*/
+  src: url("./fonts/diatype/black.otf") format("otf");
+}
 
 @tailwind base;
 @tailwind components;
@@ -25,11 +36,14 @@
 
 @layer utilities {
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none;
+    /* Chrome, Safari and Opera */
   }
 }
