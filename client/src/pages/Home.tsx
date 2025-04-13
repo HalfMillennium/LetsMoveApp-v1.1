@@ -49,7 +49,7 @@ const Home = () => {
         <div className="w-full max-w-3xl text-center">
           <h1 
             ref={headingRef}
-            className="text-[#FFEFD4] text-5xl md:text-7xl font-bold mb-8 leading-tight opacity-0 transform -translate-y-4 transition-all duration-700"
+            className="text-[#FFEFD4] text-clamp-6xl font-bold mb-8 leading-clamp-6xl font-primary opacity-0 transform -translate-y-4 transition-all duration-700"
           >
             Find your place—
             <br />

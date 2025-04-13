@@ -1,29 +1,20 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useLocation, Link } from "wouter";
+import { useLocation } from "wouter";
 import {
   Heart,
-  Search,
-  Sliders,
   Map as MapIcon,
   MapPin,
   Globe,
-  Menu,
-  ChevronLeft,
-  ChevronRight,
   ListPlus,
   Home,
   Flower2,
   Train,
   Dog,
   Building2,
-  Waves,
   Star,
   GalleryVerticalEnd,
-  ChevronDown,
-  GripVertical,
-  Users,
-  Filter,
+  Users
 } from "lucide-react";
 import {
   Apartment,
@@ -35,8 +26,6 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GoogleMapComponent } from "../components/GoogleMap";
-import { useGeolocation } from "../lib/useGeolocation";
-import { PRICE_RANGES, BEDROOM_OPTIONS } from "../lib/constants";
 import FilterChips from "../components/FilterChips";
 import { exampleApartments } from "../lib/utils";
 import ApartmentDetailsDrawer from "../components/ApartmentDetailsDrawer";
@@ -340,7 +329,7 @@ const Listings2 = () => {
                   <div className="flex items-center mb-1">
                     {collection.icon}
                   </div>
-                  <span className="text-sm">{collection.name}</span>
+                  <span className="text-clamp-sm font-primary">{collection.name}</span>
                 </button>
               ))}
 
@@ -375,7 +364,7 @@ const Listings2 = () => {
               <p className="text-sm text-gray-600">
                 {apartments.length} listings available
               </p>
-              <h1 ref={titleRef} className="text-2xl font-semibold text-gray-900 mb-4 opacity-0 transform translate-y-4 transition-all duration-700">
+              <h1 ref={titleRef} className="text-clamp-3xl font-semibold text-gray-900 mb-4 opacity-0 transform translate-y-4 transition-all duration-700 font-primary">
                 {activeCategory}
               </h1>
             </div>
@@ -440,10 +429,10 @@ const Listings2 = () => {
                         </button>
                       </div>
                       <div className="flex justify-between items-start">
-                        <h3 className="font-semibold text-gray-900 line-clamp-1">
+                        <h3 className="font-semibold text-gray-900 line-clamp-1 font-primary text-clamp-base">
                           {apartment.title}
                         </h3>
-                        <div className="flex items-center text-sm">
+                        <div className="flex items-center text-clamp-sm font-secondary">
                           <span className="mr-1">★</span>
                           <span>{formatRating(getListingRating(index))}</span>
                           <span className="ml-1 text-gray-500">
@@ -451,11 +440,11 @@ const Listings2 = () => {
                           </span>
                         </div>
                       </div>
-                      <p className="text-gray-500 text-sm">
+                      <p className="text-gray-500 text-clamp-sm font-secondary leading-clamp-sm">
                         {apartment.bedrooms} bed • {apartment.bathrooms} bath •{" "}
                         {apartment.squareFeet} sq ft
                       </p>
-                      <p className="text-gray-900 font-medium">
+                      <p className="text-gray-900 font-medium font-primary text-clamp-base">
                         ${apartment.price}/month
                       </p>
                     </div>

@@ -1,13 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 // @ts-ignore - Ignore TypeScript errors for anime.js
-import anime from 'animejs';
+import anime from "animejs";
 
 type AnimationOptions = anime.AnimeParams;
 
 export const useAnimation = (
   selector: string | Element | HTMLElement,
   options: AnimationOptions,
-  dependencies: any[] = []
+  dependencies: any[] = [],
 ) => {
   const animationRef = useRef<anime.AnimeInstance | null>(null);
 
@@ -20,7 +20,7 @@ export const useAnimation = (
     // Create a new animation
     animationRef.current = anime({
       targets: selector,
-      ...options
+      ...options,
     });
 
     // Cleanup function to pause animation on unmount
@@ -36,83 +36,91 @@ export const useAnimation = (
 
 // Predefined animations that can be used throughout the app
 export const animations = {
-  fadeIn: (delay = 0, duration = 800): AnimationOptions => ({
+  fadeIn: (delay = 0, duration = 200): AnimationOptions => ({
     opacity: [0, 1],
-    easing: 'easeOutSine',
+    easing: "easeOutSine",
     duration,
-    delay: typeof delay === 'function' ? delay : anime.stagger(50, { start: delay })
+    delay:
+      typeof delay === "function" ? delay : anime.stagger(50, { start: delay }),
   }),
-  
-  fadeInUp: (delay = 0, duration = 800): AnimationOptions => ({
+
+  fadeInUp: (delay = 0, duration = 200): AnimationOptions => ({
     opacity: [0, 1],
     translateY: [20, 0],
-    easing: 'easeOutSine',
+    easing: "easeOutSine",
     duration,
-    delay: typeof delay === 'function' ? delay : anime.stagger(50, { start: delay })
+    delay:
+      typeof delay === "function" ? delay : anime.stagger(50, { start: delay }),
   }),
-  
-  fadeInDown: (delay = 0, duration = 800): AnimationOptions => ({
+
+  fadeInDown: (delay = 0, duration = 200): AnimationOptions => ({
     opacity: [0, 1],
     translateY: [-20, 0],
-    easing: 'easeOutSine',
+    easing: "easeOutSine",
     duration,
-    delay: typeof delay === 'function' ? delay : anime.stagger(50, { start: delay })
+    delay:
+      typeof delay === "function" ? delay : anime.stagger(50, { start: delay }),
   }),
-  
-  fadeInLeft: (delay = 0, duration = 800): AnimationOptions => ({
+
+  fadeInLeft: (delay = 0, duration = 200): AnimationOptions => ({
     opacity: [0, 1],
     translateX: [-20, 0],
-    easing: 'easeOutSine',
+    easing: "easeOutSine",
     duration,
-    delay: typeof delay === 'function' ? delay : anime.stagger(50, { start: delay })
+    delay:
+      typeof delay === "function" ? delay : anime.stagger(50, { start: delay }),
   }),
-  
-  fadeInRight: (delay = 0, duration = 800): AnimationOptions => ({
+
+  fadeInRight: (delay = 0, duration = 200): AnimationOptions => ({
     opacity: [0, 1],
     translateX: [20, 0],
-    easing: 'easeOutSine',
+    easing: "easeOutSine",
     duration,
-    delay: typeof delay === 'function' ? delay : anime.stagger(50, { start: delay })
+    delay:
+      typeof delay === "function" ? delay : anime.stagger(50, { start: delay }),
   }),
-  
-  scaleIn: (delay = 0, duration = 800): AnimationOptions => ({
+
+  scaleIn: (delay = 0, duration = 200): AnimationOptions => ({
     opacity: [0, 1],
     scale: [0.9, 1],
-    easing: 'easeOutSine',
+    easing: "easeOutSine",
     duration,
-    delay: typeof delay === 'function' ? delay : anime.stagger(50, { start: delay })
+    delay:
+      typeof delay === "function" ? delay : anime.stagger(50, { start: delay }),
   }),
-  
-  pulse: (delay = 0, duration = 1500): AnimationOptions => ({
+
+  pulse: (delay = 0, duration = 7500): AnimationOptions => ({
     scale: [1, 1.05, 1],
-    easing: 'easeInOutSine',
+    easing: "easeInOutSine",
     duration,
-    delay: typeof delay === 'function' ? delay : anime.stagger(50, { start: delay }),
-    loop: true
+    delay:
+      typeof delay === "function" ? delay : anime.stagger(50, { start: delay }),
+    loop: true,
   }),
-  
-  staggerCards: (delay = 0, duration = 800): AnimationOptions => ({
+
+  staggerCards: (delay = 0, duration = 200): AnimationOptions => ({
     opacity: [0, 1],
     translateY: [15, 0],
     scale: [0.97, 1],
-    easing: 'easeOutSine',
+    easing: "easeOutSine",
     duration,
     delay: anime.stagger(90, { start: delay }),
   }),
-  
-  staggerListItems: (delay = 0, duration = 800): AnimationOptions => ({
+
+  staggerListItems: (delay = 0, duration = 200): AnimationOptions => ({
     opacity: [0, 1],
     translateX: [-10, 0],
-    easing: 'easeOutSine',
+    easing: "easeOutSine",
     duration,
     delay: anime.stagger(50, { start: delay }),
   }),
-  
-  bounceIn: (delay = 0, duration = 800): AnimationOptions => ({
+
+  bounceIn: (delay = 0, duration = 200): AnimationOptions => ({
     opacity: [0, 1],
     scale: [0.3, 1.1, 1],
-    easing: 'spring(1, 80, 10, 0)',
+    easing: "spring(1, 80, 10, 0)",
     duration,
-    delay: typeof delay === 'function' ? delay : anime.stagger(50, { start: delay })
+    delay:
+      typeof delay === "function" ? delay : anime.stagger(50, { start: delay }),
   }),
 };
