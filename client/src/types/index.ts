@@ -1,4 +1,5 @@
-import {PriceRange } from '../lib/constants';
+import { ReactNode } from "react";
+import { PriceRange } from "../lib/constants";
 
 export interface Apartment {
   id: number;
@@ -19,11 +20,18 @@ export interface Apartment {
   distance?: string;
 }
 
+export interface ListingCollection {
+  id: string;
+  title: string;
+  createdBy?: string;
+  icon: ReactNode;
+}
+
 export interface ActiveFilters {
-  price?: PriceRange,
-  bedrooms?: number,
-  distance?: number,
-  petFriendly?: boolean
+  price?: PriceRange;
+  bedrooms?: number;
+  distance?: number;
+  petFriendly?: boolean;
 }
 
 export interface Favorite {

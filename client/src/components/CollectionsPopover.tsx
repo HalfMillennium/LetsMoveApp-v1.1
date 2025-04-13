@@ -1,47 +1,45 @@
 import React from "react";
-import { 
-  Popover, 
-  PopoverContent, 
-  PopoverTrigger 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
-import { 
-  Command, 
-  CommandEmpty, 
-  CommandGroup, 
-  CommandInput, 
-  CommandItem, 
-  CommandList 
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import { GalleryVerticalEnd, ListPlus, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-type Collection = {
-  name: string;
-  icon: React.ReactNode;
-};
+import { ListingCollection } from "../types";
 
 interface CollectionsPopoverProps {
-  collections: Collection[];
-  activeCategory: string;
+  collections: ListingCollection[];
+  activeCollection: ListingCollection;
   onSelectCollection: (name: string) => void;
   onAddCollection: () => void;
 }
 
 const CollectionsPopover = ({
   collections,
-  activeCategory,
+  activeCollection,
   onSelectCollection,
   onAddCollection,
 }: CollectionsPopoverProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           className="flex items-center gap-2 rounded-full bg-white border border-gray-200 shadow-sm"
         >
           <GalleryVerticalEnd className="h-4 w-4" />
-          <span className="hidden sm:inline-block">{activeCategory}</span>
+          <span className="hidden sm:inline-block">
+            {activeCollection.title}
+          </span>
           <span className="sm:hidden">Collections</span>
         </Button>
       </PopoverTrigger>
@@ -53,16 +51,16 @@ const CollectionsPopover = ({
             <CommandGroup heading="Your Collections">
               {collections.map((collection) => (
                 <CommandItem
-                  key={collection.name}
-                  value={collection.name}
-                  onSelect={() => onSelectCollection(collection.name)}
+                  key={collection.id}
+                  value={collection.title}
+                  onSelect={() => onSelectCollection(collection.id)}
                   className="flex items-center gap-2 py-3"
                 >
                   <div className="flex items-center gap-2 flex-1">
                     {collection.icon}
-                    <span>{collection.name}</span>
+                    <span>{collection.title}</span>
                   </div>
-                  {activeCategory === collection.name && (
+                  {activeCollection.id === collection.id && (
                     <Check className="h-4 w-4 text-primary" />
                   )}
                 </CommandItem>

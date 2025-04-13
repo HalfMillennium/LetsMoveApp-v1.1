@@ -1,17 +1,18 @@
 import React from "react";
 import { X, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
-interface CollectionType {
-  name: string;
-  icon: React.ReactNode;
-}
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ListingCollection } from "../types";
 
 interface AllCollectionsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  collections: CollectionType[];
+  collections: ListingCollection[];
   onSelectCollection: (name: string) => void;
   onAddCollection: () => void;
 }
@@ -27,7 +28,9 @@ export const AllCollectionsModal: React.FC<AllCollectionsModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">All Collections</DialogTitle>
+          <DialogTitle className="text-xl font-semibold">
+            All Collections
+          </DialogTitle>
         </DialogHeader>
 
         <div className="py-4">
@@ -39,21 +42,23 @@ export const AllCollectionsModal: React.FC<AllCollectionsModalProps> = ({
               <PlusCircle className="h-8 w-8 text-gray-400 mb-2" />
               <span className="text-sm text-gray-600">Add Collection</span>
             </div>
-            
+
             {collections.map((collection, index) => (
               <div
                 key={index}
                 className="flex flex-col items-center justify-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-gray-300 hover:bg-gray-50 transition-all h-[100px]"
                 onClick={() => {
-                  onSelectCollection(collection.name);
+                  onSelectCollection(collection.title);
                   onClose();
                 }}
               >
                 <div className="h-8 w-8 flex items-center justify-center mb-2">
-                  {React.cloneElement(collection.icon as React.ReactElement, { className: 'h-6 w-6' })}
+                  {React.cloneElement(collection.icon as React.ReactElement, {
+                    className: "h-6 w-6",
+                  })}
                 </div>
                 <span className="text-sm font-medium text-center line-clamp-1">
-                  {collection.name}
+                  {collection.title}
                 </span>
               </div>
             ))}
