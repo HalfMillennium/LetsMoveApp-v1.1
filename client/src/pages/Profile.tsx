@@ -153,54 +153,33 @@ const Profile = () => {
   return (
     <div className="py-8 bg-[#FFF9F2] flex flex-1">
       <div className="container mx-auto px-4">
-        {/* Header with Title and Buttons */}
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex flex-col">
-            <h2 className="text-2xl font-bold text-[#1A4A4A]">Your Profile</h2>
-            <p className="text-[#1A4A4A]/70 mt-2">
-              Manage your account and housing preferences
-            </p>
-          </div>
-          <div>
-            <Button
-              variant="default"
-              className="bg-[#E9927E] hover:bg-[#E9927E]/90 text-white rounded-full p-2 px-8"
-              onClick={handleSave}
-            >
-              Save Changes
-            </Button>
-          </div>
-        </div>
-
         {/* Tabs for different sections */}
         <Tabs defaultValue="profile" className="mb-8 profile-tabs">
-          <div className="flex justify-center mb-8 py-2">
-            <TabsList className="px-4 py-4 tabs-list">
-              <TabsTrigger
-                value="profile"
-                className="tab-trigger"
-              >
-                Profile
-              </TabsTrigger>
-              <TabsTrigger 
-                value="preferences" 
-                className="tab-trigger"
-              >
-                Housing
-              </TabsTrigger>
-              <TabsTrigger 
-                value="collections" 
-                className="tab-trigger"
-              >
-                Collections
-              </TabsTrigger>
-              <TabsTrigger 
-                value="search-parties" 
-                className="tab-trigger"
-              >
-                Search Parties
-              </TabsTrigger>
-            </TabsList>
+          <div className="flex justify-between items-center">
+            <div className="flex flex-col">
+              <h2 className="text-2xl font-bold text-[#1A4A4A]">
+                Your Profile
+              </h2>
+              <p className="text-[#1A4A4A]/70 mt-2">
+                Manage your account and housing preferences
+              </p>
+            </div>
+            <div className="flex justify-center mb-8 py-2">
+              <TabsList className="px-4 py-4 tabs-list">
+                <TabsTrigger value="profile" className="tab-trigger">
+                  Profile
+                </TabsTrigger>
+                <TabsTrigger value="preferences" className="tab-trigger">
+                  Housing
+                </TabsTrigger>
+                <TabsTrigger value="collections" className="tab-trigger">
+                  Collections
+                </TabsTrigger>
+                <TabsTrigger value="search-parties" className="tab-trigger">
+                  Search Parties
+                </TabsTrigger>
+              </TabsList>
+            </div>
           </div>
 
           {/* Profile Tab Content */}
