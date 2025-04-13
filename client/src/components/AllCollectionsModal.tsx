@@ -43,19 +43,17 @@ export const AllCollectionsModal: React.FC<AllCollectionsModalProps> = ({
               <span className="text-sm text-gray-600">Add Collection</span>
             </div>
 
-            {collections.map((collection, index) => (
+            {collections.map((collection) => (
               <div
-                key={index}
+                key={collection.id}
                 className="flex flex-col items-center justify-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-gray-300 hover:bg-gray-50 transition-all h-[100px]"
                 onClick={() => {
-                  onSelectCollection(collection.title);
+                  onSelectCollection(collection.id);
                   onClose();
                 }}
               >
                 <div className="h-8 w-8 flex items-center justify-center mb-2">
-                  {React.cloneElement(collection.icon as React.ReactElement, {
-                    className: "h-6 w-6",
-                  })}
+                  {collection.icon}
                 </div>
                 <span className="text-sm font-medium text-center line-clamp-1">
                   {collection.title}

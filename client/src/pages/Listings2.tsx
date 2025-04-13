@@ -16,6 +16,7 @@ import {
   GalleryVerticalEnd,
   Users,
   Puzzle,
+  LayoutGrid,
 } from "lucide-react";
 import {
   Apartment,
@@ -37,6 +38,7 @@ import AddToSearchPartyModal from "../components/AddToSearchPartyModal";
 import SearchPartyDropZone from "../components/SearchPartyDropZone";
 import CollectionsPopover from "../components/CollectionsPopover";
 import { useSearchParty } from "../context/SearchPartyContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Listings2 = () => {
   const [location] = useLocation();
@@ -62,7 +64,7 @@ const Listings2 = () => {
     all: {
       id: "all",
       title: "All Apartments",
-      icon: <Home className="h-4 w-4" />,
+      icon: <LayoutGrid color="#E9927E" className="h-4 w-4" />,
     },
     "2": {
       id: "2",
@@ -81,11 +83,6 @@ const Listings2 = () => {
       icon: <Building2 className="h-4 w-4" />,
     },
   });
-
-  useEffect(
-    () => console.log("allCollections updated", allCollections),
-    [allCollections],
-  );
 
   const [activeCollection, setActiveCollection] = useState<ListingCollection>(
     allCollections["all"],
@@ -160,21 +157,8 @@ const Listings2 = () => {
     useState(false);
   const [allCollectionsModalOpen, setAllCollectionsModalOpen] = useState(false);
 
-  // User-created collections saved in state
-  const [userCollections, setUserCollections] = useState<ListingCollection[]>(
-    [],
-  );
-
-  // All collections combined
-  const apartmentCollections = useMemo<ListingCollection[]>(
-    () => [...Object.values(allCollections), ...userCollections],
-    [allCollections, userCollections],
-  );
-
-  useEffect(
-    () => console.log("apartmentCollections updated", allCollections),
-    [apartmentCollections],
-  );
+  // All collections list
+  const allCollectionsList = Object.values(allCollections).reverse();
 
   // Collection modification handlers
   const handleAddCollection = () => {
@@ -200,10 +184,9 @@ const Listings2 = () => {
       icon: collectionIcons[iconIndex],
     };
 
-    setUserCollections([...userCollections, newCollection]);
     setAllCollections((prevCollections) => ({
-      ...prevCollections,
       [newCollection.id]: newCollection,
+      ...prevCollections,
     }));
 
     toast({
@@ -216,8 +199,12 @@ const Listings2 = () => {
     setAllCollectionsModalOpen(true);
   };
 
+  const isMobile = useIsMobile();
+
   // Helper to check if collections might overflow
-  const mightCollectionsOverflow = apartmentCollections.length > 5;
+  const mightCollectionsOverflow = !isMobile
+    ? allCollectionsList.length > 6
+    : true;
 
   // Handle collection change
   const handleCollectionChange = (collectionId: string) => {
@@ -319,7 +306,7 @@ const Listings2 = () => {
         500 + index * 70,
       );
     });
-  }, [apartments, isLoading]);
+  }, [apartments, isLoading, allCollectionsList]);
 
   // Handle adding apartment to search party
   const handleAddToSearchParty = (apartment: Apartment) => {
@@ -347,7 +334,7 @@ const Listings2 = () => {
           <div className="md:hidden container mx-auto px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <CollectionsPopover
-                collections={apartmentCollections}
+                collections={allCollectionsList}
                 activeCollection={activeCollection}
                 onSelectCollection={handleCollectionChange}
                 onAddCollection={handleAddCollection}
@@ -366,13 +353,13 @@ const Listings2 = () => {
           {/* Desktop Collections Tabs - Only visible on medium screens and up */}
           <div className="hidden md:block">
             <div className="container mx-auto px-6 py-4 flex items-center overflow-x-auto scrollbar-hide">
-              {apartmentCollections.map((collection, idx) => (
+              {allCollectionsList.map((collection, idx) => (
                 <button
                   key={collection.id}
                   ref={(el) => (collectionRefs.current[idx] = el)}
                   className={`flex flex-col items-center px-4 py-2 whitespace-nowrap mr-4 transition-all opacity-0 transform -translate-y-4 duration-500 ${
                     activeCollection.id === collection.id
-                      ? "border-b-2 border-gray-800 text-gray-800"
+                      ? `border-b-2 ${collection.id == "all" ? "border-[#E9927E]" : "border-gray-800"} text-gray-800`
                       : "text-gray-500 hover:text-gray-800 hover:border-b-2 hover:border-gray-300"
                   }`}
                   onClick={() => handleCollectionChange(collection.id)}
@@ -380,7 +367,9 @@ const Listings2 = () => {
                   <div className="flex items-center mb-1">
                     {collection.icon}
                   </div>
-                  <span className="text-clamp-sm font-primary">
+                  <span
+                    className={`text-clamp-sm font-primary ${collection.id == "all" ? "text-[#E9927E] font-semibold" : ""}`}
+                  >
                     {collection.title}
                   </span>
                 </button>
@@ -561,7 +550,7 @@ const Listings2 = () => {
       <AllCollectionsModal
         isOpen={allCollectionsModalOpen}
         onClose={() => setAllCollectionsModalOpen(false)}
-        collections={apartmentCollections}
+        collections={allCollectionsList}
         onSelectCollection={handleCollectionChange}
         onAddCollection={handleAddCollection}
       />
