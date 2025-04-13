@@ -168,7 +168,7 @@ const Listings2 = () => {
   // All collections combined
   const apartmentCollections = useMemo<ListingCollection[]>(
     () => [...Object.values(allCollections), ...userCollections],
-    [allCollections],
+    [allCollections, userCollections],
   );
 
   useEffect(
