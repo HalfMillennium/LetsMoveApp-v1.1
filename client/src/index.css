@@ -1,14 +1,13 @@
 @import './assets/fonts.css';
 @import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Onest:wght@100..900&family=Special+Gothic+Expanded+One&display=swap');
 
-* {
-  font-family: 'Special Gothic Expanded One', sans-serif;
-}
-
 @font-face {
   font-family: "Medium";
-  /*Can be any text*/
-  src: url("./fonts/diatype/black.otf") format("otf");
+  src: url("./fonts/diatype/black.otf") format("opentype");
+}
+
+* {
+  font-family: 'Special Gothic Expanded One', sans-serif;
 }
 
 @tailwind base;
