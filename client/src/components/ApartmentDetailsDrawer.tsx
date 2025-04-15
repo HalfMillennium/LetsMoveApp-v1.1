@@ -163,7 +163,7 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
 
               {/* Right column - Price and details (only visible on md+ screens) */}
               <div className="hidden md:block md:w-[320px] flex flex-1">
-                <div className="bg-gray-50 p-4 rounded-lg h-full">
+                <div className="glass-card bg-white/60 p-4 rounded-xl h-full">
                   <div className="flex flex-col h-full justify-between">
                     <div className="flex flex-col">
                       <div className="flex justify-between md:justify-start items-center mb-2 gap-1">
