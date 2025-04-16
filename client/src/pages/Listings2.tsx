@@ -519,6 +519,13 @@ const Listings2 = () => {
           }}
           onClose={() => setShowSearchPartyOverlay(false)}
           currentSearchParty={activeSearchParty}
+          onChangeSearchParty={(searchParty) => {
+            setActiveSearchParty(searchParty);
+            toast({
+              title: "Search Party Changed",
+              description: `Now using "${searchParty.name}" search party`,
+            });
+          }}
         />
       )}
 
@@ -540,7 +547,12 @@ const Listings2 = () => {
             onClick={() => setShowSearchPartyOverlay(true)}
           >
             <Users size={18} />
-            <span className="font-medium">Search Party</span>
+            <div className="flex flex-col items-start">
+              <span className="font-medium text-sm leading-tight">Search Party</span>
+              {activeSearchParty && (
+                <span className="text-xs text-white/80 leading-tight">{activeSearchParty.name}</span>
+              )}
+            </div>
           </Button>
         </div>
       )}

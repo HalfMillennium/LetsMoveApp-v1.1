@@ -1,27 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
-import { X, UserCircle2, ChevronDown, ChevronUp, Plus } from 'lucide-react';
+import { 
+  X, 
+  UserCircle2, 
+  ChevronDown, 
+  ChevronUp, 
+  Plus, 
+  Users, 
+  Check 
+} from 'lucide-react';
 import { useSearchParty } from '../context/SearchPartyContext';
 import { SearchParty, Apartment } from '../types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { 
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface SearchPartyDropZoneProps {
   onAddToParty: (apartmentId: number) => void;
   onClose: () => void;
   currentSearchParty: SearchParty | null;
+  onChangeSearchParty?: (searchParty: SearchParty) => void; // New prop to handle changing search party
 }
 
 const SearchPartyDropZone: React.FC<SearchPartyDropZoneProps> = ({
   onAddToParty,
   onClose,
-  currentSearchParty
+  currentSearchParty,
+  onChangeSearchParty
 }) => {
   const { searchParties } = useSearchParty();
   const [isExpanded, setIsExpanded] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isPartySelectOpen, setIsPartySelectOpen] = useState(false);
 
   if (!currentSearchParty) return null;
+  
+  // Handle changing the active search party
+  const handleChangeSearchParty = (searchParty: SearchParty) => {
+    if (onChangeSearchParty) {
+      onChangeSearchParty(searchParty);
+    }
+    setIsPartySelectOpen(false);
+  };
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
@@ -40,9 +64,38 @@ const SearchPartyDropZone: React.FC<SearchPartyDropZoneProps> = ({
             <button onClick={toggleExpanded} className="text-gray-600 hover:text-gray-800">
               {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
-            <h3 className="font-semibold text-sm text-gray-800">
-              {currentSearchParty.name}
-            </h3>
+            
+            {/* Search Party Selector Popover */}
+            <Popover open={isPartySelectOpen} onOpenChange={setIsPartySelectOpen}>
+              <PopoverTrigger asChild>
+                <button className="flex items-center gap-1 text-sm font-semibold text-gray-800 hover:text-gray-900 transition-colors">
+                  <span className="truncate max-w-[120px]">{currentSearchParty.name}</span>
+                  <ChevronDown size={14} className="mt-0.5 opacity-70" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-56 p-2 shadow-lg">
+                <div className="space-y-1.5">
+                  <p className="text-xs font-medium text-gray-500 px-2 mb-1">Switch Search Party</p>
+                  {searchParties.map((party) => (
+                    <button
+                      key={party.id}
+                      className={`w-full text-left px-2 py-1.5 rounded-md flex items-center justify-between ${
+                        party.id === currentSearchParty.id
+                          ? "bg-[#E9927E]/10 text-[#E9927E]"
+                          : "hover:bg-gray-100 text-gray-700"
+                      }`}
+                      onClick={() => handleChangeSearchParty(party)}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Users size={16} className={party.id === currentSearchParty.id ? "text-[#E9927E]" : "text-gray-400"} />
+                        <span className="font-medium">{party.name}</span>
+                      </div>
+                      {party.id === currentSearchParty.id && <Check size={14} className="text-[#E9927E]" />}
+                    </button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
           <button
             onClick={onClose}
