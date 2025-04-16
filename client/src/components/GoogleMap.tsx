@@ -4,8 +4,11 @@ import {
   useJsApiLoader,
   Marker,
   InfoWindow,
+  OverlayView,
 } from "@react-google-maps/api";
 import { Apartment } from "../types";
+import { Building, Pin } from "lucide-react";
+import { COLORS } from "@/lib/constants";
 
 // Map container style
 const containerStyle = {
@@ -50,10 +53,13 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
     lng: number;
   } | null>(null);
 
+  const mapsKey = "AIzaSyDAGlko3aGJd4-ZvYy20QydYWrl_QwRNBo";
+
   // Load Google Maps API
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
+    mapIds: ["ebe32cd9465194d6"],
+    googleMapsApiKey: mapsKey,
   });
 
   // Get user's current location
@@ -126,31 +132,33 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
       >
         {/* User's location marker */}
         {userLocation && (
-          <Marker
+          <OverlayView
             position={userLocation}
-            icon={{
-              url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-              scaledSize: new window.google.maps.Size(40, 40),
-            }}
-            title="Your location"
-          />
+            mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+          >
+            <div className="flex items-center justify-center w-8 h-8 bg-[#212121] rounded-full shadow-md cursor-pointer border border-gray-200">
+              <Pin size={16} color={COLORS.coral} strokeWidth={2} />
+            </div>
+          </OverlayView>
         )}
 
         {/* Apartment markers */}
         {apartments.map((apartment) => (
-          <Marker
+          <OverlayView
             key={apartment.id}
             position={{
               lat: parseFloat(apartment.latitude),
               lng: parseFloat(apartment.longitude),
             }}
-            onClick={() => handleMarkerClick(apartment)}
-            animation={
-              selectedApartmentId === apartment.id
-                ? google.maps.Animation.BOUNCE
-                : undefined
-            }
-          />
+            mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+          >
+            <div
+              onClick={() => handleMarkerClick(apartment)}
+              className="flex items-center justify-center w-8 h-8 bg-white rounded-full shadow-md cursor-pointer border border-gray-200"
+            >
+              <Building size={16} color={COLORS.coral} strokeWidth={2} />
+            </div>
+          </OverlayView>
         ))}
 
         {/* Info window for selected apartment */}
