@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus } from "lucide-react";
+import { Plus, MessageCircle, Calendar, ExternalLink, Users, ArrowRight } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +14,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { exampleApartments } from "../lib/utils";
+import { Apartment } from "../types";
+import ApartmentDetailsModal from "@/components/ApartmentDetailsModal";
+import SearchPartyChatDrawer from "@/components/SearchPartyChatDrawer";
 
 const SearchParty = () => {
   const { searchParties, isLoading, createSearchParty } = useSearchParty();
@@ -21,6 +24,26 @@ const SearchParty = () => {
   const [newPartyName, setNewPartyName] = useState("");
   const [invites, setInvites] = useState("");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  
+  // State for apartment details modal
+  const [selectedApartment, setSelectedApartment] = useState<Apartment | undefined>(undefined);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  
+  // State for chat drawer
+  const [chatDrawerOpen, setChatDrawerOpen] = useState(false);
+  const [activeSearchParty, setActiveSearchParty] = useState<typeof searchParties[0] | null>(null);
+  
+  // Handle apartment selection for details modal
+  const handleApartmentSelect = (apartment: Apartment) => {
+    setSelectedApartment(apartment);
+    setDetailsModalOpen(true);
+  };
+  
+  // Handle chat drawer opening
+  const handleOpenChat = (searchParty: typeof searchParties[0]) => {
+    setActiveSearchParty(searchParty);
+    setChatDrawerOpen(true);
+  };
 
   const handleCreateParty = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -151,42 +174,73 @@ const SearchParty = () => {
                   className="glass-card rounded-xl overflow-hidden border border-white/40"
                 >
                   <div className="p-6">
-                    <div className="flex justify-between items-center mb-2">
-                      <h2 className="text-xl font-semibold text-[#1A4A4A]">
-                        {searchParty.name}
-                      </h2>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="border-[#1A4A4A] hover:bg-white/80 text-[#1A4A4A] rounded-full"
+                    <div className="flex justify-between items-center mb-4">
+                      <div>
+                        <h2 className="text-xl font-semibold text-[#1A4A4A]">
+                          {searchParty.name}
+                        </h2>
+                        <div className="text-sm text-gray-600 mt-1">
+                          {listingCount} listings • Updated {daysAgo} days ago
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-blue-500 text-blue-500 hover:bg-blue-50 rounded-full"
+                          onClick={() => handleOpenChat(searchParty)}
+                        >
+                          <MessageCircle className="h-4 w-4 mr-1" />
+                          Chat
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-[#1A4A4A] hover:bg-white/80 text-[#1A4A4A] rounded-full"
+                        >
+                          <Calendar className="h-4 w-4 mr-1" />
+                          Schedule
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Members section */}
+                    <div className="flex items-center mb-5">
+                      <div className="flex -space-x-2 mr-3">
+                        {mockUserImages.slice(0, 4).map((img, idx) => (
+                          <img
+                            key={idx}
+                            src={img}
+                            alt={`Member ${idx + 1}`}
+                            className="w-8 h-8 rounded-full border-2 border-white/90 object-cover shadow-sm"
+                          />
+                        ))}
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-xs text-gray-600 hover:bg-gray-100/50 rounded-full px-3"
                       >
-                        View Listings
+                        <Users className="h-3 w-3 mr-1" />
+                        Manage Members
                       </Button>
                     </div>
 
-                    <div className="text-sm text-gray-600 mb-4">
-                      {listingCount} listings • Updated {daysAgo} days ago
+                    {/* Recently Added Section */}
+                    <div className="mb-4">
+                      <h3 className="text-sm font-medium text-gray-700 mb-3">
+                        Recently Added
+                      </h3>
                     </div>
 
-                    {/* Members circle avatars */}
-                    <div className="flex -space-x-2 mb-4">
-                      {mockUserImages.slice(0, 4).map((img, idx) => (
-                        <img
-                          key={idx}
-                          src={img}
-                          alt={`Member ${idx + 1}`}
-                          className="w-10 h-10 rounded-full border-2 border-white/90 object-cover shadow-sm"
-                        />
-                      ))}
-                    </div>
-
-                    {/* Listings grid */}
-                    <div className="grid grid-cols-3 gap-3">
+                    {/* Listings grid with taller cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {listings.length > 0
                         ? listings.slice(0, 3).map((listing, idx) => (
                             <div
                               key={idx}
-                              className="rounded-lg overflow-hidden shadow-sm"
+                              className="rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
+                              onClick={() => handleApartmentSelect(listing.apartment!)}
                             >
                               <div className="relative">
                                 <img
@@ -195,24 +249,38 @@ const SearchParty = () => {
                                     `https://source.unsplash.com/random/300x200/?apartment,${idx}`
                                   }
                                   alt="Apartment"
-                                  className="w-full h-24 object-cover"
+                                  className="w-full h-40 object-cover"
                                 />
-                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 backdrop-blur-sm">
-                                  <div className="text-white text-xs font-medium">
-                                    {listing.apartment?.bedrooms ||
-                                      (idx % 3) + 1}{" "}
-                                    Bed, {listing.apartment?.bathrooms || 1}{" "}
-                                    Bath
-                                  </div>
-                                  <div className="text-white text-xs">
-                                    {listing.apartment?.location ||
-                                      (idx === 0
-                                        ? "New York, NY"
-                                        : idx === 1
-                                        ? "Brooklyn, NY"
-                                        : "Jersey City, NJ")}
-                                  </div>
+                                <div className="absolute top-2 right-2 bg-white/90 text-gray-700 text-xs font-medium px-2 py-1 rounded-full">
+                                  ${listing.apartment?.price || (1500 + idx * 300)}/mo
                                 </div>
+                              </div>
+                              <div className="p-3">
+                                <h4 className="font-medium text-gray-800 mb-1 line-clamp-1">
+                                  {listing.apartment?.title || `Apartment ${idx + 1}`}
+                                </h4>
+                                <div className="flex items-center text-gray-600 text-sm mb-1">
+                                  <span className="font-medium">
+                                    {listing.apartment?.bedrooms || (idx % 3) + 1} bed, {listing.apartment?.bathrooms || 1} bath
+                                  </span>
+                                  <span className="mx-1">•</span>
+                                  <span>
+                                    {listing.apartment?.squareFeet || 800 + (idx * 100)} sq ft
+                                  </span>
+                                </div>
+                                <div className="text-gray-500 text-sm line-clamp-1">
+                                  {listing.apartment?.location ||
+                                    (idx === 0
+                                      ? "New York, NY"
+                                      : idx === 1
+                                      ? "Brooklyn, NY"
+                                      : "Jersey City, NJ")}
+                                </div>
+                                {listing.notes && (
+                                  <div className="mt-2 text-xs text-gray-600 italic line-clamp-2 bg-gray-50 p-2 rounded">
+                                    "{listing.notes}"
+                                  </div>
+                                )}
                               </div>
                             </div>
                           ))
@@ -222,28 +290,57 @@ const SearchParty = () => {
                             return (
                               <div
                                 key={idx}
-                                className="rounded-lg overflow-hidden shadow-sm"
+                                className="rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
+                                onClick={() => handleApartmentSelect(apartment)}
                               >
                                 <div className="relative">
                                   <img
                                     src={apartment.images[0]}
                                     alt={apartment.title}
-                                    className="w-full h-24 object-cover"
+                                    className="w-full h-40 object-cover"
                                   />
-                                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 backdrop-blur-sm">
-                                    <div className="text-white text-xs font-medium">
-                                      {apartment.bedrooms} Bed,{" "}
-                                      {apartment.bathrooms} Bath
-                                    </div>
-                                    <div className="text-white text-xs">
-                                      {apartment.location}
-                                    </div>
+                                  <div className="absolute top-2 right-2 bg-white/90 text-gray-700 text-xs font-medium px-2 py-1 rounded-full">
+                                    ${apartment.price}/mo
+                                  </div>
+                                </div>
+                                <div className="p-3">
+                                  <h4 className="font-medium text-gray-800 mb-1 line-clamp-1">
+                                    {apartment.title}
+                                  </h4>
+                                  <div className="flex items-center text-gray-600 text-sm mb-1">
+                                    <span className="font-medium">
+                                      {apartment.bedrooms} bed, {apartment.bathrooms} bath
+                                    </span>
+                                    <span className="mx-1">•</span>
+                                    <span>
+                                      {apartment.squareFeet || 800 + (idx * 100)} sq ft
+                                    </span>
+                                  </div>
+                                  <div className="text-gray-500 text-sm line-clamp-1">
+                                    {apartment.location}
+                                  </div>
+                                  <div className="mt-2 bg-gray-50 py-1 px-2 text-xs text-gray-500 rounded flex justify-between items-center">
+                                    <span>Added 2 days ago</span>
+                                    <ExternalLink className="h-3 w-3" />
                                   </div>
                                 </div>
                               </div>
                             );
                           })}
                     </div>
+                    
+                    {/* View all listings button */}
+                    {(listings.length > 3 || listingCount > 3) && (
+                      <div className="mt-4 text-center">
+                        <Button 
+                          variant="ghost" 
+                          className="text-[#E9927E] hover:bg-[#E9927E]/10"
+                        >
+                          View all {listingCount} listings
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -268,6 +365,26 @@ const SearchParty = () => {
           </div>
         )}
       </div>
+
+      {/* Apartment Details Modal */}
+      <ApartmentDetailsModal
+        apartment={selectedApartment}
+        isOpen={detailsModalOpen}
+        onClose={() => setDetailsModalOpen(false)}
+        onAddToFavorites={(id) => {
+          toast({
+            title: "Added to Favorites",
+            description: "This apartment has been added to your favorites.",
+          });
+        }}
+      />
+
+      {/* Search Party Chat Drawer */}
+      <SearchPartyChatDrawer
+        isOpen={chatDrawerOpen}
+        onClose={() => setChatDrawerOpen(false)}
+        searchParty={activeSearchParty}
+      />
     </section>
   );
 };
