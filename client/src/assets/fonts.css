@@ -1,35 +1,5 @@
-/* Import fallback fonts from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap');
-
-/* ABC Diatype font declarations - uncomment when font files are available */
-/*
-@font-face {
-  font-family: 'ABC Diatype';
-  src: url('./fonts/ABCDiatype-Regular.woff2') format('woff2'),
-       url('./fonts/ABCDiatype-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'ABC Diatype';
-  src: url('./fonts/ABCDiatype-Medium.woff2') format('woff2'),
-       url('./fonts/ABCDiatype-Medium.woff') format('woff');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'ABC Diatype';
-  src: url('./fonts/ABCDiatype-Bold.woff2') format('woff2'),
-       url('./fonts/ABCDiatype-Bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-*/
+/* Import Inter font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 /* Font clamp utility classes */
 .text-clamp-sm {
@@ -89,7 +59,11 @@
   line-height: calc(1.35em + 0.1vw);
 }
 
-.leading-clamp-2xl, .leading-clamp-3xl, .leading-clamp-4xl, .leading-clamp-5xl, 
-.leading-clamp-6xl, .leading-clamp-7xl {
+.leading-clamp-2xl,
+.leading-clamp-3xl,
+.leading-clamp-4xl,
+.leading-clamp-5xl,
+.leading-clamp-6xl,
+.leading-clamp-7xl {
   line-height: calc(1.2em + 0.05vw);
 }

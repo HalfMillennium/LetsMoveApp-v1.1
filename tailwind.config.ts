@@ -6,9 +6,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'primary': ['"ABC Diatype"', 'Inter', 'sans-serif'],
-        'secondary': ['"DM Sans"', 'sans-serif'],
-        'sans': ['"ABC Diatype"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        'primary': ['Inter', 'sans-serif'],
+        'secondary': ['Inter', 'sans-serif'],
+        'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
