@@ -369,7 +369,8 @@ const Listings2 = () => {
                     {collection.icon}
                   </div>
                   <span
-                    className={`text-clamp-sm font-primary ${collection.id == "all" ? "text-[#E9927E] font-semibold" : ""}`}
+                    style={{ fontFamily: "Inter" }}
+                    className={`text-clamp-sm ${collection.id == "all" ? "text-[#E9927E] font-semibold" : ""}`}
                   >
                     {collection.title}
                   </span>
@@ -548,9 +549,13 @@ const Listings2 = () => {
           >
             <Users size={18} />
             <div className="flex flex-col items-start">
-              <span className="font-medium text-sm leading-tight">Search Party</span>
+              <span className="font-medium text-sm leading-tight">
+                Search Party
+              </span>
               {activeSearchParty && (
-                <span className="text-xs text-white/80 leading-tight">{activeSearchParty.name}</span>
+                <span className="text-xs text-white/80 leading-tight">
+                  {activeSearchParty.name}
+                </span>
               )}
             </div>
           </Button>

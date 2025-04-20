@@ -30,7 +30,7 @@ export const SearchPartyChatDrawer: React.FC<SearchPartyChatDrawerProps> = ({
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  
+
   // Mock data for demonstration - in a real app, these would come from API
   const currentUserId = 1;
   const userColors = [
@@ -40,7 +40,7 @@ export const SearchPartyChatDrawer: React.FC<SearchPartyChatDrawerProps> = ({
     "#FFD700", // Gold
     "#E6A8D7", // Light Purple
   ];
-  
+
   // Initialize with some example messages
   useEffect(() => {
     if (searchParty && messages.length === 0) {
@@ -145,7 +145,7 @@ export const SearchPartyChatDrawer: React.FC<SearchPartyChatDrawerProps> = ({
       groups[date].push(message);
       return groups;
     },
-    {}
+    {},
   );
 
   if (!searchParty) return null;
@@ -161,7 +161,7 @@ export const SearchPartyChatDrawer: React.FC<SearchPartyChatDrawerProps> = ({
       )}
 
       <div
-        className={`fixed top-0 bottom-0 right-0 z-40 flex flex-col w-full md:w-96 bg-white border-l shadow-xl transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 bottom-0 right-0 z-40 flex flex-col w-full md:w-96 bg-white border-l shadow-xl transform transition-transform duration-300 ease-in-out top-[63px] ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -199,12 +199,16 @@ export const SearchPartyChatDrawer: React.FC<SearchPartyChatDrawerProps> = ({
                 <div
                   key={msg.id}
                   className={`flex ${
-                    msg.userId === currentUserId ? "justify-end" : "justify-start"
+                    msg.userId === currentUserId
+                      ? "justify-end"
+                      : "justify-start"
                   }`}
                 >
                   <div
                     className={`flex max-w-[80%] ${
-                      msg.userId === currentUserId ? "flex-row-reverse" : "flex-row"
+                      msg.userId === currentUserId
+                        ? "flex-row-reverse"
+                        : "flex-row"
                     }`}
                   >
                     {msg.userId !== currentUserId && (
