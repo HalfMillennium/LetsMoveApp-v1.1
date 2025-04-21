@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import {
   Heart,
@@ -216,6 +216,21 @@ const Listings2 = () => {
   const updateActiveFilters = (activeFilters: ActiveFilters) => {
     setActiveListingFilters(activeFilters);
   };
+  
+  // Filter apartments by search party
+  const [filterBySearchParty, setFilterBySearchParty] = useState(false);
+  
+  const handleSearchPartyFilterToggle = (checked: boolean) => {
+    setFilterBySearchParty(checked);
+    
+    if (checked && activeSearchParty) {
+      toast({
+        title: `Filtering by "${activeSearchParty.name}"`,
+        description: "Showing only apartments in this search party",
+      });
+      // In a real app, we would actually filter the apartments here
+    }
+  };
 
   // Handle rating and price display for each listing
   const formatRating = (rating: number) => rating.toFixed(1);
@@ -248,7 +263,7 @@ const Listings2 = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const apartmentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const collectionRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
+  const { addListingToParty } = useSearchParty();
   // Reset apartment refs whenever apartments change
   useEffect(() => {
     apartmentRefs.current = apartmentRefs.current.slice(0, apartments.length);
@@ -425,6 +440,8 @@ const Listings2 = () => {
             <FilterChips
               onFilterChange={handleFilterChange}
               updateActiveFilters={updateActiveFilters}
+              activeSearchParty={activeSearchParty}
+              onSearchPartyFilterToggle={handleSearchPartyFilterToggle}
             />
           </div>
 
@@ -486,6 +503,13 @@ const Listings2 = () => {
           });
         }}
         onAddToSearchParty={(id) => {
+          if (activeSearchParty) {
+            addListingToParty(
+              activeSearchParty.id,
+              id,
+              "Added from listings page",
+            );
+          }
           toast({
             title: "Added to Search Party",
             description: "Apartment has been added to your active search party",

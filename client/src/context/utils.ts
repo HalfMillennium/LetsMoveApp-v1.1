@@ -18,7 +18,6 @@ export const exampleSearchPartyContext: SearchPartyContextType = {
         {
           id: 1,
           searchPartyId: 1,
-          apartmentId: 101,
           addedById: 1,
           apartment: exampleApartments[0],
           addedAt: new Date().toISOString(),
@@ -27,7 +26,6 @@ export const exampleSearchPartyContext: SearchPartyContextType = {
         {
           id: 2,
           searchPartyId: 1,
-          apartmentId: 102,
           addedById: 2,
           apartment: exampleApartments[1],
           addedAt: new Date().toISOString(),
@@ -45,7 +43,6 @@ export const exampleSearchPartyContext: SearchPartyContextType = {
         {
           id: 3,
           searchPartyId: 2,
-          apartmentId: 201,
           addedById: 2,
           apartment: exampleApartments[4],
           addedAt: new Date().toISOString(),
@@ -93,14 +90,15 @@ export const exampleSearchPartyContext: SearchPartyContextType = {
     const newListingId =
       (party.listings?.reduce((max, listing) => Math.max(max, listing.id), 0) ||
         0) + 1;
+    const apartment = exampleApartments.find((apt) => apt.id === apartmentId);
 
     const newListing: SearchPartyListing = {
       id: newListingId,
       searchPartyId,
-      apartmentId,
       addedById: 1, // Assume current user id is 1.
       addedAt: new Date().toISOString(),
       notes,
+      apartment,
     };
 
     if (!party.listings) {
