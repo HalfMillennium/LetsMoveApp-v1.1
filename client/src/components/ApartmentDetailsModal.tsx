@@ -43,22 +43,6 @@ export const ApartmentDetailsModal: React.FC<ApartmentDetailsModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
-        <DialogHeader className="sticky top-0 z-10 bg-white p-4 border-b">
-          <div className="flex justify-between items-center">
-            <DialogTitle className="text-xl font-semibold truncate">
-              {apartment.title}
-            </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="rounded-full hover:bg-gray-100 transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-        </DialogHeader>
-
         {/* Content */}
         <div className="overflow-y-auto">
           {/* Images */}
