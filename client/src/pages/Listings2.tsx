@@ -328,13 +328,30 @@ const Listings2 = () => {
   // Handle adding apartment to search party
   const handleAddToSearchParty = (apartment: Apartment) => {
     setApartmentToAdd(apartment);
-    setAddToPartyModalOpen(true);
-    setShowSearchPartyOverlay(true);
-
-    toast({
-      title: "Adding to search party",
-      description: "Preparing to add apartment to search party",
-    });
+    
+    if (activeSearchParty) {
+      // If we have an active search party, use the custom event to open the modal directly
+      window.dispatchEvent(new CustomEvent('open-search-party-modal', {
+        detail: { 
+          searchPartyId: activeSearchParty.id,
+          apartment: apartment
+        }
+      }));
+      
+      toast({
+        title: "Adding to search party",
+        description: `Adding to "${activeSearchParty.name}" search party`,
+      });
+    } else {
+      // Fall back to the old way if no active search party
+      setAddToPartyModalOpen(true);
+      setShowSearchPartyOverlay(true);
+      
+      toast({
+        title: "Adding to search party",
+        description: "Select a search party to add this apartment",
+      });
+    }
   };
 
   return (
@@ -566,27 +583,7 @@ const Listings2 = () => {
         }}
       />
 
-      {/* Select Search Party Toggle Button */}
-      {!showSearchPartyOverlay && searchParties && searchParties.length > 0 && (
-        <div className="fixed bottom-8 right-8 z-40">
-          <Button
-            className="bg-[#E9927E] hover:bg-[#E9927E]/90 text-white flex items-center gap-2 px-4 py-2 rounded-full shadow-lg"
-            onClick={() => setShowSearchPartyOverlay(true)}
-          >
-            <Users size={18} />
-            <div className="flex flex-col items-start">
-              <span className="font-medium text-sm leading-tight">
-                Search Party
-              </span>
-              {activeSearchParty && (
-                <span className="text-xs text-white/80 leading-tight">
-                  {activeSearchParty.name}
-                </span>
-              )}
-            </div>
-          </Button>
-        </div>
-      )}
+      {/* We've moved the Search Party Toggle Button functionality to the filter toggle */}
     </>
   );
 };

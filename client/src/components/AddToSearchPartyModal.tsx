@@ -206,7 +206,7 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
             <Button
               type="button"
               variant="outline"
-              onClick={onClose}
+              onClick={handleClose}
               className="bg-white/60 border-white/40"
             >
               Cancel
