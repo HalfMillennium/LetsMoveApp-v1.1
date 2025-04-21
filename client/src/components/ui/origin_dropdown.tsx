@@ -31,14 +31,16 @@ export const OriginDropdown: React.FC<OriginDropdownProps> = ({
   className = "",
   showClearOption = false,
 }) => {
-  const selectedOption = options.find(option => option.value === value || option.label === value);
-  
+  const selectedOption = options.find(
+    (option) => option.value === value || option.label === value,
+  );
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant="outline" 
-          className={`w-[160px] bg-white border-[#C9DAD0] ${className}`}
+        <Button
+          variant="outline"
+          className={`w-[160px] bg-white border-[#C9DAD0] ${className} rounded-full`}
         >
           <div className="flex items-center gap-2 w-full justify-between">
             <div className="flex items-center gap-2 overflow-hidden">
@@ -54,7 +56,7 @@ export const OriginDropdown: React.FC<OriginDropdownProps> = ({
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="min-w-[160px]">
+      <DropdownMenuContent align="start" className="min-w-[160px] rounded-xl">
         {label && (
           <>
             <DropdownMenuLabel>{label}</DropdownMenuLabel>
@@ -62,7 +64,7 @@ export const OriginDropdown: React.FC<OriginDropdownProps> = ({
           </>
         )}
         {options.map((option, index) => (
-          <DropdownMenuItem 
+          <DropdownMenuItem
             key={`${option.value}-${index}`}
             onClick={() => onSelect(option.value)}
             className={value === option.value ? "bg-muted" : ""}

@@ -4,21 +4,28 @@ import {
   BEDROOM_OPTIONS,
   DISTANCE_OPTIONS,
 } from "../lib/constants";
-import { DollarSign, Bed, Map, PawPrint } from "lucide-react";
+import { DollarSign, Bed, Map, PawPrint, UsersRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterSettings, ActiveFilters } from "../types";
 import { OriginDropdown } from "@/components/ui/origin_dropdown";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface FilterChipsProps {
   onFilterChange: (filters: FilterSettings) => void;
   updateActiveFilters: (filters: ActiveFilters) => void;
+  activeSearchParty?: { id: number; name: string } | null;
+  onSearchPartyFilterToggle?: (enabled: boolean) => void;
 }
 
 const FilterChips = ({
   onFilterChange,
   updateActiveFilters,
+  activeSearchParty,
+  onSearchPartyFilterToggle,
 }: FilterChipsProps) => {
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({});
+  const [filterBySearchParty, setFilterBySearchParty] = useState(false);
 
   const handleFilterChange = (filterType: string, value: string) => {
     const newFilters = { ...activeFilters };
@@ -107,6 +114,13 @@ const FilterChips = ({
     setActiveFilters({});
     updateActiveFilters({});
     onFilterChange({});
+  };
+  
+  const handleSearchPartyToggle = (checked: boolean) => {
+    setFilterBySearchParty(checked);
+    if (onSearchPartyFilterToggle) {
+      onSearchPartyFilterToggle(checked);
+    }
   };
 
   // Helper to get the current selected value for each dropdown
@@ -209,6 +223,34 @@ const FilterChips = ({
           >
             Clear all
           </Button>
+        )}
+        
+        {/* Search Party Filter Toggle */}
+        {activeSearchParty && (
+          <div className="flex items-center gap-2 ml-auto px-3 py-1.5 bg-[#8A4FFF]/10 rounded-full border border-[#8A4FFF]/30">
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="search-party-filter"
+                checked={filterBySearchParty}
+                onCheckedChange={handleSearchPartyToggle}
+                className="data-[state=checked]:bg-[#8A4FFF]"
+              />
+              <div className="flex flex-col">
+                <Label 
+                  htmlFor="search-party-filter" 
+                  className="text-xs text-[#8A4FFF]"
+                >
+                  Filter by
+                </Label>
+                <div className="flex items-center gap-1">
+                  <UsersRound className="h-3 w-3 text-[#8A4FFF]" />
+                  <span className="text-xs font-medium text-[#8A4FFF] max-w-[100px] truncate">
+                    {activeSearchParty.name}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

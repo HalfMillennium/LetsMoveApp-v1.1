@@ -67,7 +67,6 @@ export interface Member {
 export interface SearchPartyListing {
   id: number;
   searchPartyId: number;
-  apartmentId: number;
   addedById: number;
   addedAt: string;
   notes?: string;
