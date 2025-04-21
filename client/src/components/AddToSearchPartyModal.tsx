@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Apartment } from "../types";
 import { useSearchParty } from "../context/SearchPartyContext";
 import { Button } from "@/components/ui/button";
@@ -36,11 +36,58 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
   const [selectedPartyId, setSelectedPartyId] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(isOpen);
+  const [currentApartment, setCurrentApartment] = useState<Apartment | undefined>(apartment);
+
+  // Listen for custom event to open the modal
+  useEffect(() => {
+    const handleOpenSearchPartyModal = (event: Event) => {
+      const customEvent = event as CustomEvent<{ searchPartyId: number, apartment?: Apartment }>;
+      
+      if (customEvent.detail) {
+        // If an apartment is passed, use that
+        if (customEvent.detail.apartment) {
+          setCurrentApartment(customEvent.detail.apartment);
+        } else {
+          // Otherwise fetch the most recently viewed apartment from the page
+          // This would be better with context, but we're using a simpler approach for now
+          const mostRecentApartment = document.querySelector('[data-selected-apartment="true"]');
+          if (mostRecentApartment) {
+            const apartmentId = mostRecentApartment.getAttribute('data-apartment-id');
+            if (apartmentId) {
+              // Find the apartment with this ID from searchParties
+              // In a real implementation, we'd fetch this from an API or context
+              // For now, let's assume we'll have an apartment from props
+            }
+          }
+        }
+        
+        // Set the selected party ID
+        if (customEvent.detail.searchPartyId) {
+          setSelectedPartyId(customEvent.detail.searchPartyId.toString());
+        }
+        
+        setModalOpen(true);
+      }
+    };
+
+    window.addEventListener('open-search-party-modal', handleOpenSearchPartyModal);
+    
+    return () => {
+      window.removeEventListener('open-search-party-modal', handleOpenSearchPartyModal);
+    };
+  }, [searchParties]);
+
+  // Sync with controlled prop
+  useEffect(() => {
+    setModalOpen(isOpen);
+    setCurrentApartment(apartment);
+  }, [isOpen, apartment]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!apartment || !selectedPartyId) {
+    if (!currentApartment || !selectedPartyId) {
       toast({
         title: "Error",
         description: "Please select a search party",
@@ -53,7 +100,7 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
       setIsSubmitting(true);
       await addListingToParty(
         parseInt(selectedPartyId),
-        apartment.id,
+        currentApartment.id,
         notes
       );
       
@@ -65,7 +112,7 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
       // Reset form and close modal
       setSelectedPartyId("");
       setNotes("");
-      onClose();
+      handleClose();
     } catch (error) {
       toast({
         title: "Error",
@@ -76,11 +123,16 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
       setIsSubmitting(false);
     }
   };
+  
+  const handleClose = () => {
+    setModalOpen(false);
+    onClose();
+  };
 
-  if (!apartment) return null;
+  if (!currentApartment && !apartment) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={modalOpen} onOpenChange={handleClose}>
       <DialogContent className="glass-card bg-white/80 backdrop-blur-md border border-white/40 sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Add to Search Party</DialogTitle>
@@ -93,17 +145,27 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
           <div className="grid gap-4">
             <div className="space-y-2">
               <div className="flex items-center gap-2 mb-2">
-                <img 
-                  src={apartment.images[0]} 
-                  alt={apartment.title} 
-                  className="h-14 w-14 rounded-md object-cover" 
-                />
-                <div>
-                  <h3 className="font-medium text-sm">{apartment.title}</h3>
-                  <p className="text-xs text-gray-500">
-                    {apartment.bedrooms} bed • {apartment.bathrooms} bath • ${apartment.price}/mo
-                  </p>
-                </div>
+                {/* Use a separate variable to avoid TypeScript errors */}
+                {(() => {
+                  const apt = currentApartment || apartment;
+                  if (!apt) return null;
+                  
+                  return (
+                    <>
+                      <img 
+                        src={apt.images[0]} 
+                        alt={apt.title} 
+                        className="h-14 w-14 rounded-md object-cover" 
+                      />
+                      <div>
+                        <h3 className="font-medium text-sm">{apt.title}</h3>
+                        <p className="text-xs text-gray-500">
+                          {apt.bedrooms} bed • {apt.bathrooms} bath • ${apt.price}/mo
+                        </p>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
               
               <label htmlFor="search-party" className="text-sm font-medium">
