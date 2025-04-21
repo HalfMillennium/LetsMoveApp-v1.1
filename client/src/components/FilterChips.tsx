@@ -227,29 +227,28 @@ const FilterChips = ({
         
         {/* Search Party Filter Toggle */}
         {activeSearchParty && (
-          <div className="flex items-center gap-2 ml-auto px-3 py-1.5 bg-[#8A4FFF]/10 rounded-full border border-[#8A4FFF]/30">
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="search-party-filter"
-                checked={filterBySearchParty}
-                onCheckedChange={handleSearchPartyToggle}
-                className="data-[state=checked]:bg-[#8A4FFF]"
-              />
-              <div className="flex flex-col">
-                <Label 
-                  htmlFor="search-party-filter" 
-                  className="text-xs text-[#8A4FFF]"
-                >
-                  Filter by
-                </Label>
-                <div className="flex items-center gap-1">
-                  <UsersRound className="h-3 w-3 text-[#8A4FFF]" />
-                  <span className="text-xs font-medium text-[#8A4FFF] max-w-[100px] truncate">
-                    {activeSearchParty.name}
-                  </span>
-                </div>
+          <div className="ml-auto">
+            <Button
+              variant={filterBySearchParty ? "default" : "outline"}
+              onClick={() => handleSearchPartyToggle(!filterBySearchParty)}
+              className={`
+                flex items-center gap-2 px-4 py-2 rounded-full h-10 transition-all duration-300
+                ${filterBySearchParty 
+                  ? "bg-gradient-to-r from-[#7B4AFF] to-[#A259FF] text-white shadow-md shadow-purple-200" 
+                  : "border-[#A259FF] text-[#7B4AFF] hover:bg-[#A259FF]/10"}
+              `}
+            >
+              <UsersRound className="h-4 w-4" />
+              <div className="flex flex-col items-start leading-none">
+                <span className="text-xs opacity-90">Filter by</span>
+                <span className="font-medium text-sm truncate max-w-[100px]">
+                  {activeSearchParty.name}
+                </span>
               </div>
-            </div>
+              <div className={`w-3 h-3 rounded-full transition-all ml-1 ${
+                filterBySearchParty ? "bg-white" : "bg-[#A259FF]/40"
+              }`}/>
+            </Button>
           </div>
         )}
       </div>
