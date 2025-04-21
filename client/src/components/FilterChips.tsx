@@ -20,7 +20,7 @@ const FilterChips = ({
 }: FilterChipsProps) => {
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({});
 
-  const handleFilterChange = (filterType: string, value: any) => {
+  const handleFilterChange = (filterType: string, value: string) => {
     const newFilters = { ...activeFilters };
 
     if (value === "clear") {
@@ -144,86 +144,41 @@ const FilterChips = ({
       >
         {/* Price Range Dropdown */}
         <div className="relative">
-          <Select
-            value={getCurrentValue("price") || undefined}
-            onValueChange={(value) => handleFilterChange("price", value)}
-          >
-            <SelectTrigger className="w-[160px] bg-white border-[#C9DAD0]">
-              <div className="flex items-center gap-2">
-                <DollarSign className="h-4 w-4 text-[#1A4A4A]" />
-                <SelectValue placeholder="Price range" />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Price Range</SelectLabel>
-                {PRICE_RANGES.map((range, index) => (
-                  <SelectItem key={`price-${index}`} value={range.label}>
-                    {range.label}
-                  </SelectItem>
-                ))}
-                {activeFilters.price && (
-                  <SelectItem value="clear">Clear selection</SelectItem>
-                )}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <OriginDropdown
+            options={PRICE_RANGES.map(range => ({ label: range.label, value: range.label }))}
+            onSelect={(value) => handleFilterChange("price", value)}
+            value={getCurrentValue("price")}
+            placeholder="Price range"
+            icon={<DollarSign className="h-4 w-4 text-[#1A4A4A]" />}
+            label="Price Range"
+            showClearOption={!!activeFilters.price}
+          />
         </div>
 
         {/* Bedrooms Dropdown */}
         <div className="relative">
-          <Select
-            value={getCurrentValue("bedrooms") || undefined}
-            onValueChange={(value) => handleFilterChange("bedrooms", value)}
-          >
-            <SelectTrigger className="w-[160px] bg-white border-[#C9DAD0]">
-              <div className="flex items-center gap-2">
-                <Bed className="h-4 w-4 text-[#1A4A4A]" />
-                <SelectValue placeholder="Bedrooms" />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Bedrooms</SelectLabel>
-                {BEDROOM_OPTIONS.map((option, index) => (
-                  <SelectItem key={`bedroom-${index}`} value={option.label}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-                {activeFilters.bedrooms !== undefined && (
-                  <SelectItem value="clear">Clear selection</SelectItem>
-                )}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <OriginDropdown
+            options={BEDROOM_OPTIONS.map(option => ({ label: option.label, value: option.label }))}
+            onSelect={(value) => handleFilterChange("bedrooms", value)}
+            value={getCurrentValue("bedrooms")}
+            placeholder="Bedrooms"
+            icon={<Bed className="h-4 w-4 text-[#1A4A4A]" />}
+            label="Bedrooms"
+            showClearOption={activeFilters.bedrooms !== undefined}
+          />
         </div>
 
         {/* Distance Dropdown */}
         <div className="relative">
-          <Select
-            value={getCurrentValue("distance") || undefined}
-            onValueChange={(value) => handleFilterChange("distance", value)}
-          >
-            <SelectTrigger className="w-[160px] bg-white border-[#C9DAD0]">
-              <div className="flex items-center gap-2">
-                <Map className="h-4 w-4 text-[#1A4A4A]" />
-                <SelectValue placeholder="Distance" />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Distance</SelectLabel>
-                {DISTANCE_OPTIONS.map((option, index) => (
-                  <SelectItem key={`distance-${index}`} value={option.label}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-                {activeFilters.distance && (
-                  <SelectItem value="clear">Clear selection</SelectItem>
-                )}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <OriginDropdown
+            options={DISTANCE_OPTIONS.map(option => ({ label: option.label, value: option.label }))}
+            onSelect={(value) => handleFilterChange("distance", value)}
+            value={getCurrentValue("distance")}
+            placeholder="Distance"
+            icon={<Map className="h-4 w-4 text-[#1A4A4A]" />}
+            label="Distance"
+            showClearOption={!!activeFilters.distance}
+          />
         </div>
 
         {/* Pet Friendly Button */}
