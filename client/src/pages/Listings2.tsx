@@ -329,7 +329,7 @@ const Listings2 = () => {
         {/* Responsive Collection Navigation */}
         <div
           ref={headerRef}
-          className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm opacity-0 transform -translate-y-4 transition-all duration-500"
+          className="top-0 z-10 bg-white border-b border-gray-100 shadow-sm opacity-0 transform -translate-y-4 transition-all duration-500"
         >
           {/* Mobile Collections Popover - Only visible on small screens */}
           <div className="md:hidden container mx-auto px-6 py-4 flex items-center justify-between">
@@ -370,7 +370,7 @@ const Listings2 = () => {
                   </div>
                   <span
                     style={{ fontFamily: "Inter" }}
-                    className={`text-clamp-sm ${collection.id == "all" ? "text-[#E9927E] font-semibold" : ""}`}
+                    className={`text-clamp-sm text-sm ${collection.id == "all" ? "text-[#E9927E] font-semibold" : ""}`}
                   >
                     {collection.title}
                   </span>
@@ -452,6 +452,7 @@ const Listings2 = () => {
                       apartment={apartment}
                       apartmentRefs={apartmentRefs}
                       handleApartmentSelect={handleApartmentSelect}
+                      handleAddToSearchParty={handleAddToSearchParty}
                     />
                   ))}
                 </div>
