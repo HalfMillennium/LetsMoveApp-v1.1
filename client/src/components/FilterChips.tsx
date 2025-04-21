@@ -225,30 +225,55 @@ const FilterChips = ({
           </Button>
         )}
         
-        {/* Search Party Filter Toggle */}
+        {/* Search Party Filter Toggle with Add To Search Party functionality */}
         {activeSearchParty && (
           <div className="ml-auto">
-            <Button
-              variant={filterBySearchParty ? "default" : "outline"}
-              onClick={() => handleSearchPartyToggle(!filterBySearchParty)}
-              className={`
-                flex items-center gap-2 px-4 py-2 rounded-full h-10 transition-all duration-300
-                ${filterBySearchParty 
-                  ? "bg-gradient-to-r from-[#7B4AFF] to-[#A259FF] text-white shadow-md shadow-purple-200" 
-                  : "border-[#A259FF] text-[#7B4AFF] hover:bg-[#A259FF]/10"}
-              `}
-            >
-              <UsersRound className="h-4 w-4" />
-              <div className="flex flex-col items-start leading-none">
-                <span className="text-xs opacity-90">Filter by</span>
-                <span className="font-medium text-sm truncate max-w-[100px]">
-                  {activeSearchParty.name}
-                </span>
-              </div>
-              <div className={`w-3 h-3 rounded-full transition-all ml-1 ${
-                filterBySearchParty ? "bg-white" : "bg-[#A259FF]/40"
-              }`}/>
-            </Button>
+            <div className="flex items-center rounded-full border border-[#A259FF] overflow-hidden">
+              {/* Filter toggle side */}
+              <Button
+                variant={filterBySearchParty ? "default" : "ghost"}
+                onClick={() => handleSearchPartyToggle(!filterBySearchParty)}
+                className={`
+                  flex items-center gap-2 px-4 py-2 h-10 rounded-l-full border-r border-[#A259FF]/30 transition-all duration-300
+                  ${filterBySearchParty 
+                    ? "bg-gradient-to-r from-[#7B4AFF] to-[#A259FF] text-white shadow-sm" 
+                    : "text-[#7B4AFF] hover:bg-[#A259FF]/10"}
+                `}
+              >
+                <UsersRound className="h-4 w-4" />
+                <div className="flex flex-col items-start leading-none">
+                  <span className="text-xs opacity-90">Filter by</span>
+                  <span className="font-medium text-sm truncate max-w-[85px]">
+                    {activeSearchParty.name}
+                  </span>
+                </div>
+                <div className={`w-3 h-3 rounded-full transition-all ${
+                  filterBySearchParty ? "bg-white" : "bg-[#A259FF]/40"
+                }`}/>
+              </Button>
+              
+              {/* Add To Search Party side */}
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  // Open add to search party modal or functionality
+                  window.dispatchEvent(new CustomEvent('open-search-party-modal', {
+                    detail: { searchPartyId: activeSearchParty.id }
+                  }));
+                }}
+                className="flex items-center gap-2 px-4 py-2 h-10 rounded-r-full text-[#7B4AFF] hover:bg-[#A259FF]/10"
+              >
+                <div className="flex flex-col items-start leading-none">
+                  <span className="text-xs opacity-90">Add to</span>
+                  <span className="font-medium text-sm truncate max-w-[85px]">
+                    Search Party
+                  </span>
+                </div>
+                <div className="w-5 h-5 rounded-full bg-[#A259FF]/10 flex items-center justify-center">
+                  <span className="text-[#7B4AFF] text-xs font-bold">+</span>
+                </div>
+              </Button>
+            </div>
           </div>
         )}
       </div>
