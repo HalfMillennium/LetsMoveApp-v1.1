@@ -1,39 +1,84 @@
 import { ChevronDownIcon } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import React from "react";
+import React, { ReactNode } from "react";
 
 interface OriginDropdownProps {
-  options: string[];
-  onSelect: (option: string) => void
+  options: { label: string; value: string }[];
+  onSelect: (value: string) => void;
+  placeholder?: string;
+  icon?: ReactNode;
+  label?: string;
+  value?: string;
+  className?: string;
+  showClearOption?: boolean;
 }
 
-export const OriginDropdown: React.FC<OriginDropdownProps> = {
+export const OriginDropdown: React.FC<OriginDropdownProps> = ({
+  options,
+  onSelect,
+  placeholder = "Select option",
+  icon,
+  label,
+  value,
+  className = "",
+  showClearOption = false,
+}) => {
+  const selectedOption = options.find(option => option.value === value || option.label === value);
+  
   return (
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <Button variant="outline">
-        Same width of trigger
-        <ChevronDownIcon
-          className="-me-1 opacity-60"
-          size={16}
-          aria-hidden="true"
-        />
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent className="min-w-(--radix-dropdown-menu-trigger-width)">
-      <DropdownMenuItem>Option 1</DropdownMenuItem>
-      <DropdownMenuItem>Option 2</DropdownMenuItem>
-      <DropdownMenuItem>Option 3</DropdownMenuItem>
-      <DropdownMenuItem>Option 4</DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
-  </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button 
+          variant="outline" 
+          className={`w-[160px] bg-white border-[#C9DAD0] ${className}`}
+        >
+          <div className="flex items-center gap-2 w-full justify-between">
+            <div className="flex items-center gap-2 overflow-hidden">
+              {icon}
+              <span className="truncate">
+                {selectedOption ? selectedOption.label : placeholder}
+              </span>
+            </div>
+            <ChevronDownIcon
+              className="h-4 w-4 opacity-60 flex-shrink-0 ml-1"
+              aria-hidden="true"
+            />
+          </div>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="min-w-[160px]">
+        {label && (
+          <>
+            <DropdownMenuLabel>{label}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+          </>
+        )}
+        {options.map((option, index) => (
+          <DropdownMenuItem 
+            key={`${option.value}-${index}`}
+            onClick={() => onSelect(option.value)}
+            className={value === option.value ? "bg-muted" : ""}
+          >
+            {option.label}
+          </DropdownMenuItem>
+        ))}
+        {showClearOption && value && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => onSelect("clear")}>
+              Clear selection
+            </DropdownMenuItem>
+          </>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
-}
+};

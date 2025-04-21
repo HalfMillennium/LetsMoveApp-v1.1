@@ -5,17 +5,9 @@ import {
   DISTANCE_OPTIONS,
 } from "../lib/constants";
 import { DollarSign, Bed, Map, PawPrint } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { FilterSettings, ActiveFilters } from "../types";
+import { OriginDropdown } from "@/components/ui/origin_dropdown";
 
 interface FilterChipsProps {
   onFilterChange: (filters: FilterSettings) => void;
