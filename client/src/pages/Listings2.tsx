@@ -40,7 +40,7 @@ import CollectionsPopover from "../components/CollectionsPopover";
 import { useSearchParty } from "../context/SearchPartyContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ApartmentListingCard } from "@/components/ApartmentListingCard";
-import DraggableApartmentCard from "@/components/DraggableApartmentCard"
+import DraggableApartmentCard from "@/components/DraggableApartmentCard";
 
 const Listings2 = () => {
   const [location] = useLocation();
@@ -106,6 +106,32 @@ const Listings2 = () => {
       setActiveSearchParty(searchParties[0]);
     }
   }, [searchParties, activeSearchParty]);
+  
+  // Listen for search party switch events
+  useEffect(() => {
+    const handleSwitchSearchParty = (event: Event) => {
+      const customEvent = event as CustomEvent<{ searchPartyId: number }>;
+      
+      if (customEvent.detail && customEvent.detail.searchPartyId) {
+        const searchPartyId = customEvent.detail.searchPartyId;
+        const selectedParty = searchParties.find(party => party.id === searchPartyId);
+        
+        if (selectedParty) {
+          setActiveSearchParty(selectedParty);
+          toast({
+            title: "Search Party Changed",
+            description: `Now using "${selectedParty.name}" search party`,
+          });
+        }
+      }
+    };
+    
+    window.addEventListener('switch-search-party', handleSwitchSearchParty);
+    
+    return () => {
+      window.removeEventListener('switch-search-party', handleSwitchSearchParty);
+    };
+  }, [searchParties, toast]);
 
   // Used to show number of experiences/listings
   const totalListings = 235;
@@ -217,13 +243,13 @@ const Listings2 = () => {
   const updateActiveFilters = (activeFilters: ActiveFilters) => {
     setActiveListingFilters(activeFilters);
   };
-  
+
   // Filter apartments by search party
   const [filterBySearchParty, setFilterBySearchParty] = useState(false);
-  
+
   const handleSearchPartyFilterToggle = (checked: boolean) => {
     setFilterBySearchParty(checked);
-    
+
     if (checked && activeSearchParty) {
       toast({
         title: `Filtering by "${activeSearchParty.name}"`,
@@ -328,16 +354,18 @@ const Listings2 = () => {
   // Handle adding apartment to search party
   const handleAddToSearchParty = (apartment: Apartment) => {
     setApartmentToAdd(apartment);
-    
+
     if (activeSearchParty) {
       // If we have an active search party, use the custom event to open the modal directly
-      window.dispatchEvent(new CustomEvent('open-search-party-modal', {
-        detail: { 
-          searchPartyId: activeSearchParty.id,
-          apartment: apartment
-        }
-      }));
-      
+      window.dispatchEvent(
+        new CustomEvent("open-search-party-modal", {
+          detail: {
+            searchPartyId: activeSearchParty.id,
+            apartment: apartment,
+          },
+        }),
+      );
+
       toast({
         title: "Adding to search party",
         description: `Adding to "${activeSearchParty.name}" search party`,
@@ -346,7 +374,7 @@ const Listings2 = () => {
       // Fall back to the old way if no active search party
       setAddToPartyModalOpen(true);
       setShowSearchPartyOverlay(true);
-      
+
       toast({
         title: "Adding to search party",
         description: "Select a search party to add this apartment",
