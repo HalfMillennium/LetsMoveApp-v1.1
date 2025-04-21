@@ -8,8 +8,14 @@ import { DollarSign, Bed, Map, PawPrint, UsersRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterSettings, ActiveFilters } from "../types";
 import { OriginDropdown } from "@/components/ui/origin_dropdown";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import { useSearchParty } from "../context/SearchPartyContext";
 
 interface FilterChipsProps {
   onFilterChange: (filters: FilterSettings) => void;
@@ -150,82 +156,92 @@ const FilterChips = ({
     return "";
   };
 
+  // Get searchParties data
+  const { searchParties } = useSearchParty();
+
   return (
     <div className="flex w-full md:w-auto">
-      <div
-        style={{ scrollbarWidth: "none" }}
-        className="flex flex-1 overflow-auto md:overflow-hidden gap-3 items-center mb-4 sm:p-2"
-      >
-        {/* Price Range Dropdown */}
-        <div className="relative">
-          <OriginDropdown
-            options={PRICE_RANGES.map(range => ({ label: range.label, value: range.label }))}
-            onSelect={(value) => handleFilterChange("price", value)}
-            value={getCurrentValue("price")}
-            placeholder="Price range"
-            icon={<DollarSign className="h-4 w-4 text-[#1A4A4A]" />}
-            label="Price Range"
-            showClearOption={!!activeFilters.price}
-          />
+      <div className="w-full flex flex-wrap gap-3 items-center mb-3">
+        {/* Consolidated filter bar with all filters in one container */}
+        <div className="flex items-center bg-gray-100/70 backdrop-blur-sm rounded-full p-1 flex-grow mr-2">
+          <div className="flex gap-1 px-2 divide-x divide-gray-200">
+            {/* Price Range Dropdown */}
+            <div className="pl-1 pr-2">
+              <OriginDropdown
+                options={PRICE_RANGES.map(range => ({ label: range.label, value: range.label }))}
+                onSelect={(value) => handleFilterChange("price", value)}
+                value={getCurrentValue("price")}
+                placeholder="Price"
+                icon={<DollarSign className="h-4 w-4 text-[#1A4A4A]" />}
+                label=""
+                showClearOption={!!activeFilters.price}
+                minimal={true}
+              />
+            </div>
+
+            {/* Bedrooms Dropdown */}
+            <div className="pl-2 pr-2">
+              <OriginDropdown
+                options={BEDROOM_OPTIONS.map(option => ({ label: option.label, value: option.label }))}
+                onSelect={(value) => handleFilterChange("bedrooms", value)}
+                value={getCurrentValue("bedrooms")}
+                placeholder="Beds"
+                icon={<Bed className="h-4 w-4 text-[#1A4A4A]" />}
+                label=""
+                showClearOption={activeFilters.bedrooms !== undefined}
+                minimal={true}
+              />
+            </div>
+
+            {/* Distance Dropdown */}
+            <div className="pl-2 pr-2">
+              <OriginDropdown
+                options={DISTANCE_OPTIONS.map(option => ({ label: option.label, value: option.label }))}
+                onSelect={(value) => handleFilterChange("distance", value)}
+                value={getCurrentValue("distance")}
+                placeholder="Distance"
+                icon={<Map className="h-4 w-4 text-[#1A4A4A]" />}
+                label=""
+                showClearOption={!!activeFilters.distance}
+                minimal={true}
+              />
+            </div>
+
+            {/* Pet Friendly Button */}
+            <div className="pl-2">
+              <Button
+                variant={activeFilters.petFriendly ? "default" : "outline"}
+                size="sm"
+                className={`
+                  flex items-center gap-1 rounded-full py-1 h-8
+                  ${
+                    activeFilters.petFriendly
+                      ? "bg-[#E9927E] hover:bg-[#E9927E]/90 text-white"
+                      : "border-[#C9DAD0] text-[#1A4A4A] hover:bg-[#C9DAD0]/10"
+                  }
+                `}
+                onClick={togglePetFriendly}
+              >
+                <PawPrint className="h-3.5 w-3.5" />
+                <span className="text-sm">Pets</span>
+              </Button>
+            </div>
+          </div>
+          
+          {/* Clear All Filters (shown only when filters are active) */}
+          {Object.keys(activeFilters).length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-[#1A4A4A] ml-1 h-8 text-xs"
+              onClick={clearAllFilters}
+            >
+              Clear
+            </Button>
+          )}
         </div>
-
-        {/* Bedrooms Dropdown */}
-        <div className="relative">
-          <OriginDropdown
-            options={BEDROOM_OPTIONS.map(option => ({ label: option.label, value: option.label }))}
-            onSelect={(value) => handleFilterChange("bedrooms", value)}
-            value={getCurrentValue("bedrooms")}
-            placeholder="Bedrooms"
-            icon={<Bed className="h-4 w-4 text-[#1A4A4A]" />}
-            label="Bedrooms"
-            showClearOption={activeFilters.bedrooms !== undefined}
-          />
-        </div>
-
-        {/* Distance Dropdown */}
-        <div className="relative">
-          <OriginDropdown
-            options={DISTANCE_OPTIONS.map(option => ({ label: option.label, value: option.label }))}
-            onSelect={(value) => handleFilterChange("distance", value)}
-            value={getCurrentValue("distance")}
-            placeholder="Distance"
-            icon={<Map className="h-4 w-4 text-[#1A4A4A]" />}
-            label="Distance"
-            showClearOption={!!activeFilters.distance}
-          />
-        </div>
-
-        {/* Pet Friendly Button */}
-        <Button
-          variant={activeFilters.petFriendly ? "default" : "outline"}
-          size="sm"
-          className={`
-            flex items-center gap-2 rounded-full h-10
-            ${
-              activeFilters.petFriendly
-                ? "bg-[#E9927E] hover:bg-[#E9927E]/90 text-white"
-                : "border-[#C9DAD0] text-[#1A4A4A] hover:bg-[#C9DAD0]/10"
-            }
-          `}
-          onClick={togglePetFriendly}
-        >
-          <PawPrint className="h-4 w-4" />
-          <span>Pet friendly</span>
-        </Button>
-
-        {/* Clear All Filters (shown only when filters are active) */}
-        {Object.keys(activeFilters).length > 0 && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-[#1A4A4A]"
-            onClick={clearAllFilters}
-          >
-            Clear all
-          </Button>
-        )}
         
-        {/* Search Party Filter Toggle with Add To Search Party functionality */}
+        {/* Search Party Filter Toggle with Selection functionality */}
         {activeSearchParty && (
           <div className="ml-auto">
             <div className="flex items-center rounded-full border border-[#A259FF] overflow-hidden">
@@ -234,10 +250,10 @@ const FilterChips = ({
                 variant={filterBySearchParty ? "default" : "ghost"}
                 onClick={() => handleSearchPartyToggle(!filterBySearchParty)}
                 className={`
-                  flex items-center gap-2 px-4 py-2 h-10 rounded-l-full border-r border-[#A259FF]/30 transition-all duration-300
+                  flex items-center gap-2 px-3 py-2 h-10 transition-all duration-300
                   ${filterBySearchParty 
-                    ? "bg-gradient-to-r from-[#7B4AFF] to-[#A259FF] text-white shadow-sm" 
-                    : "text-[#7B4AFF] hover:bg-[#A259FF]/10"}
+                    ? "bg-gradient-to-r from-[#7B4AFF] to-[#A259FF] text-white shadow-sm rounded-full" 
+                    : "text-[#7B4AFF] hover:bg-[#A259FF]/10 rounded-l-full"}
                 `}
               >
                 <UsersRound className="h-4 w-4" />
@@ -252,27 +268,34 @@ const FilterChips = ({
                 }`}/>
               </Button>
               
-              {/* Add To Search Party side */}
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  // Open add to search party modal or functionality
-                  window.dispatchEvent(new CustomEvent('open-search-party-modal', {
-                    detail: { searchPartyId: activeSearchParty.id }
+              {/* Switch Search Party Dropdown Button */}
+              <Select
+                value={activeSearchParty?.id.toString()}
+                onValueChange={(value) => {
+                  const searchPartyId = parseInt(value, 10);
+                  // Dispatch an event to switch search parties
+                  window.dispatchEvent(new CustomEvent('switch-search-party', {
+                    detail: { searchPartyId }
                   }));
                 }}
-                className="flex items-center gap-2 px-4 py-2 h-10 rounded-r-full text-[#7B4AFF] hover:bg-[#A259FF]/10"
               >
-                <div className="flex flex-col items-start leading-none">
-                  <span className="text-xs opacity-90">Add to</span>
-                  <span className="font-medium text-sm truncate max-w-[85px]">
-                    Search Party
-                  </span>
-                </div>
-                <div className="w-5 h-5 rounded-full bg-[#A259FF]/10 flex items-center justify-center">
-                  <span className="text-[#7B4AFF] text-xs font-bold">+</span>
-                </div>
-              </Button>
+                <SelectTrigger 
+                  className={`
+                    border-none h-10 px-3 rounded-r-full focus:ring-0 
+                    ${!filterBySearchParty ? "border-l border-[#A259FF]/30" : ""}
+                    ${filterBySearchParty ? "bg-gradient-to-r from-[#A259FF] to-[#9370FF] text-white" : "text-[#7B4AFF]"}
+                  `}
+                >
+                  <SelectValue placeholder="Switch" />
+                </SelectTrigger>
+                <SelectContent>
+                  {searchParties.map((party) => (
+                    <SelectItem key={party.id} value={party.id.toString()}>
+                      {party.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         )}

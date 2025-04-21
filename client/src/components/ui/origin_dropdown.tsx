@@ -19,6 +19,7 @@ interface OriginDropdownProps {
   value?: string;
   className?: string;
   showClearOption?: boolean;
+  minimal?: boolean; // New prop for minimalist style
 }
 
 export const OriginDropdown: React.FC<OriginDropdownProps> = ({
@@ -30,6 +31,7 @@ export const OriginDropdown: React.FC<OriginDropdownProps> = ({
   value,
   className = "",
   showClearOption = false,
+  minimal = false,
 }) => {
   const selectedOption = options.find(
     (option) => option.value === value || option.label === value,
@@ -39,18 +41,21 @@ export const OriginDropdown: React.FC<OriginDropdownProps> = ({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
-          className={`w-[160px] bg-white border-[#C9DAD0] ${className} rounded-full`}
+          variant={minimal ? "ghost" : "outline"}
+          className={`
+            ${minimal ? "p-1.5 h-8 border-0" : "w-[160px] bg-white border-[#C9DAD0]"} 
+            ${className} rounded-full
+          `}
         >
-          <div className="flex items-center gap-2 w-full justify-between">
-            <div className="flex items-center gap-2 overflow-hidden">
-              {icon}
-              <span className="truncate">
+          <div className="flex items-center gap-1.5 w-full justify-between">
+            <div className="flex items-center gap-1.5 overflow-hidden">
+              {icon && <span className={minimal ? "text-gray-500" : ""}>{icon}</span>}
+              <span className={`truncate ${minimal ? "font-medium text-sm" : ""}`}>
                 {selectedOption ? selectedOption.label : placeholder}
               </span>
             </div>
             <ChevronDownIcon
-              className="h-4 w-4 opacity-60 flex-shrink-0 ml-1"
+              className={`${minimal ? "h-3.5 w-3.5" : "h-4 w-4"} opacity-60 flex-shrink-0 ml-1`}
               aria-hidden="true"
             />
           </div>
