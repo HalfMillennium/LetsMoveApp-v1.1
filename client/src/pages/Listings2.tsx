@@ -218,7 +218,7 @@ const Listings2 = () => {
     }));
 
     toast({
-      title: "Collection created",
+     title: "Collection created",
       description: `Your "${title}" collection has been created`,
     });
   };
