@@ -22,7 +22,7 @@ import MobileFilterPopover from "./MobileFilterPopover";
 interface FilterChipsProps {
   onFilterChange: (filters: FilterSettings) => void;
   updateActiveFilters: (filters: ActiveFilters) => void;
-  activeSearchParty?: { id: number; name: string } | null;
+  activeSearchParty?: { id: number; name: string; createdById?: number; createdAt?: string } | null;
   onSearchPartyFilterToggle?: (enabled: boolean) => void;
 }
 
