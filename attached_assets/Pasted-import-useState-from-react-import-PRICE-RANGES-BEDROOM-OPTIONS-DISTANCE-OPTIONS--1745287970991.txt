@@ -4,14 +4,7 @@ import {
   BEDROOM_OPTIONS,
   DISTANCE_OPTIONS,
 } from "../lib/constants";
-import {
-  DollarSign,
-  Bed,
-  Map,
-  PawPrint,
-  UsersRound,
-  Trash2,
-} from "lucide-react";
+import { DollarSign, Bed, Map, PawPrint, UsersRound, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterSettings, ActiveFilters } from "../types";
 import { OriginDropdown } from "@/components/ui/origin_dropdown";
@@ -29,12 +22,7 @@ import MobileFilterPopover from "./MobileFilterPopover";
 interface FilterChipsProps {
   onFilterChange: (filters: FilterSettings) => void;
   updateActiveFilters: (filters: ActiveFilters) => void;
-  activeSearchParty?: {
-    id: number;
-    name: string;
-    createdById?: number;
-    createdAt?: string;
-  } | null;
+  activeSearchParty?: { id: number; name: string; createdById?: number; createdAt?: string } | null;
   onSearchPartyFilterToggle?: (enabled: boolean) => void;
 }
 
@@ -181,7 +169,7 @@ const FilterChips = ({
         {/* Mobile version of filters */}
         {isMobile ? (
           <div className="flex w-full justify-between">
-            <MobileFilterPopover
+            <MobileFilterPopover 
               activeFilters={activeFilters}
               onFilterChange={handleFilterChange}
               clearAllFilters={clearAllFilters}
@@ -284,7 +272,7 @@ const FilterChips = ({
                   ${
                     filterBySearchParty
                       ? "bg-gradient-to-r from-primary to-[#f7c8bb] text-white shadow-md rounded-full"
-                      : "text-primary hover:bg-primary/20 rounded-full"
+                      : "text-primary hover:bg-[#A259FF]/10 rounded-full"
                   }
                 `}
               >
@@ -299,43 +287,42 @@ const FilterChips = ({
                 </div>
                 <div
                   className={`w-3 h-3 rounded-full transition-all ${
-                    filterBySearchParty ? "bg-white" : "bg-primary/40"
+                    filterBySearchParty ? "bg-white" : "bg-[#A259FF]/40"
                   }`}
                 />
               </Button>
 
-              {/* Switch Search Party Dropdown Button as OriginDropdown */}
-              <div className="border-l border-[#A259FF]/30 pl-4 ml-2">
-                <OriginDropdown
-                  options={searchParties.map((party) => ({
-                    label: party.name,
-                    value: party.id.toString(),
-                  }))}
-                  className="rounded-lg"
-                  onSelect={(value) => {
-                    const searchPartyId = parseInt(value, 10);
-                    // Dispatch an event to switch search parties
-                    window.dispatchEvent(
-                      new CustomEvent("switch-search-party", {
-                        detail: { searchPartyId },
-                      }),
-                    );
-                  }}
-                  value={activeSearchParty.name}
-                  placeholder="Switch party"
-                  icon={<UsersRound className="h-4 w-4 text-[#A259FF]" />}
-                  label=""
-                  minimal={true}
-                />
-              </div>
+              {/* Switch Search Party Dropdown Button */}
+              <Select
+                value={activeSearchParty?.id.toString()}
+                onValueChange={(value) => {
+                  const searchPartyId = parseInt(value, 10);
+                  // Dispatch an event to switch search parties
+                  window.dispatchEvent(
+                    new CustomEvent("switch-search-party", {
+                      detail: { searchPartyId },
+                    }),
+                  );
+                }}
+              >
+                <SelectTrigger className="border-none h-10 pl-6 m-2 rounded-r-full focus:ring-0 border-l border-[#A259FF]/30">
+                  <SelectValue placeholder="Switch" />
+                </SelectTrigger>
+                <SelectContent>
+                  {searchParties.map((party) => (
+                    <SelectItem key={party.id} value={party.id.toString()}>
+                      {party.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         )}
-
-        {/* Mobile Search Party Controls */}
+        
+        {/* Mobile Search Party Button */}
         {activeSearchParty && isMobile && (
-          <div className="ml-auto flex items-center gap-2">
-            {/* Toggle Button */}
+          <div className="ml-auto">
             <Button
               variant={filterBySearchParty ? "default" : "outline"}
               size="sm"
@@ -355,28 +342,6 @@ const FilterChips = ({
                 }`}
               />
             </Button>
-            
-            {/* Mobile OriginDropdown for Search Party selection */}
-            <div className="relative">
-              <OriginDropdown
-                options={searchParties.map((party) => ({
-                  label: party.name,
-                  value: party.id.toString(),
-                }))}
-                onSelect={(value) => {
-                  const searchPartyId = parseInt(value, 10);
-                  window.dispatchEvent(
-                    new CustomEvent("switch-search-party", {
-                      detail: { searchPartyId },
-                    }),
-                  );
-                }}
-                value={activeSearchParty.name}
-                placeholder="Switch"
-                icon={<UsersRound className="h-3.5 w-3.5 text-[#A259FF]" />}
-                minimal={true}
-              />
-            </div>
           </div>
         )}
       </div>
