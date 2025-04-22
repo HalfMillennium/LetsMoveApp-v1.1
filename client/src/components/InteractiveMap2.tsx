@@ -2,17 +2,7 @@ import { useState, useEffect, useRef, SVGProps } from "react";
 import { Apartment } from "../types";
 import { useGeolocation } from "../lib/useGeolocation";
 import { Button } from "@/components/ui/button";
-import {
-  Home,
-  MapPin,
-  Navigation,
-  Plus,
-  Minus,
-  CornerUpLeft,
-  MapIcon,
-  HouseIcon,
-  Building2,
-} from "lucide-react";
+import { Plus, Minus, CornerUpLeft, Building2 } from "lucide-react";
 
 interface InteractiveMapProps {
   apartments: Apartment[];
@@ -372,7 +362,7 @@ const InteractiveMap = ({
               {/* Home icon */}
               <g transform="translate(-12, -12)">
                 <rect x="0" y="0" width="24" height="24" fill="none" />
-                <Building2 color="#212121"/>
+                <Building2 color="#212121" />
               </g>
 
               {/* Price Label */}

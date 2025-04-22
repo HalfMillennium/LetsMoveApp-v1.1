@@ -4,18 +4,20 @@ import {
   BEDROOM_OPTIONS,
   DISTANCE_OPTIONS,
 } from "../lib/constants";
-import { DollarSign, Bed, Map, PawPrint, UsersRound } from "lucide-react";
+import { DollarSign, Bed, Map, PawPrint, UsersRound, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterSettings, ActiveFilters } from "../types";
 import { OriginDropdown } from "@/components/ui/origin_dropdown";
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
 import { useSearchParty } from "../context/SearchPartyContext";
+import { useIsMobile } from "@/hooks/use-mobile";
+import MobileFilterPopover from "./MobileFilterPopover";
 
 interface FilterChipsProps {
   onFilterChange: (filters: FilterSettings) => void;
@@ -121,7 +123,7 @@ const FilterChips = ({
     updateActiveFilters({});
     onFilterChange({});
   };
-  
+
   const handleSearchPartyToggle = (checked: boolean) => {
     setFilterBySearchParty(checked);
     if (onSearchPartyFilterToggle) {
@@ -159,133 +161,151 @@ const FilterChips = ({
   // Get searchParties data
   const { searchParties } = useSearchParty();
 
+  const isMobile = useIsMobile();
+
   return (
     <div className="flex w-full md:w-auto">
       <div className="w-full flex flex-wrap gap-3 items-center mb-3">
-        {/* Consolidated filter bar with all filters in one container */}
-        <div className="flex items-center bg-gray-100/70 backdrop-blur-sm rounded-full p-1 flex-grow mr-2">
-          <div className="flex gap-1 px-2 divide-x divide-gray-200">
-            {/* Price Range Dropdown */}
-            <div className="pl-1 pr-2">
-              <OriginDropdown
-                options={PRICE_RANGES.map(range => ({ label: range.label, value: range.label }))}
-                onSelect={(value) => handleFilterChange("price", value)}
-                value={getCurrentValue("price")}
-                placeholder="Price"
-                icon={<DollarSign className="h-4 w-4 text-[#1A4A4A]" />}
-                label=""
-                showClearOption={!!activeFilters.price}
-                minimal={true}
-              />
-            </div>
-
-            {/* Bedrooms Dropdown */}
-            <div className="pl-2 pr-2">
-              <OriginDropdown
-                options={BEDROOM_OPTIONS.map(option => ({ label: option.label, value: option.label }))}
-                onSelect={(value) => handleFilterChange("bedrooms", value)}
-                value={getCurrentValue("bedrooms")}
-                placeholder="Beds"
-                icon={<Bed className="h-4 w-4 text-[#1A4A4A]" />}
-                label=""
-                showClearOption={activeFilters.bedrooms !== undefined}
-                minimal={true}
-              />
-            </div>
-
-            {/* Distance Dropdown */}
-            <div className="pl-2 pr-2">
-              <OriginDropdown
-                options={DISTANCE_OPTIONS.map(option => ({ label: option.label, value: option.label }))}
-                onSelect={(value) => handleFilterChange("distance", value)}
-                value={getCurrentValue("distance")}
-                placeholder="Distance"
-                icon={<Map className="h-4 w-4 text-[#1A4A4A]" />}
-                label=""
-                showClearOption={!!activeFilters.distance}
-                minimal={true}
-              />
-            </div>
-
-            {/* Pet Friendly Button */}
-            <div className="pl-2">
-              <Button
-                variant={activeFilters.petFriendly ? "default" : "outline"}
-                size="sm"
-                className={`
-                  flex items-center gap-1 rounded-full py-1 h-8
-                  ${
-                    activeFilters.petFriendly
-                      ? "bg-[#E9927E] hover:bg-[#E9927E]/90 text-white"
-                      : "border-[#C9DAD0] text-[#1A4A4A] hover:bg-[#C9DAD0]/10"
-                  }
-                `}
-                onClick={togglePetFriendly}
-              >
-                <PawPrint className="h-3.5 w-3.5" />
-                <span className="text-sm">Pets</span>
-              </Button>
-            </div>
+        {/* Mobile version of filters */}
+        {isMobile ? (
+          <div className="flex w-full justify-between">
+            <MobileFilterPopover 
+              activeFilters={activeFilters}
+              onFilterChange={handleFilterChange}
+              clearAllFilters={clearAllFilters}
+              onPetFriendlyToggle={togglePetFriendly}
+              activeSearchParty={activeSearchParty}
+              filterBySearchParty={filterBySearchParty}
+              onSearchPartyFilterToggle={handleSearchPartyToggle}
+            />
           </div>
-          
-          {/* Clear All Filters (shown only when filters are active) */}
-          {Object.keys(activeFilters).length > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-[#1A4A4A] ml-1 h-8 text-xs"
-              onClick={clearAllFilters}
-            >
-              Clear
-            </Button>
-          )}
-        </div>
-        
+        ) : (
+          /* Desktop/Tablet version of filters */
+          <div className="flex items-center shadow-md backdrop-blur-sm rounded-full p-2 flex-grow mr-2">
+            <div className="flex gap-4 px-2 divide-x divide-gray-200">
+              {/* Price Range Dropdown */}
+              <div className="w-full">
+                <OriginDropdown
+                  options={PRICE_RANGES.map((range) => ({
+                    label: range.label,
+                    value: range.label,
+                  }))}
+                  className="rounded-lg"
+                  onSelect={(value) => handleFilterChange("price", value)}
+                  value={getCurrentValue("price")}
+                  placeholder="Price"
+                  icon={<DollarSign className="h-4 w-4 text-[#1A4A4A]" />}
+                  label=""
+                  showClearOption={!!activeFilters.price}
+                  minimal={true}
+                />
+              </div>
+
+              {/* Bedrooms Dropdown */}
+              <div className="pl-4">
+                <OriginDropdown
+                  options={BEDROOM_OPTIONS.map((option) => ({
+                    label: option.label,
+                    value: option.label,
+                  }))}
+                  className="rounded-lg"
+                  onSelect={(value) => handleFilterChange("bedrooms", value)}
+                  value={getCurrentValue("bedrooms")}
+                  placeholder="Beds"
+                  icon={<Bed className="h-4 w-4 text-[#1A4A4A]" />}
+                  label=""
+                  showClearOption={activeFilters.bedrooms !== undefined}
+                  minimal={true}
+                />
+              </div>
+
+              {/* Distance Dropdown */}
+              <div className="pl-4">
+                <OriginDropdown
+                  options={DISTANCE_OPTIONS.map((option) => ({
+                    label: option.label,
+                    value: option.label,
+                  }))}
+                  className="rounded-lg"
+                  onSelect={(value) => handleFilterChange("distance", value)}
+                  value={getCurrentValue("distance")}
+                  placeholder="Distance"
+                  icon={<Map className="h-4 w-4 text-[#1A4A4A]" />}
+                  label=""
+                  showClearOption={!!activeFilters.distance}
+                  minimal={true}
+                />
+              </div>
+            </div>
+
+            {/* Clear All Filters (shown only when filters are active) */}
+            {Object.keys(activeFilters).length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-[#1A4A4A] ml-1 h-8 text-xs rounded-full items-center"
+                onClick={clearAllFilters}
+              >
+                <div className="flex items-center gap-1.5 w-full justify-between">
+                  <div className="flex items-center gap-1.5 overflow-hidden">
+                    <span className="text-md">
+                      <Trash2 size={8} />
+                    </span>
+                    <span className="truncate mt-0.5">Clear</span>
+                  </div>
+                </div>
+              </Button>
+            )}
+          </div>
+        )}
+
         {/* Search Party Filter Toggle with Selection functionality */}
-        {activeSearchParty && (
+        {activeSearchParty && !isMobile && (
           <div className="ml-auto">
-            <div className="flex items-center rounded-full border border-[#A259FF] overflow-hidden">
+            <div className="flex items-center rounded-full overflow-visible">
               {/* Filter toggle side */}
               <Button
                 variant={filterBySearchParty ? "default" : "ghost"}
                 onClick={() => handleSearchPartyToggle(!filterBySearchParty)}
                 className={`
-                  flex items-center gap-2 px-3 py-2 h-10 transition-all duration-300
-                  ${filterBySearchParty 
-                    ? "bg-gradient-to-r from-[#7B4AFF] to-[#A259FF] text-white shadow-sm rounded-full" 
-                    : "text-[#7B4AFF] hover:bg-[#A259FF]/10 rounded-l-full"}
+                  flex items-center gap-2 p-6 h-10 transition-all duration-300
+                  ${
+                    filterBySearchParty
+                      ? "bg-gradient-to-r from-primary to-[#f7c8bb] text-white shadow-md rounded-full"
+                      : "text-primary hover:bg-[#A259FF]/10 rounded-full"
+                  }
                 `}
               >
                 <UsersRound className="h-4 w-4" />
                 <div className="flex flex-col items-start leading-none">
-                  <span className="text-xs opacity-90">Filter by</span>
-                  <span className="font-medium text-sm truncate max-w-[85px]">
+                  <span className="text-xs opacity-90">
+                    {filterBySearchParty ? "Filtering" : "Filter"} by
+                  </span>
+                  <span className="font-medium text-sm truncate">
                     {activeSearchParty.name}
                   </span>
                 </div>
-                <div className={`w-3 h-3 rounded-full transition-all ${
-                  filterBySearchParty ? "bg-white" : "bg-[#A259FF]/40"
-                }`}/>
+                <div
+                  className={`w-3 h-3 rounded-full transition-all ${
+                    filterBySearchParty ? "bg-white" : "bg-[#A259FF]/40"
+                  }`}
+                />
               </Button>
-              
+
               {/* Switch Search Party Dropdown Button */}
               <Select
                 value={activeSearchParty?.id.toString()}
                 onValueChange={(value) => {
                   const searchPartyId = parseInt(value, 10);
                   // Dispatch an event to switch search parties
-                  window.dispatchEvent(new CustomEvent('switch-search-party', {
-                    detail: { searchPartyId }
-                  }));
+                  window.dispatchEvent(
+                    new CustomEvent("switch-search-party", {
+                      detail: { searchPartyId },
+                    }),
+                  );
                 }}
               >
-                <SelectTrigger 
-                  className={`
-                    border-none h-10 px-3 rounded-r-full focus:ring-0 
-                    ${!filterBySearchParty ? "border-l border-[#A259FF]/30" : ""}
-                    ${filterBySearchParty ? "bg-gradient-to-r from-[#A259FF] to-[#9370FF] text-white" : "text-[#7B4AFF]"}
-                  `}
-                >
+                <SelectTrigger className="border-none h-10 pl-6 m-2 rounded-r-full focus:ring-0 border-l border-[#A259FF]/30">
                   <SelectValue placeholder="Switch" />
                 </SelectTrigger>
                 <SelectContent>
@@ -297,6 +317,31 @@ const FilterChips = ({
                 </SelectContent>
               </Select>
             </div>
+          </div>
+        )}
+        
+        {/* Mobile Search Party Button */}
+        {activeSearchParty && isMobile && (
+          <div className="ml-auto">
+            <Button
+              variant={filterBySearchParty ? "default" : "outline"}
+              size="sm"
+              onClick={() => handleSearchPartyToggle(!filterBySearchParty)}
+              className={`
+                flex items-center gap-1.5 h-9 px-3 transition-all duration-300 rounded-full
+                ${filterBySearchParty ? "bg-[#A259FF] text-white" : "border-[#A259FF]/40 text-[#A259FF]"}
+              `}
+            >
+              <UsersRound className="h-3.5 w-3.5" />
+              <span className="text-xs font-medium truncate max-w-[80px]">
+                {activeSearchParty.name}
+              </span>
+              <div
+                className={`w-2 h-2 rounded-full transition-all ${
+                  filterBySearchParty ? "bg-white" : "bg-[#A259FF]/40"
+                }`}
+              />
+            </Button>
           </div>
         )}
       </div>
