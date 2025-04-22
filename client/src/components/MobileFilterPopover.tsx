@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/command";
 import { Sliders, DollarSign, Bed, Map, PawPrint, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FilterSettings, ActiveFilters, SearchParty } from "../types";
+import { FilterSettings, ActiveFilters } from "../types";
 import { PRICE_RANGES, BEDROOM_OPTIONS, DISTANCE_OPTIONS } from "../lib/constants";
 import { Switch } from "@/components/ui/switch";
 
@@ -23,7 +23,7 @@ interface MobileFilterPopoverProps {
   onFilterChange: (filterType: string, value: string) => void;
   clearAllFilters: () => void;
   onPetFriendlyToggle: () => void;
-  activeSearchParty?: SearchParty | null;
+  activeSearchParty?: { id: number; name: string; createdById?: number; createdAt?: string } | null;
   filterBySearchParty: boolean;
   onSearchPartyFilterToggle: (enabled: boolean) => void;
 }
