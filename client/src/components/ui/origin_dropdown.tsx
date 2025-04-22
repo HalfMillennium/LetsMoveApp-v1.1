@@ -44,13 +44,17 @@ export const OriginDropdown: React.FC<OriginDropdownProps> = ({
           variant={minimal ? "ghost" : "outline"}
           className={`
             ${minimal ? "p-1.5 h-8 border-0" : "w-[160px] bg-white border-[#C9DAD0]"} 
-            ${className} rounded-full
+            ${className}
           `}
         >
           <div className="flex items-center gap-1.5 w-full justify-between">
             <div className="flex items-center gap-1.5 overflow-hidden">
-              {icon && <span className={minimal ? "text-gray-500" : ""}>{icon}</span>}
-              <span className={`truncate ${minimal ? "font-medium text-sm" : ""}`}>
+              {icon && (
+                <span className={minimal ? "text-gray-500" : ""}>{icon}</span>
+              )}
+              <span
+                className={`truncate ${minimal ? "font-medium text-sm" : ""}`}
+              >
                 {selectedOption ? selectedOption.label : placeholder}
               </span>
             </div>
