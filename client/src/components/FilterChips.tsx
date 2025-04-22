@@ -323,7 +323,7 @@ const FilterChips = ({
                   }}
                   value={activeSearchParty.name}
                   placeholder="Switch party"
-                  icon={<UsersRound className="h-4 w-4 text-primary" />}
+                  icon={<UsersRound className="h-4 w-4 text-black" />}
                   label=""
                   minimal={true}
                 />
