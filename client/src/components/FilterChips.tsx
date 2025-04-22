@@ -305,7 +305,7 @@ const FilterChips = ({
               </Button>
 
               {/* Switch Search Party Dropdown Button as OriginDropdown */}
-              <div className="border-l border-[#A259FF]/30 pl-4 ml-2">
+              <div className="border-l border-primary/30 pl-4 ml-2">
                 <OriginDropdown
                   options={searchParties.map((party) => ({
                     label: party.name,
@@ -323,7 +323,7 @@ const FilterChips = ({
                   }}
                   value={activeSearchParty.name}
                   placeholder="Switch party"
-                  icon={<UsersRound className="h-4 w-4 text-[#A259FF]" />}
+                  icon={<UsersRound className="h-4 w-4 text-primary" />}
                   label=""
                   minimal={true}
                 />
@@ -342,7 +342,7 @@ const FilterChips = ({
               onClick={() => handleSearchPartyToggle(!filterBySearchParty)}
               className={`
                 flex items-center gap-1.5 h-9 px-3 transition-all duration-300 rounded-full
-                ${filterBySearchParty ? "bg-[#A259FF] text-white" : "border-[#A259FF]/40 text-[#A259FF]"}
+                ${filterBySearchParty ? "bg-primary text-white" : "border-primary/40 text-primary"}
               `}
             >
               <UsersRound className="h-3.5 w-3.5" />
@@ -351,11 +351,11 @@ const FilterChips = ({
               </span>
               <div
                 className={`w-2 h-2 rounded-full transition-all ${
-                  filterBySearchParty ? "bg-white" : "bg-[#A259FF]/40"
+                  filterBySearchParty ? "bg-white" : "bg-primary/40"
                 }`}
               />
             </Button>
-            
+
             {/* Mobile OriginDropdown for Search Party selection */}
             <div className="relative">
               <OriginDropdown
@@ -373,7 +373,7 @@ const FilterChips = ({
                 }}
                 value={activeSearchParty.name}
                 placeholder="Switch"
-                icon={<UsersRound className="h-3.5 w-3.5 text-[#A259FF]" />}
+                icon={<UsersRound className="h-3.5 w-3.5 text-primary" />}
                 minimal={true}
               />
             </div>

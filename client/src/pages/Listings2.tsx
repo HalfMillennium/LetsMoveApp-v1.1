@@ -106,16 +106,18 @@ const Listings2 = () => {
       setActiveSearchParty(searchParties[0]);
     }
   }, [searchParties, activeSearchParty]);
-  
+
   // Listen for search party switch events
   useEffect(() => {
     const handleSwitchSearchParty = (event: Event) => {
       const customEvent = event as CustomEvent<{ searchPartyId: number }>;
-      
+
       if (customEvent.detail && customEvent.detail.searchPartyId) {
         const searchPartyId = customEvent.detail.searchPartyId;
-        const selectedParty = searchParties.find(party => party.id === searchPartyId);
-        
+        const selectedParty = searchParties.find(
+          (party) => party.id === searchPartyId,
+        );
+
         if (selectedParty) {
           setActiveSearchParty(selectedParty);
           toast({
@@ -125,11 +127,14 @@ const Listings2 = () => {
         }
       }
     };
-    
-    window.addEventListener('switch-search-party', handleSwitchSearchParty);
-    
+
+    window.addEventListener("switch-search-party", handleSwitchSearchParty);
+
     return () => {
-      window.removeEventListener('switch-search-party', handleSwitchSearchParty);
+      window.removeEventListener(
+        "switch-search-party",
+        handleSwitchSearchParty,
+      );
     };
   }, [searchParties, toast]);
 
@@ -218,7 +223,7 @@ const Listings2 = () => {
     }));
 
     toast({
-     title: "Collection created",
+      title: "Collection created",
       description: `Your "${title}" collection has been created`,
     });
   };
@@ -390,7 +395,7 @@ const Listings2 = () => {
         {/* Responsive Collection Navigation */}
         <div
           ref={headerRef}
-          className="top-0 z-10 bg-white border-b border-gray-100 shadow-sm opacity-0 transform -translate-y-4 transition-all duration-500"
+          className="top-0 z-10 bg-white opacity-0 transform -translate-y-4 transition-all duration-500"
         >
           {/* Mobile Collections Popover - Only visible on small screens */}
           <div className="md:hidden container mx-auto px-6 py-4 flex items-center justify-between">
