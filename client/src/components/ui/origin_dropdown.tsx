@@ -53,7 +53,8 @@ export const OriginDropdown: React.FC<OriginDropdownProps> = ({
                 <span className={minimal ? "text-gray-500" : ""}>{icon}</span>
               )}
               <span
-                className={`truncate ${minimal ? "font-medium text-sm" : ""}`}
+                key={selectedOption ? selectedOption.label : placeholder}
+                className={`truncate ${minimal ? "font-medium text-sm" : ""} transition-all duration-300 animate-fadeIn`}
               >
                 {selectedOption ? selectedOption.label : placeholder}
               </span>
