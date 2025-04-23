@@ -193,8 +193,8 @@ const FilterChips = ({
           </div>
         ) : (
           /* Desktop/Tablet version of filters */
-          <div className="flex items-center shadow-md backdrop-blur-sm rounded-full p-2 flex-grow mr-2">
-            <div className="flex gap-4 px-2 divide-x divide-gray-200">
+          <div className="flex items-center shadow-md backdrop-blur-sm rounded-full p-2 flex-grow mr-2 transition-all duration-300 ease-in-out">
+            <div className="flex gap-4 px-2 divide-x divide-gray-200 transition-all duration-300 ease-in-out">
               {/* Price Range Dropdown */}
               <div className="w-full">
                 <OriginDropdown
@@ -251,23 +251,32 @@ const FilterChips = ({
             </div>
 
             {/* Clear All Filters (shown only when filters are active) */}
-            {Object.keys(activeFilters).length > 0 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-[#1A4A4A] ml-1 h-8 text-xs rounded-full items-center"
-                onClick={clearAllFilters}
+            <div className="relative overflow-hidden transition-all duration-300 ease-in-out">
+              <div 
+                className={`
+                  ${Object.keys(activeFilters).length > 0 
+                    ? 'opacity-100 max-w-[80px] animate-fadeIn' 
+                    : 'opacity-0 max-w-0 animate-fadeOut'}
+                  transition-all duration-300 transform ease-in-out
+                `}
               >
-                <div className="flex items-center gap-1.5 w-full justify-between">
-                  <div className="flex items-center gap-1.5 overflow-hidden">
-                    <span className="text-md">
-                      <Trash2 size={8} />
-                    </span>
-                    <span className="truncate mt-0.5">Clear</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-[#1A4A4A] ml-1 h-8 text-xs rounded-full items-center whitespace-nowrap"
+                  onClick={clearAllFilters}
+                >
+                  <div className="flex items-center gap-1.5 w-full justify-between">
+                    <div className="flex items-center gap-1.5 overflow-hidden">
+                      <span className="text-md">
+                        <Trash2 size={8} />
+                      </span>
+                      <span className="truncate mt-0.5">Clear</span>
+                    </div>
                   </div>
-                </div>
-              </Button>
-            )}
+                </Button>
+              </div>
+            </div>
           </div>
         )}
 
