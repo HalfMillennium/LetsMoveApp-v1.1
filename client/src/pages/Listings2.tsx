@@ -361,28 +361,17 @@ const Listings2 = () => {
     setApartmentToAdd(apartment);
 
     if (activeSearchParty) {
-      // If we have an active search party, use the custom event to open the modal directly
-      window.dispatchEvent(
-        new CustomEvent("open-search-party-modal", {
-          detail: {
-            searchPartyId: activeSearchParty.id,
-            apartment: apartment,
-          },
-        }),
-      );
-
-      toast({
-        title: "Adding to search party",
-        description: `Adding to "${activeSearchParty.name}" search party`,
-      });
-    } else {
-      // Fall back to the old way if no active search party
       setAddToPartyModalOpen(true);
       setShowSearchPartyOverlay(true);
 
       toast({
         title: "Adding to search party",
         description: "Select a search party to add this apartment",
+      });
+    } else {
+      toast({
+        title: "No active search party",
+        description: "Couldn't find an active search party to add to",
       });
     }
   };
