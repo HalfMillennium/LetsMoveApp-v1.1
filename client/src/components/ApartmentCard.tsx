@@ -95,28 +95,6 @@ const ApartmentCard = ({ apartment }: ApartmentCardProps) => {
         <Button variant="outline" size="sm" className="w-full">
           Add to Search Party
         </Button>
-        {/** 
-                {searchParties.length > 0 && (
-          <div className="flex flex-col h-full mt-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="w-full">
-                  Add to Search Party
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {searchParties.map((party) => (
-                  <DropdownMenuItem
-                    key={party.id}
-                    onClick={() => handleAddToSearchParty(party.id)}
-                  >
-                    {party.name}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        )}*/}
       </div>
     </div>
   );

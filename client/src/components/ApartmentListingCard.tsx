@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Apartment } from "@/types";
 import { Heart, Map as MapIcon, Users } from "lucide-react";

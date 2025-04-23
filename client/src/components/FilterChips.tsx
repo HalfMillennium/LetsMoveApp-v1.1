@@ -252,11 +252,13 @@ const FilterChips = ({
 
             {/* Clear All Filters (shown only when filters are active) */}
             <div className="relative overflow-hidden transition-all duration-300 ease-in-out">
-              <div 
+              <div
                 className={`
-                  ${Object.keys(activeFilters).length > 0 
-                    ? 'opacity-100 max-w-[80px] animate-fadeIn' 
-                    : 'opacity-0 max-w-0 animate-fadeOut'}
+                  ${
+                    Object.keys(activeFilters).length > 0
+                      ? "opacity-100 max-w-[80px] animate-fadeIn"
+                      : "opacity-0 max-w-0 animate-fadeOut"
+                  }
                   transition-all duration-300 transform ease-in-out
                 `}
               >
@@ -292,7 +294,7 @@ const FilterChips = ({
                   flex items-center gap-2 p-6 h-10 transition-all duration-300
                   ${
                     filterBySearchParty
-                      ? "bg-gradient-to-r from-primary to-[#f7c8bb] text-white shadow-md rounded-full"
+                      ? "bg-primary text-white shadow-md rounded-full"
                       : "text-primary hover:bg-primary/20 rounded-full"
                   }
                 `}
