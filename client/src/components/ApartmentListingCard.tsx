@@ -1,6 +1,6 @@
 import React from "react";
 import { Apartment } from "@/types";
-import { Heart, Map as MapIcon, Users } from "lucide-react";
+import { Heart, Map as MapIcon, Users, Bed, Bath, Square, Play } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ApartmentListingCardProps {
@@ -35,17 +35,29 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
     <div
       key={apartment.id}
       ref={(el) => (apartmentRefs.current[index] = el)}
-      className="space-y-2 group cursor-pointer relative opacity-0 transform translate-y-4 scale-95 transition-all duration-700"
+      className="group cursor-pointer relative opacity-0 transform translate-y-4 scale-95 transition-all duration-700"
       onClick={() => handleApartmentSelect(apartment.id)}
     >
-      <div className="relative overflow-hidden rounded-lg h-48">
+      {/* Image Container */}
+      <div className="relative overflow-hidden rounded-xl h-52 mb-3">
         <img
           src={apartment.images[0]}
           alt={apartment.title}
           className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
         />
+        
+        {/* Play button overlay - for video/virtual tours */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="bg-white/80 rounded-full p-2 opacity-90 hover:opacity-100 transition-opacity hover:scale-105 cursor-pointer">
+            <div className="h-8 w-8 bg-primary text-white rounded-full flex items-center justify-center">
+              <Play className="h-4 w-4 fill-white ml-0.5" />
+            </div>
+          </div>
+        </div>
+        
+        {/* Favorite Button */}
         <button
-          className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white"
+          className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white shadow-sm"
           onClick={(e) => {
             e.stopPropagation();
             // Handle favorite toggle
@@ -57,8 +69,10 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
         >
           <Heart className="h-4 w-4 text-gray-700" />
         </button>
+        
+        {/* Search Party Button */}
         <button
-          className="absolute top-3 left-3 p-2 rounded-full bg-white/90 hover:bg-white cursor-pointer"
+          className="absolute top-3 left-3 p-2 rounded-full bg-white/90 hover:bg-white shadow-sm cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
             handleAddToSearchParty(apartment);
@@ -67,25 +81,42 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
           <Users className="h-4 w-4 text-gray-700" />
         </button>
       </div>
-      <div className="flex justify-between items-start">
-        <h3 className="font-semibold text-gray-900 line-clamp-1 font-primary text-clamp-base">
-          {apartment.title}
-        </h3>
-        <div className="flex items-center text-clamp-sm font-secondary">
-          <span className="mr-1">★</span>
-          <span>{formatRating(getListingRating(index))}</span>
-          <span className="ml-1 text-gray-500">
-            ({getListingReviews(index)})
-          </span>
+      
+      {/* Main Text Content */}
+      <div className="space-y-1">
+        {/* Title and Address */}
+        <div>
+          <h3 className="font-semibold text-gray-900 text-lg line-clamp-1">
+            {apartment.title}
+          </h3>
+          <p className="text-gray-500 text-sm">
+            {apartment.address.split(',')[0]}, {apartment.location}
+          </p>
+        </div>
+        
+        {/* Price */}
+        <p className="text-primary font-medium text-xl">
+          ${apartment.price.toLocaleString()}
+        </p>
+        
+        {/* Features */}
+        <div className="flex items-center space-x-5 pt-2">
+          <div className="flex items-center text-gray-700">
+            <Bed className="h-4 w-4 mr-1.5 text-gray-500" />
+            <span className="text-sm">{apartment.bedrooms}</span>
+          </div>
+          
+          <div className="flex items-center text-gray-700">
+            <Bath className="h-4 w-4 mr-1.5 text-gray-500" />
+            <span className="text-sm">{apartment.bathrooms}</span>
+          </div>
+          
+          <div className="flex items-center text-gray-700">
+            <Square className="h-4 w-4 mr-1.5 text-gray-500" />
+            <span className="text-sm">{apartment.squareFeet} ft²</span>
+          </div>
         </div>
       </div>
-      <p className="text-gray-500 text-clamp-sm font-secondary leading-clamp-sm">
-        {apartment.bedrooms} bed • {apartment.bathrooms} bath •{" "}
-        {apartment.squareFeet} sq ft
-      </p>
-      <p className="text-gray-900 font-medium font-primary text-clamp-base">
-        ${apartment.price}/month
-      </p>
     </div>
   );
 };
