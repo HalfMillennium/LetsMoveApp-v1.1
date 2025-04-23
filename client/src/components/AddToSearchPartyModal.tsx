@@ -37,46 +37,9 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
   const [notes, setNotes] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(isOpen);
-  const [currentApartment, setCurrentApartment] = useState<Apartment | undefined>(apartment);
-
-  // Listen for custom event to open the modal
-  useEffect(() => {
-    const handleOpenSearchPartyModal = (event: Event) => {
-      const customEvent = event as CustomEvent<{ searchPartyId: number, apartment?: Apartment }>;
-      
-      if (customEvent.detail) {
-        // If an apartment is passed, use that
-        if (customEvent.detail.apartment) {
-          setCurrentApartment(customEvent.detail.apartment);
-        } else {
-          // Otherwise fetch the most recently viewed apartment from the page
-          // This would be better with context, but we're using a simpler approach for now
-          const mostRecentApartment = document.querySelector('[data-selected-apartment="true"]');
-          if (mostRecentApartment) {
-            const apartmentId = mostRecentApartment.getAttribute('data-apartment-id');
-            if (apartmentId) {
-              // Find the apartment with this ID from searchParties
-              // In a real implementation, we'd fetch this from an API or context
-              // For now, let's assume we'll have an apartment from props
-            }
-          }
-        }
-        
-        // Set the selected party ID
-        if (customEvent.detail.searchPartyId) {
-          setSelectedPartyId(customEvent.detail.searchPartyId.toString());
-        }
-        
-        setModalOpen(true);
-      }
-    };
-
-    window.addEventListener('open-search-party-modal', handleOpenSearchPartyModal);
-    
-    return () => {
-      window.removeEventListener('open-search-party-modal', handleOpenSearchPartyModal);
-    };
-  }, [searchParties]);
+  const [currentApartment, setCurrentApartment] = useState<
+    Apartment | undefined
+  >(apartment);
 
   // Sync with controlled prop
   useEffect(() => {
@@ -86,7 +49,7 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!currentApartment || !selectedPartyId) {
       toast({
         title: "Error",
@@ -101,14 +64,14 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
       await addListingToParty(
         parseInt(selectedPartyId),
         currentApartment.id,
-        notes
+        notes,
       );
-      
+
       toast({
         title: "Success",
         description: "Apartment added to search party",
       });
-      
+
       // Reset form and close modal
       setSelectedPartyId("");
       setNotes("");
@@ -123,7 +86,7 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
       setIsSubmitting(false);
     }
   };
-  
+
   const handleClose = () => {
     setModalOpen(false);
     onClose();
@@ -137,10 +100,11 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
         <DialogHeader>
           <DialogTitle>Add to Search Party</DialogTitle>
           <DialogDescription>
-            Add this apartment to a search party and share it with friends or roommates.
+            Add this apartment to a search party and share it with friends or
+            roommates.
           </DialogDescription>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4">
             <div className="space-y-2">
@@ -149,25 +113,26 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
                 {(() => {
                   const apt = currentApartment || apartment;
                   if (!apt) return null;
-                  
+
                   return (
                     <>
-                      <img 
-                        src={apt.images[0]} 
-                        alt={apt.title} 
-                        className="h-14 w-14 rounded-md object-cover" 
+                      <img
+                        src={apt.images[0]}
+                        alt={apt.title}
+                        className="h-14 w-14 rounded-md object-cover"
                       />
                       <div>
                         <h3 className="font-medium text-sm">{apt.title}</h3>
                         <p className="text-xs text-gray-500">
-                          {apt.bedrooms} bed • {apt.bathrooms} bath • ${apt.price}/mo
+                          {apt.bedrooms} bed • {apt.bathrooms} bath • $
+                          {apt.price}/mo
                         </p>
                       </div>
                     </>
                   );
                 })()}
               </div>
-              
+
               <label htmlFor="search-party" className="text-sm font-medium">
                 Search Party
               </label>
@@ -187,7 +152,7 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="notes" className="text-sm font-medium">
                 Notes (Optional)
@@ -201,7 +166,7 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
               />
             </div>
           </div>
-          
+
           <DialogFooter>
             <Button
               type="button"
@@ -211,8 +176,8 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
             >
               Cancel
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={isSubmitting || !selectedPartyId}
               className="bg-[#E9927E] hover:bg-[#E9927E]/90 text-white"
             >
