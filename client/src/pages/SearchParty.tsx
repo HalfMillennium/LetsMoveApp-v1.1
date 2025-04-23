@@ -5,7 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, MessageCircle, Calendar, ExternalLink, Users, ArrowRight } from "lucide-react";
+import {
+  Plus,
+  MessageCircle,
+  Calendar,
+  ExternalLink,
+  Users,
+  ArrowRight,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -24,23 +31,27 @@ const SearchParty = () => {
   const [newPartyName, setNewPartyName] = useState("");
   const [invites, setInvites] = useState("");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  
+
   // State for apartment details modal
-  const [selectedApartment, setSelectedApartment] = useState<Apartment | undefined>(undefined);
+  const [selectedApartment, setSelectedApartment] = useState<
+    Apartment | undefined
+  >(undefined);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
-  
+
   // State for chat drawer
   const [chatDrawerOpen, setChatDrawerOpen] = useState(false);
-  const [activeSearchParty, setActiveSearchParty] = useState<typeof searchParties[0] | null>(null);
-  
+  const [activeSearchParty, setActiveSearchParty] = useState<
+    (typeof searchParties)[0] | null
+  >(null);
+
   // Handle apartment selection for details modal
   const handleApartmentSelect = (apartment: Apartment) => {
     setSelectedApartment(apartment);
     setDetailsModalOpen(true);
   };
-  
+
   // Handle chat drawer opening
-  const handleOpenChat = (searchParty: typeof searchParties[0]) => {
+  const handleOpenChat = (searchParty: (typeof searchParties)[0]) => {
     setActiveSearchParty(searchParty);
     setChatDrawerOpen(true);
   };
@@ -216,9 +227,9 @@ const SearchParty = () => {
                           />
                         ))}
                       </div>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         className="text-xs text-gray-600 hover:bg-gray-100/50 rounded-full px-3"
                       >
                         <Users className="h-3 w-3 mr-1" />
@@ -240,7 +251,9 @@ const SearchParty = () => {
                             <div
                               key={idx}
                               className="rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
-                              onClick={() => handleApartmentSelect(listing.apartment!)}
+                              onClick={() =>
+                                handleApartmentSelect(listing.apartment!)
+                              }
                             >
                               <div className="relative">
                                 <img
@@ -252,20 +265,28 @@ const SearchParty = () => {
                                   className="w-full h-40 object-cover"
                                 />
                                 <div className="absolute top-2 right-2 bg-white/90 text-gray-700 text-xs font-medium px-2 py-1 rounded-full">
-                                  ${listing.apartment?.price || (1500 + idx * 300)}/mo
+                                  $
+                                  {listing.apartment?.price || 1500 + idx * 300}
+                                  /mo
                                 </div>
                               </div>
-                              <div className="p-3">
+                              <div className="p-3 bg-white">
                                 <h4 className="font-medium text-gray-800 mb-1 line-clamp-1">
-                                  {listing.apartment?.title || `Apartment ${idx + 1}`}
+                                  {listing.apartment?.title ||
+                                    `Apartment ${idx + 1}`}
                                 </h4>
                                 <div className="flex items-center text-gray-600 text-sm mb-1">
                                   <span className="font-medium">
-                                    {listing.apartment?.bedrooms || (idx % 3) + 1} bed, {listing.apartment?.bathrooms || 1} bath
+                                    {listing.apartment?.bedrooms ||
+                                      (idx % 3) + 1}{" "}
+                                    bed, {listing.apartment?.bathrooms || 1}{" "}
+                                    bath
                                   </span>
                                   <span className="mx-1">•</span>
                                   <span>
-                                    {listing.apartment?.squareFeet || 800 + (idx * 100)} sq ft
+                                    {listing.apartment?.squareFeet ||
+                                      800 + idx * 100}{" "}
+                                    sq ft
                                   </span>
                                 </div>
                                 <div className="text-gray-500 text-sm line-clamp-1">
@@ -273,8 +294,8 @@ const SearchParty = () => {
                                     (idx === 0
                                       ? "New York, NY"
                                       : idx === 1
-                                      ? "Brooklyn, NY"
-                                      : "Jersey City, NJ")}
+                                        ? "Brooklyn, NY"
+                                        : "Jersey City, NJ")}
                                 </div>
                                 {listing.notes && (
                                   <div className="mt-2 text-xs text-gray-600 italic line-clamp-2 bg-gray-50 p-2 rounded">
@@ -309,11 +330,13 @@ const SearchParty = () => {
                                   </h4>
                                   <div className="flex items-center text-gray-600 text-sm mb-1">
                                     <span className="font-medium">
-                                      {apartment.bedrooms} bed, {apartment.bathrooms} bath
+                                      {apartment.bedrooms} bed,{" "}
+                                      {apartment.bathrooms} bath
                                     </span>
                                     <span className="mx-1">•</span>
                                     <span>
-                                      {apartment.squareFeet || 800 + (idx * 100)} sq ft
+                                      {apartment.squareFeet || 800 + idx * 100}{" "}
+                                      sq ft
                                     </span>
                                   </div>
                                   <div className="text-gray-500 text-sm line-clamp-1">
@@ -328,12 +351,12 @@ const SearchParty = () => {
                             );
                           })}
                     </div>
-                    
+
                     {/* View all listings button */}
                     {(listings.length > 3 || listingCount > 3) && (
                       <div className="mt-4 text-center">
-                        <Button 
-                          variant="ghost" 
+                        <Button
+                          variant="ghost"
                           className="text-[#E9927E] hover:bg-[#E9927E]/10"
                         >
                           View all {listingCount} listings

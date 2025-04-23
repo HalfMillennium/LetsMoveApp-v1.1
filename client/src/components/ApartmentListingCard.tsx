@@ -1,6 +1,14 @@
 import React from "react";
 import { Apartment } from "@/types";
-import { Heart, Map as MapIcon, Users, Bed, Bath, Square, Play } from "lucide-react";
+import {
+  Heart,
+  Map as MapIcon,
+  Users,
+  Bed,
+  Bath,
+  Square,
+  Play,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ApartmentListingCardProps {
@@ -45,16 +53,7 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
           alt={apartment.title}
           className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
         />
-        
-        {/* Play button overlay - for video/virtual tours */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="bg-white/80 rounded-full p-2 opacity-90 hover:opacity-100 transition-opacity hover:scale-105 cursor-pointer">
-            <div className="h-8 w-8 bg-primary text-white rounded-full flex items-center justify-center">
-              <Play className="h-4 w-4 fill-white ml-0.5" />
-            </div>
-          </div>
-        </div>
-        
+
         {/* Favorite Button */}
         <button
           className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white shadow-sm"
@@ -69,7 +68,7 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
         >
           <Heart className="h-4 w-4 text-gray-700" />
         </button>
-        
+
         {/* Search Party Button */}
         <button
           className="absolute top-3 left-3 p-2 rounded-full bg-white/90 hover:bg-white shadow-sm cursor-pointer"
@@ -81,7 +80,7 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
           <Users className="h-4 w-4 text-gray-700" />
         </button>
       </div>
-      
+
       {/* Main Text Content */}
       <div className="space-y-1">
         {/* Title and Address */}
@@ -90,27 +89,27 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
             {apartment.title}
           </h3>
           <p className="text-gray-500 text-sm">
-            {apartment.address.split(',')[0]}, {apartment.location}
+            {apartment.address.split(",")[0]}, {apartment.location}
           </p>
         </div>
-        
+
         {/* Price */}
         <p className="text-primary font-medium text-xl">
           ${apartment.price.toLocaleString()}
         </p>
-        
+
         {/* Features */}
         <div className="flex items-center space-x-5 pt-2">
           <div className="flex items-center text-gray-700">
             <Bed className="h-4 w-4 mr-1.5 text-gray-500" />
             <span className="text-sm">{apartment.bedrooms}</span>
           </div>
-          
+
           <div className="flex items-center text-gray-700">
             <Bath className="h-4 w-4 mr-1.5 text-gray-500" />
             <span className="text-sm">{apartment.bathrooms}</span>
           </div>
-          
+
           <div className="flex items-center text-gray-700">
             <Square className="h-4 w-4 mr-1.5 text-gray-500" />
             <span className="text-sm">{apartment.squareFeet} ft²</span>
