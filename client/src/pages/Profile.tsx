@@ -76,6 +76,19 @@ const Profile = () => {
     "Quiet Street",
     "Safe Neighborhood",
   ]);
+  
+  // NYC Boroughs and neighborhoods
+  const nycBoroughs = [
+    { id: 1, name: "Manhattan", neighborhoods: ["Upper East Side", "Chelsea", "Greenwich Village", "SoHo", "Harlem", "Midtown"] },
+    { id: 2, name: "Brooklyn", neighborhoods: ["Williamsburg", "DUMBO", "Park Slope", "Brooklyn Heights", "Flatlands", "Bushwick"] },
+    { id: 3, name: "Queens", neighborhoods: ["Astoria", "Long Island City", "Flushing", "Jamaica", "Forest Hills"] },
+    { id: 4, name: "Bronx", neighborhoods: ["Riverdale", "Fordham", "Pelham Bay", "Concourse", "Mott Haven"] },
+    { id: 5, name: "Staten Island", neighborhoods: ["St. George", "Todt Hill", "Great Kills", "New Dorp"] }
+  ];
+  
+  // Selected boroughs
+  const [selectedBoroughs, setSelectedBoroughs] = useState<string[]>([]);
+  const [boroughSearch, setBoroughSearch] = useState("");
 
   // User collections
   const [collections, setCollections] = useState([
@@ -149,6 +162,31 @@ const Profile = () => {
       [preference]: !prev[preference],
     }));
   };
+  
+  // Function to handle adding a borough
+  const handleAddBorough = (borough: string) => {
+    if (!selectedBoroughs.includes(borough)) {
+      setSelectedBoroughs([...selectedBoroughs, borough]);
+      setBoroughSearch("");
+      
+      toast({
+        title: "Borough Added",
+        description: `${borough} added to your preferred neighborhoods.`,
+      });
+    }
+  };
+  
+  // Function to handle removing a borough
+  const handleRemoveBorough = (borough: string) => {
+    setSelectedBoroughs(selectedBoroughs.filter(b => b !== borough));
+  };
+  
+  // Filter boroughs based on search input
+  const filteredBoroughs = nycBoroughs
+    .filter(borough => 
+      borough.name.toLowerCase().includes(boroughSearch.toLowerCase()) ||
+      borough.neighborhoods.some(n => n.toLowerCase().includes(boroughSearch.toLowerCase()))
+    );
 
   return (
     <div className="py-8 bg-[#FFF9F2] flex flex-1">
@@ -599,26 +637,96 @@ const Profile = () => {
                   </Button>
                 </div>
 
-                {/* Map View Placeholder */}
-                <div className="glass-card rounded-xl p-6 border border-white/40 h-80 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <div className="text-center p-6">
-                      <MapPin className="h-10 w-10 text-[#E9927E] mx-auto mb-2" />
-                      <h3 className="font-medium text-[#1A4A4A] mb-1">
-                        Preferred Neighborhoods
-                      </h3>
-                      <p className="text-sm text-gray-500 mb-4">
-                        Select your preferred areas on the map
-                      </p>
-                      <Button
-                        variant="default"
-                        size="sm"
-                        className="bg-[#E9927E] hover:bg-[#E9927E]/90"
-                      >
-                        Open Map
-                      </Button>
+                {/* NYC Boroughs Search */}
+                <div className="glass-card rounded-xl p-6 border border-white/40">
+                  <h2 className="text-xl font-semibold mb-4 text-[#1A4A4A]">
+                    Preferred Neighborhoods
+                  </h2>
+                  
+                  {/* Selected boroughs (chips) */}
+                  {selectedBoroughs.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {selectedBoroughs.map((borough, index) => (
+                        <Badge
+                          key={index}
+                          variant="secondary"
+                          className="flex items-center gap-1 py-1 px-2 bg-white/60 backdrop-blur-sm hover:bg-white/80 text-[#1A4A4A]"
+                        >
+                          {borough}
+                          <button
+                            onClick={() => handleRemoveBorough(borough)}
+                            aria-label={`Remove ${borough}`}
+                          >
+                            <X size={14} className="ml-1" />
+                          </button>
+                        </Badge>
+                      ))}
                     </div>
+                  )}
+                  
+                  {/* Search input and dropdown */}
+                  <div className="relative">
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <MapPin size={16} className="text-gray-500" />
+                      </div>
+                      <Input
+                        placeholder="Search NYC boroughs or neighborhoods..."
+                        value={boroughSearch}
+                        onChange={(e) => setBoroughSearch(e.target.value)}
+                        className="pl-10 w-full bg-white/50 border-white/40 focus:border-[#E9927E]/70 focus:ring-[#E9927E]/30"
+                      />
+                    </div>
+                    
+                    {/* Dropdown menu for search results */}
+                    {boroughSearch.length > 0 && (
+                      <div className="absolute mt-1 w-full z-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
+                        {filteredBoroughs.length > 0 ? (
+                          <div className="py-1">
+                            {filteredBoroughs.map((borough) => (
+                              <div key={borough.id} className="px-2 py-1">
+                                <button 
+                                  className="w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 font-medium text-gray-800"
+                                  onClick={() => handleAddBorough(borough.name)}
+                                >
+                                  {borough.name}
+                                </button>
+                                
+                                <div className="pl-8 space-y-1 my-1">
+                                  {borough.neighborhoods
+                                    .filter(n => n.toLowerCase().includes(boroughSearch.toLowerCase()))
+                                    .slice(0, 3)
+                                    .map((neighborhood, idx) => (
+                                      <button 
+                                        key={idx}
+                                        className="w-full text-left px-3 py-1 text-sm rounded-md hover:bg-gray-100 text-gray-600"
+                                        onClick={() => handleAddBorough(`${neighborhood}, ${borough.name}`)}
+                                      >
+                                        {neighborhood}
+                                      </button>
+                                    ))
+                                  }
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="px-4 py-3 text-sm text-gray-500">
+                            No results found
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
+                  
+                  {selectedBoroughs.length === 0 && boroughSearch.length === 0 && (
+                    <div className="mt-4 text-center p-6 bg-gray-50/50 rounded-lg border border-gray-100/50">
+                      <MapPin className="h-8 w-8 text-[#E9927E]/70 mx-auto mb-2" />
+                      <p className="text-sm text-gray-500">
+                        Search and select your preferred NYC boroughs and neighborhoods
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
