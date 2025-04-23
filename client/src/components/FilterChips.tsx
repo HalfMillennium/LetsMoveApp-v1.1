@@ -4,24 +4,10 @@ import {
   BEDROOM_OPTIONS,
   DISTANCE_OPTIONS,
 } from "../lib/constants";
-import {
-  DollarSign,
-  Bed,
-  Map,
-  PawPrint,
-  UsersRound,
-  Trash2,
-} from "lucide-react";
+import { DollarSign, Bed, Map, UsersRound, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterSettings, ActiveFilters } from "../types";
 import { OriginDropdown } from "@/components/ui/origin_dropdown";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useSearchParty } from "../context/SearchPartyContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileFilterPopover from "./MobileFilterPopover";
