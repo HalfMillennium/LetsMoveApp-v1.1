@@ -10,7 +10,8 @@ import { Apartment } from "../types";
 import { Building, Pin } from "lucide-react";
 import { COLORS } from "@/lib/constants";
 
-const customMapStyles = [
+// Define the map styles for the Google Map
+const customMapStyles: google.maps.MapTypeStyle[] = [
   {
     elementType: "labels",
     stylers: [
@@ -92,6 +93,11 @@ const customMapStyles = [
   },
   {
     featureType: "poi.business",
+    stylers: [
+      {
+        visibility: "simplified",
+      },
+    ],
   },
   {
     featureType: "poi.park",
@@ -115,7 +121,6 @@ const customMapStyles = [
       },
     ],
   },
-  {},
   {
     featureType: "poi.medical",
     elementType: "geometry.fill",
@@ -131,19 +136,13 @@ const customMapStyles = [
       },
     ],
   },
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
   {
     elementType: "labels",
+    stylers: [
+      {
+        visibility: "simplified",
+      },
+    ],
   },
   {
     featureType: "poi.sports_complex",
@@ -156,7 +155,6 @@ const customMapStyles = [
       },
     ],
   },
-  {},
   {
     featureType: "poi.government",
     stylers: [
@@ -207,9 +205,6 @@ const customMapStyles = [
       },
     ],
   },
-  {},
-  {},
-  {},
 ];
 
 // Map container style
@@ -226,7 +221,7 @@ const defaultCenter = {
 };
 
 // Map options
-const mapOptions = {
+const mapOptions: google.maps.MapOptions = {
   disableDefaultUI: false,
   styles: customMapStyles,
   zoomControl: true,
@@ -249,6 +244,9 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
 }) => {
   const [mapCenter, setMapCenter] = useState(defaultCenter);
   const [selectedApartment, setSelectedApartment] = useState<Apartment | null>(
+    null,
+  );
+  const [hoveredApartment, setHoveredApartment] = useState<Apartment | null>(
     null,
   );
   const [userLocation, setUserLocation] = useState<{
@@ -355,11 +353,40 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
             }}
             mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
           >
-            <div
-              onClick={() => handleMarkerClick(apartment)}
-              className="flex items-center justify-center w-8 h-8 bg-white rounded-full shadow-md cursor-pointer border border-gray-200"
-            >
-              <Building size={16} color={COLORS.coral} strokeWidth={2} />
+            <div className="relative">
+              {/* Hover Info Popup */}
+              {hoveredApartment && hoveredApartment.id === apartment.id && (
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 -translate-y-2 bg-white shadow-lg rounded-md p-3 min-w-[200px] z-10 mb-1 animate-fadeIn">
+                  <div className="p-1">
+                    <h3 className="font-semibold text-sm truncate">{apartment.title}</h3>
+                    <p className="text-xs text-gray-600 truncate">{apartment.address}</p>
+                    <div className="flex justify-between items-center mt-1">
+                      <p className="text-sm font-medium text-primary">
+                        ${apartment.price.toLocaleString()}/mo
+                      </p>
+                      <span className="text-xs">
+                        {apartment.bedrooms} BD | {apartment.bathrooms} BA
+                      </span>
+                    </div>
+                  </div>
+                  {/* Triangle pointer */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-2 w-4 h-4 rotate-45 bg-white"></div>
+                </div>
+              )}
+              
+              {/* Marker Icon */}
+              <div
+                onClick={() => handleMarkerClick(apartment)}
+                onMouseEnter={() => setHoveredApartment(apartment)}
+                onMouseLeave={() => setHoveredApartment(null)}
+                className={`flex items-center justify-center w-8 h-8 transition-transform duration-150 ${hoveredApartment?.id === apartment.id ? 'bg-primary scale-110' : 'bg-white'} rounded-full shadow-md cursor-pointer border border-gray-200`}
+              >
+                <Building 
+                  size={16} 
+                  color={hoveredApartment?.id === apartment.id ? '#FFFFFF' : COLORS.coral} 
+                  strokeWidth={2} 
+                />
+              </div>
             </div>
           </OverlayView>
         ))}
