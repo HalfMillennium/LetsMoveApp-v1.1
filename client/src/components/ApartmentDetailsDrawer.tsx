@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { Apartment } from "../types";
 
 interface ApartmentDetailsDrawerProps {
@@ -46,7 +45,6 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
           onClick={onClose}
         ></div>
       )}
-
       <div
         className={`fixed top-[63px] bottom-0 left-0 z-40 flex flex-col w-full md:w-2/3 lg:w-2/5 bg-white border-r shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto ${
           isOpen ? "translate-x-0" : "-translate-x-full"
