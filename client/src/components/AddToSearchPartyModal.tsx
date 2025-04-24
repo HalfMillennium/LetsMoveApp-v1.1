@@ -104,7 +104,6 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
             roommates.
           </DialogDescription>
         </DialogHeader>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4">
             <div className="space-y-2">
@@ -152,7 +151,6 @@ const AddToSearchPartyModal: React.FC<AddToSearchPartyModalProps> = ({
                 </SelectContent>
               </Select>
             </div>
-
             <div className="space-y-2">
               <label htmlFor="notes" className="text-sm font-medium">
                 Notes (Optional)
