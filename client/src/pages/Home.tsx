@@ -2,7 +2,6 @@ import { useLocation } from "wouter";
 import MapBackground from "../components/MapBackground";
 import SearchBar from "../components/SearchBar";
 import { Navigation } from "../components/Navigation";
-import Header from "../components/Header";
 import { useRef, useEffect } from "react";
 
 const Home = () => {
@@ -44,36 +43,31 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-black">
-      {/* Custom Header with dark mode */}
-      <Header darkMode={true} />
-      
-      <MapBackground variant="cityscape">
-        <div className="container mx-auto px-4 py-16 md:py-28 flex flex-col items-center">
-          {/* Main Content */}
-          <div className="w-full max-w-3xl text-center">
-            <h1 
-              ref={headingRef}
-              className="text-[#FFEFD4] text-clamp-6xl font-bold mb-8 leading-clamp-6xl font-primary opacity-0 transform -translate-y-4 transition-all duration-700"
-            >
-              Find your place—
-              <br />
-              together in the city
-            </h1>
+    <MapBackground variant="cityscape">
+      <div className="container mx-auto px-4 py-16 md:py-28 flex flex-col items-center">
+        {/* Main Content */}
+        <div className="w-full max-w-3xl text-center">
+          <h1 
+            ref={headingRef}
+            className="text-[#FFEFD4] text-clamp-6xl font-bold mb-8 leading-clamp-6xl font-primary opacity-0 transform -translate-y-4 transition-all duration-700"
+          >
+            Find your place—
+            <br />
+            together in the city
+          </h1>
 
-            {/* Search Bar (Dark Mode) */}
-            <div ref={searchBarRef} className="mb-8 opacity-0 transform translate-y-4 transition-all duration-700">
-              <SearchBar onSearch={handleSearch} darkMode={true} />
-            </div>
+          {/* Search Bar (Dark Mode) */}
+          <div ref={searchBarRef} className="mb-8 opacity-0 transform translate-y-4 transition-all duration-700">
+            <SearchBar onSearch={handleSearch} darkMode={true} />
+          </div>
 
-            {/* Navigation Buttons */}
-            <div ref={navigationRef} className="w-full max-w-xl mx-auto mb-16 opacity-0 transition-opacity duration-700">
-              <Navigation darkMode={true} />
-            </div>
+          {/* Navigation Buttons */}
+          <div ref={navigationRef} className="w-full max-w-xl mx-auto mb-16 opacity-0 transition-opacity duration-700">
+            <Navigation darkMode={true} />
           </div>
         </div>
-      </MapBackground>
-    </div>
+      </div>
+    </MapBackground>
   );
 };
 

@@ -2,73 +2,30 @@ import { Link, useLocation } from "wouter";
 import { Menu, Search, CircleUserRound } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useEffect, useState } from "react";
 import appLogo from "../assets/letsmove_logo_black.png";
 
-interface HeaderProps {
-  darkMode?: boolean;
-}
-
-const Header: React.FC<HeaderProps> = ({ darkMode = false }) => {
+const Header = () => {
   const [, setLocation] = useLocation();
   const [location] = useLocation();
   const isMobile = useIsMobile();
-  const [isScrolled, setIsScrolled] = useState(false);
-  
-  const isActive = (path: string) => location === path;
-  
-  // Add scroll event listener to apply styles based on scroll position
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
-  // Dynamic styles based on dark mode and scroll state
-  const headerClasses = darkMode 
-    ? `sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled 
-        ? "bg-[#2E1249]/40 backdrop-blur-md" 
-        : "bg-gradient-to-b from-[#2E1249]/70 to-transparent"
-      }`
-    : `sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled 
-        ? "bg-white/80 backdrop-blur-md shadow-sm" 
-        : "bg-white"
-      }`;
-  
-  const textColor = darkMode ? "text-white" : "text-[#1A4A4A]";
-  const iconColor = darkMode ? "#FFFFFF" : "#1A4A4A";
-  const hoverBgClass = darkMode 
-    ? "hover:bg-white/10" 
-    : "hover:bg-[#C9DAD0]/20";
-  const activeTextClass = darkMode 
-    ? "text-[#E9927E]" 
-    : "text-[#E9927E]";
-  
-  const logoSrc = darkMode 
-    ? appLogo // You may want to replace this with a white logo if available
-    : appLogo;
+  const isActive = (path: string) => location === path;
 
   return (
-    <header className={headerClasses}>
+    <header className="sticky top-0 z-50 shadow-sm backdrop-blur-lg bg-white backdrop-opacity-20">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link href="/">
-          <img src={logoSrc} className="h-8 cursor-pointer" />
+          <img src={appLogo} className="h-8 cursor-pointer" />
         </Link>
-        
         {!isMobile && (
-          <div className="flex items-center space-x-12 text-sm px-8 rounded-full">
+          <div className="flex items-center space-x-12 text-sm">
             <Link href="/" className="flex flex-1 w-full cursor-pointer">
               <span
-                className={`w-full ${textColor} font-medium ${
-                  isActive("/") ? activeTextClass : ""
+                className={`w-full text-[#1A4A4A] font-medium ${
+                  isActive("/") ? "text-[#E9927E]" : ""
                 }`}
               >
-                Events
+                Home
               </span>
             </Link>
             <Link
@@ -76,11 +33,11 @@ const Header: React.FC<HeaderProps> = ({ darkMode = false }) => {
               className="flex flex-1 w-full cursor-pointer"
             >
               <span
-                className={`w-full ${textColor} font-medium ${
-                  isActive("/listings") ? activeTextClass : ""
+                className={`w-full text-[#1A4A4A] font-medium ${
+                  isActive("/listings") ? "text-[#E9927E]" : ""
                 }`}
               >
-                Calendars
+                Apartments
               </span>
             </Link>
             <Link
@@ -88,11 +45,23 @@ const Header: React.FC<HeaderProps> = ({ darkMode = false }) => {
               className="flex flex-grow w-full cursor-pointer"
             >
               <span
-                className={`w-full ${textColor} font-medium ${
-                  isActive("/search-party") ? activeTextClass : ""
+                className={`w-full text-[#1A4A4A] font-medium ${
+                  isActive("/search-party") ? "text-[#E9927E]" : ""
                 }`}
               >
-                Discover
+                Search Parties
+              </span>
+            </Link>
+            <Link
+              href="/favorites"
+              className="flex flex-1 w-full cursor-pointer"
+            >
+              <span
+                className={`w-full text-[#1A4A4A] font-medium ${
+                  isActive("/favorites") ? "text-[#E9927E]" : ""
+                }`}
+              >
+                Favorites
               </span>
             </Link>
           </div>
@@ -100,18 +69,18 @@ const Header: React.FC<HeaderProps> = ({ darkMode = false }) => {
 
         <div className="flex items-center space-x-3">
           <button
-            className={`${textColor} p-2 rounded-full ${hoverBgClass}`}
+            className="text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20"
             onClick={() => setLocation("/listings")}
           >
-            <Search className="h-5 w-5" />
+            <Search className="h-6 w-6" />
           </button>
 
           <button className="">
             <Link
               href="/profile"
-              className={`flex flex-1 w-full ${textColor} p-2 rounded-full ${hoverBgClass}`}
+              className="flex flex-1 w-full text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20"
             >
-              <CircleUserRound color={iconColor} className="h-5 w-5" />
+              <CircleUserRound color="#1A4A4A" className="h-6 w-6" />
             </Link>
           </button>
 
@@ -119,8 +88,8 @@ const Header: React.FC<HeaderProps> = ({ darkMode = false }) => {
           {isMobile && (
             <Sheet>
               <SheetTrigger asChild>
-                <button className={`${textColor} p-2 rounded-full ${hoverBgClass} md:hidden`}>
-                  <Menu className="h-5 w-5" />
+                <button className="text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20 md:hidden">
+                  <Menu className="h-6 w-6" />
                 </button>
               </SheetTrigger>
               <SheetContent>
@@ -131,7 +100,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode = false }) => {
                         isActive("/") ? "bg-[#C9DAD0]/20" : ""
                       }`}
                     >
-                      Events
+                      Home
                     </span>
                   </Link>
                   <Link href="/listings">
@@ -140,7 +109,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode = false }) => {
                         isActive("/listings") ? "bg-[#C9DAD0]/20" : ""
                       }`}
                     >
-                      Calendars
+                      Apartments
                     </span>
                   </Link>
                   <Link href="/search-party">
@@ -149,7 +118,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode = false }) => {
                         isActive("/search-party") ? "bg-[#C9DAD0]/20" : ""
                       }`}
                     >
-                      Discover
+                      Search Parties
                     </span>
                   </Link>
                   <Link href="/favorites">
