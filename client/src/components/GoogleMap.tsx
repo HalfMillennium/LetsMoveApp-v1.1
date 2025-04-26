@@ -355,17 +355,13 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
           >
             <div className="relative">
               {/* Hover Info Popup - Always render but conditionally show */}
-              <div
+              <div 
                 className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white shadow-lg rounded-md p-3 min-w-[200px] z-10 
-                  transition-opacity duration-150 ${hoveredApartment && hoveredApartment.id === apartment.id ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                  transition-opacity duration-150 ${hoveredApartment && hoveredApartment.id === apartment.id ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
               >
                 <div className="p-1">
-                  <h3 className="font-semibold text-sm truncate">
-                    {apartment.title}
-                  </h3>
-                  <p className="text-xs text-gray-600 truncate">
-                    {apartment.address}
-                  </p>
+                  <h3 className="font-semibold text-sm truncate">{apartment.title}</h3>
+                  <p className="text-xs text-gray-600 truncate">{apartment.address}</p>
                   <div className="flex justify-between items-center mt-1">
                     <p className="text-sm font-medium text-primary">
                       ${apartment.price.toLocaleString()}/mo
@@ -378,30 +374,22 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
                 {/* Triangle pointer */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-2 w-4 h-4 rotate-45 bg-white"></div>
               </div>
-
+              
               {/* Marker Icon */}
               <div
                 onClick={() => handleMarkerClick(apartment)}
                 onMouseEnter={() => setHoveredApartment(apartment)}
                 onMouseLeave={() => setHoveredApartment(null)}
-                style={{
-                  transform:
-                    hoveredApartment?.id === apartment.id
-                      ? "scale(1.1)"
-                      : "scale(1)",
-                  transition:
-                    "transform 0.15s ease, background-color 0.15s ease",
+                style={{ 
+                  transform: hoveredApartment?.id === apartment.id ? 'scale(1.1)' : 'scale(1)',
+                  transition: 'transform 0.15s ease, background-color 0.15s ease'
                 }}
-                className={`flex items-center justify-center w-8 h-8 ${hoveredApartment?.id === apartment.id ? "bg-primary" : "bg-white"} rounded-full shadow-md cursor-pointer border border-gray-200`}
+                className={`flex items-center justify-center w-8 h-8 ${hoveredApartment?.id === apartment.id ? 'bg-primary' : 'bg-white'} rounded-full shadow-md cursor-pointer border border-gray-200`}
               >
-                <Building
-                  size={16}
-                  color={
-                    hoveredApartment?.id === apartment.id
-                      ? "#FFFFFF"
-                      : COLORS.coral
-                  }
-                  strokeWidth={2}
+                <Building 
+                  size={16} 
+                  color={hoveredApartment?.id === apartment.id ? '#FFFFFF' : COLORS.coral} 
+                  strokeWidth={2} 
                 />
               </div>
             </div>
