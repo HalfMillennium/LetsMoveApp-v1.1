@@ -1,16 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Apartment } from "../types";
 import { useGeolocation } from "../lib/useGeolocation";
-import { mapBgImage } from "../assets/map_bg.ts";
 import { Button } from "@/components/ui/button";
-import {
-  Home,
-  MapPin,
-  Navigation,
-  Plus,
-  Minus,
-  CornerUpLeft,
-} from "lucide-react";
+import { Home, Plus, Minus, CornerUpLeft } from "lucide-react";
 
 interface InteractiveMapProps {
   apartments: Apartment[];

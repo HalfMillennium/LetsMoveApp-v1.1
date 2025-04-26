@@ -7,7 +7,6 @@ import {
   Bed,
   Bath,
   Square,
-  Play,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 

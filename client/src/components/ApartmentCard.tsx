@@ -2,12 +2,6 @@ import { Heart, MapPin } from "lucide-react";
 import { Apartment } from "../types";
 import { useFavorites } from "../context/FavoritesContext";
 import { useSearchParty } from "../context/SearchPartyContext";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 

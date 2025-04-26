@@ -28,15 +28,17 @@ function Router() {
 function AppContent() {
   const [location] = useLocation();
   const isListings2Page = location === "/listings";
-
+  const isHomePage = location === "/";
+  
   return (
     <div className="flex flex-col min-h-screen bg-[#0D2436]">
-      <Header />
+      {/* Don't render header on home page since it has its own */}
+      {!isHomePage && <Header />}
       <main className={`flex-1 ${isListings2Page ? "" : "flex"}`}>
         <Router />
       </main>
-      <HomeFooter />
-      {!isListings2Page && <MobileNavBar />}
+      {!isHomePage && <HomeFooter />}
+      {!isListings2Page && !isHomePage && <MobileNavBar />}
       <Toaster />
     </div>
   );
