@@ -460,7 +460,7 @@ const Listings2 = () => {
         <main className="flex-1 container mx-auto px-6 py-6">
           <div className="flex flex-1 flex-col md:flex-row items-start md:items-center justify-between">
             <div className="flex flex-col flex-1">
-              <p className="text-sm text-gray-600">
+              <p className="text-xs text-gray-600">
                 {apartments.length} listings available
               </p>
               <div className="flex items-center gap-1 mb-4 gap-2">
@@ -471,7 +471,7 @@ const Listings2 = () => {
                 )}
                 <h1
                   ref={titleRef}
-                  className="text-clamp-3xl font-semibold text-gray-900 opacity-0 transform translate-y-4 transition-all duration-700 font-primary"
+                  className="text-clamp-xl font-semibold text-gray-900 opacity-0 transform translate-y-4 transition-all duration-700 font-primary"
                 >
                   {activeCollection.title}
                 </h1>
@@ -519,7 +519,8 @@ const Listings2 = () => {
             {/* Map View */}
             <div
               ref={mapRef}
-              className="lg:sticky lg:top-20 h-[70vh] rounded-lg overflow-hidden shadow-md border border-gray-200 opacity-0 transition-opacity duration-700"
+              style={{ borderRadius: 10 }}
+              className="lg:sticky lg:top-20 h-[70vh] overflow-hidden shadow-md opacity-0 transition-opacity duration-700"
             >
               <GoogleMapComponent
                 apartments={apartments}

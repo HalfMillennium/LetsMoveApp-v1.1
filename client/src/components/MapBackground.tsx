@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { cityscapeBgImage } from "../assets/cityscape_bg.tsx";
+import Header from "./Header.tsx";
 
 interface MapBackgroundProps {
   children: ReactNode;
@@ -19,6 +20,7 @@ const MapBackground = ({ children, variant = "map" }: MapBackgroundProps) => {
           backgroundColor: variant === "cityscape" ? undefined : "#FFF5E6",
         }}
       >
+        <Header />
         <div className="w-full">{children}</div>
       </div>
     </div>
