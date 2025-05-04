@@ -8,210 +8,13 @@ import {
 } from "@react-google-maps/api";
 import { Apartment } from "../types";
 import { Building, Pin } from "lucide-react";
-import { COLORS } from "@/lib/constants";
-
-// Define the map styles for the Google Map
-const customMapStyles: google.maps.MapTypeStyle[] = [
-  {
-    elementType: "labels",
-    stylers: [
-      {
-        visibility: "off",
-      },
-      {
-        color: "#f49f53",
-      },
-    ],
-  },
-  {
-    featureType: "landscape",
-    stylers: [
-      {
-        color: "#f9ddc5",
-      },
-      {
-        lightness: -7,
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    stylers: [
-      {
-        color: "#813033",
-      },
-      {
-        lightness: 43,
-      },
-    ],
-  },
-  {
-    featureType: "poi.business",
-    stylers: [
-      {
-        color: "#645c20",
-      },
-      {
-        lightness: 38,
-      },
-    ],
-  },
-  {
-    featureType: "water",
-    stylers: [
-      {
-        color: "#1994bf",
-      },
-      {
-        saturation: -69,
-      },
-      {
-        gamma: 0.99,
-      },
-      {
-        lightness: 43,
-      },
-    ],
-  },
-  {
-    featureType: "road.local",
-    elementType: "geometry.fill",
-    stylers: [
-      {
-        color: "#f19f53",
-      },
-      {
-        weight: 1.3,
-      },
-      {
-        visibility: "on",
-      },
-      {
-        lightness: 16,
-      },
-    ],
-  },
-  {
-    featureType: "poi.business",
-    stylers: [
-      {
-        visibility: "simplified",
-      },
-    ],
-  },
-  {
-    featureType: "poi.park",
-    stylers: [
-      {
-        color: "#645c20",
-      },
-      {
-        lightness: 39,
-      },
-    ],
-  },
-  {
-    featureType: "poi.school",
-    stylers: [
-      {
-        color: "#a95521",
-      },
-      {
-        lightness: 35,
-      },
-    ],
-  },
-  {
-    featureType: "poi.medical",
-    elementType: "geometry.fill",
-    stylers: [
-      {
-        color: "#813033",
-      },
-      {
-        lightness: 38,
-      },
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    elementType: "labels",
-    stylers: [
-      {
-        visibility: "simplified",
-      },
-    ],
-  },
-  {
-    featureType: "poi.sports_complex",
-    stylers: [
-      {
-        color: "#9e5916",
-      },
-      {
-        lightness: 32,
-      },
-    ],
-  },
-  {
-    featureType: "poi.government",
-    stylers: [
-      {
-        color: "#9e5916",
-      },
-      {
-        lightness: 46,
-      },
-    ],
-  },
-  {
-    featureType: "transit.station",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "transit.line",
-    stylers: [
-      {
-        color: "#813033",
-      },
-      {
-        lightness: 22,
-      },
-    ],
-  },
-  {
-    featureType: "transit",
-    stylers: [
-      {
-        lightness: 38,
-      },
-    ],
-  },
-  {
-    featureType: "road.local",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#f19f53",
-      },
-      {
-        lightness: -10,
-      },
-    ],
-  },
-];
+import { COLORS, MAP_STYLES, MapStyleTypes } from "@/lib/constants";
 
 // Map container style
 const containerStyle = {
   width: "100%",
   height: "100%",
-  borderRadius: "10px",
+  borderRadius: 10,
 };
 
 // Default map center (will be updated with user's location)
@@ -223,7 +26,7 @@ const defaultCenter = {
 // Map options
 const mapOptions: google.maps.MapOptions = {
   disableDefaultUI: false,
-  styles: customMapStyles,
+  styles: MAP_STYLES[MapStyleTypes.NEUTRAL],
   zoomControl: true,
   mapTypeControl: false,
   streetViewControl: true,
@@ -355,13 +158,17 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
           >
             <div className="relative">
               {/* Hover Info Popup - Always render but conditionally show */}
-              <div 
-                className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white shadow-lg rounded-md p-3 min-w-[200px] z-10 
-                  transition-opacity duration-150 ${hoveredApartment && hoveredApartment.id === apartment.id ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+              <div
+                className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white shadow-lg rounded-lg p-3 min-w-[200px] z-10 
+                  transition-opacity duration-150 ${hoveredApartment && hoveredApartment.id === apartment.id ? "opacity-100" : "opacity-0 pointer-events-none"}`}
               >
                 <div className="p-1">
-                  <h3 className="font-semibold text-sm truncate">{apartment.title}</h3>
-                  <p className="text-xs text-gray-600 truncate">{apartment.address}</p>
+                  <h3 className="font-semibold text-sm truncate">
+                    {apartment.title}
+                  </h3>
+                  <p className="text-xs text-gray-600 truncate">
+                    {apartment.address}
+                  </p>
                   <div className="flex justify-between items-center mt-1">
                     <p className="text-sm font-medium text-primary">
                       ${apartment.price.toLocaleString()}/mo
@@ -374,22 +181,30 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
                 {/* Triangle pointer */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-2 w-4 h-4 rotate-45 bg-white"></div>
               </div>
-              
+
               {/* Marker Icon */}
               <div
                 onClick={() => handleMarkerClick(apartment)}
                 onMouseEnter={() => setHoveredApartment(apartment)}
                 onMouseLeave={() => setHoveredApartment(null)}
-                style={{ 
-                  transform: hoveredApartment?.id === apartment.id ? 'scale(1.1)' : 'scale(1)',
-                  transition: 'transform 0.15s ease, background-color 0.15s ease'
+                style={{
+                  transform:
+                    hoveredApartment?.id === apartment.id
+                      ? "scale(1.1)"
+                      : "scale(1)",
+                  transition:
+                    "transform 0.15s ease, background-color 0.15s ease",
                 }}
-                className={`flex items-center justify-center w-8 h-8 ${hoveredApartment?.id === apartment.id ? 'bg-primary' : 'bg-white'} rounded-full shadow-md cursor-pointer border border-gray-200`}
+                className={`flex items-center justify-center w-8 h-8 ${hoveredApartment?.id === apartment.id ? "bg-primary" : "bg-white"} rounded-full shadow-md cursor-pointer border border-gray-200`}
               >
-                <Building 
-                  size={16} 
-                  color={hoveredApartment?.id === apartment.id ? '#FFFFFF' : COLORS.coral} 
-                  strokeWidth={2} 
+                <Building
+                  size={16}
+                  color={
+                    hoveredApartment?.id === apartment.id
+                      ? "#FFFFFF"
+                      : COLORS.coral
+                  }
+                  strokeWidth={2}
                 />
               </div>
             </div>

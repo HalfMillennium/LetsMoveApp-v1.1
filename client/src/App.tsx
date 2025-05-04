@@ -31,7 +31,7 @@ function AppContent() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0D2436]">
-      <Header />
+      {location !== "/" && <Header />}
       <main className={`flex-1 ${isListings2Page ? "" : "flex"}`}>
         <Router />
       </main>
