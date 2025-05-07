@@ -57,7 +57,7 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
     lng: number;
   } | null>(null);
 
-  const mapsKey = process.env.VITE_GOOGLE_MAPS_API_KEY || "";
+  const mapsKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
 
   // Load Google Maps API
   const { isLoaded, loadError } = useJsApiLoader({
