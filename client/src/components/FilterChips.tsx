@@ -343,7 +343,7 @@ const FilterChips = ({
               )}
             </div>
 
-            {/* Clear All Filters (shown only when filters are active) */}
+            {/* Clear All Filters (shown onl8 when filters are active) */}
             <div className="relative overflow-hidden transition-all duration-300 ease-in-out">
               <div
                 className={`
