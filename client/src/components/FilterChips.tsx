@@ -284,7 +284,7 @@ const FilterChips = ({
               
               {/* Search Party Dropdown - Integrated into filter bar */}
               {activeSearchParty && (
-                <div className="pl-4 flex items-center">
+                <div className="pl-6 flex items-center">
                   <div className="flex items-center group">
                     {/* Search Party Filter Toggle */}
                     <Button
@@ -292,32 +292,32 @@ const FilterChips = ({
                       size="sm"
                       onClick={() => handleSearchPartyToggle(!filterBySearchParty)}
                       className={`
-                        flex items-center gap-1.5 px-2 h-8 transition-all duration-300 rounded-l-full border-r-0
+                        flex items-center gap-2 px-3 h-9 transition-all duration-300
                         ${filterBySearchParty 
-                          ? "bg-primary text-white hover:bg-primary/90 hover:text-white" 
-                          : "text-primary hover:bg-primary/10 border border-primary/30"
+                          ? "bg-primary/90 text-white hover:bg-primary" 
+                          : "text-primary hover:bg-primary/5"
                         }
                       `}
                     >
-                      <UsersRound className="h-3.5 w-3.5" />
-                      <span className="text-xs">
-                        {filterBySearchParty ? "Filtering" : "Filter"}
+                      <UsersRound className="h-4 w-4" />
+                      <span className="text-xs font-medium">
+                        {filterBySearchParty ? "Filtering by" : "Filter by"}
                       </span>
                       <div
                         className={`w-2 h-2 rounded-full transition-all ${
-                          filterBySearchParty ? "bg-white" : "bg-primary/40"
+                          filterBySearchParty ? "bg-white" : "bg-primary/30"
                         }`}
                       />
                     </Button>
                     
                     {/* Search Party Selector */}
-                    <div className="border-l-0">
+                    <div className="pl-1">
                       <OriginDropdown
                         options={searchParties.map((party) => ({
                           label: party.name,
                           value: party.id.toString(),
                         }))}
-                        className={`rounded-r-full rounded-l-none border ${filterBySearchParty ? "border-primary" : "border-primary/30"}`}
+                        className="text-sm font-medium"
                         onSelect={(value) => {
                           const searchPartyId = parseInt(value, 10);
                           window.dispatchEvent(
@@ -335,7 +335,7 @@ const FilterChips = ({
                         icon={null}
                         label=""
                         minimal={true}
-                        containerClassName="min-w-[120px]"
+                        containerClassName="min-w-[130px]"
                       />
                     </div>
                   </div>
