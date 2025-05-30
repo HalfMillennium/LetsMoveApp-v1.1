@@ -5,3 +5,4 @@ server/public
 server/index.ts
 vite.config.ts.*
 *.tar.gz
+*.replit

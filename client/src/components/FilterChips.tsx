@@ -226,7 +226,7 @@ const FilterChips = ({
           </div>
         ) : (
           /* Desktop/Tablet version of filters */
-          <div className="flex items-center shadow-md backdrop-blur-sm rounded-full p-2 flex-grow mr-2 transition-all duration-300 ease-in-out">
+          <div className="flex items-center shadow-md backdrop-blur-sm rounded-full p-2 flex-grow transition-all duration-300 ease-in-out">
             <div className="flex gap-4 px-2 divide-x divide-gray-200 transition-all duration-300 ease-in-out">
               {/* Price Range Dropdown */}
               <div className="w-full">
@@ -281,14 +281,74 @@ const FilterChips = ({
                   minimal={true}
                 />
               </div>
+              
+              {/* Search Party Dropdown - Integrated into filter bar */}
+              {activeSearchParty && (
+                <div className="pl-4 flex items-center">
+                  <div className="flex items-center group">
+                    {/* Search Party Filter Toggle */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleSearchPartyToggle(!filterBySearchParty)}
+                      className={`
+                        flex items-center gap-1.5 px-2 h-8 transition-all duration-300 rounded-l-full border-r-0
+                        ${filterBySearchParty 
+                          ? "bg-primary text-white hover:bg-primary/90 hover:text-white" 
+                          : "text-primary hover:bg-primary/10 border border-primary/30"
+                        }
+                      `}
+                    >
+                      <UsersRound className="h-3.5 w-3.5" />
+                      <span className="text-xs">
+                        {filterBySearchParty ? "Filtering" : "Filter"}
+                      </span>
+                      <div
+                        className={`w-2 h-2 rounded-full transition-all ${
+                          filterBySearchParty ? "bg-white" : "bg-primary/40"
+                        }`}
+                      />
+                    </Button>
+                    
+                    {/* Search Party Selector */}
+                    <div className="border-l-0">
+                      <OriginDropdown
+                        options={searchParties.map((party) => ({
+                          label: party.name,
+                          value: party.id.toString(),
+                        }))}
+                        className={`rounded-r-full rounded-l-none border ${filterBySearchParty ? "border-primary" : "border-primary/30"}`}
+                        onSelect={(value) => {
+                          const searchPartyId = parseInt(value, 10);
+                          window.dispatchEvent(
+                            new CustomEvent("switch-search-party", {
+                              detail: { searchPartyId },
+                            }),
+                          );
+                          // Auto-enable filtering when changing search party
+                          if (!filterBySearchParty) {
+                            handleSearchPartyToggle(true);
+                          }
+                        }}
+                        value={activeSearchParty.name}
+                        placeholder="Select Party"
+                        icon={null}
+                        label=""
+                        minimal={true}
+                        containerClassName="min-w-[120px]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Clear All Filters (shown only when filters are active) */}
+            {/* Clear All Filters (shown onl8 when filters are active) */}
             <div className="relative overflow-hidden transition-all duration-300 ease-in-out">
               <div
                 className={`
                   ${
-                    Object.keys(activeFilters).length > 0
+                    Object.keys(activeFilters).length > 0 || filterBySearchParty
                       ? "opacity-100 max-w-[80px] animate-fadeIn"
                       : "opacity-0 max-w-0 animate-fadeOut"
                   }
@@ -299,7 +359,12 @@ const FilterChips = ({
                   variant="ghost"
                   size="sm"
                   className="text-[#1A4A4A] ml-1 h-8 text-xs rounded-full items-center whitespace-nowrap"
-                  onClick={clearAllFilters}
+                  onClick={() => {
+                    clearAllFilters();
+                    if (filterBySearchParty) {
+                      handleSearchPartyToggle(false);
+                    }
+                  }}
                 >
                   <div className="flex items-center gap-1.5 w-full justify-between">
                     <div className="flex items-center gap-1.5 overflow-hidden">
@@ -310,67 +375,6 @@ const FilterChips = ({
                     </div>
                   </div>
                 </Button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Search Party Filter Toggle with Selection functionality */}
-        {activeSearchParty && !isMobile && (
-          <div className="ml-auto">
-            <div className="flex items-center rounded-full overflow-visible">
-              {/* Filter toggle side */}
-              <Button
-                variant={filterBySearchParty ? "default" : "ghost"}
-                onClick={() => handleSearchPartyToggle(!filterBySearchParty)}
-                className={`
-                  flex items-center gap-2 p-6 h-10 transition-all duration-300
-                  ${
-                    filterBySearchParty
-                      ? "bg-primary text-white shadow-md rounded-full"
-                      : "text-primary hover:bg-primary/20 rounded-full"
-                  }
-                `}
-              >
-                <UsersRound className="h-4 w-4" />
-                <div className="flex flex-col items-start leading-none">
-                  <span className="text-xs opacity-90">
-                    {filterBySearchParty ? "Filtering" : "Filter"} by
-                  </span>
-                  <span className="font-medium text-sm truncate">
-                    {activeSearchParty.name}
-                  </span>
-                </div>
-                <div
-                  className={`w-3 h-3 rounded-full transition-all ${
-                    filterBySearchParty ? "bg-white" : "bg-primary/40"
-                  }`}
-                />
-              </Button>
-
-              {/* Switch Search Party Dropdown Button as OriginDropdown */}
-              <div className="border-l border-primary/30 pl-4 ml-2">
-                <OriginDropdown
-                  options={searchParties.map((party) => ({
-                    label: party.name,
-                    value: party.id.toString(),
-                  }))}
-                  className="rounded-lg"
-                  onSelect={(value) => {
-                    const searchPartyId = parseInt(value, 10);
-                    // Dispatch an event to switch search parties
-                    window.dispatchEvent(
-                      new CustomEvent("switch-search-party", {
-                        detail: { searchPartyId },
-                      }),
-                    );
-                  }}
-                  value={activeSearchParty.name}
-                  placeholder="Switch party"
-                  icon={<UsersRound className="h-4 w-4 text-black" />}
-                  label=""
-                  minimal={true}
-                />
               </div>
             </div>
           </div>
