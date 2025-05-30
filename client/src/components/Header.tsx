@@ -5,8 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import appLogo from "../assets/letsmove_logo_black.png";
 
 const Header = () => {
-  const [, setLocation] = useLocation();
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const isMobile = useIsMobile();
 
   const isActive = (path: string) => location === path;
