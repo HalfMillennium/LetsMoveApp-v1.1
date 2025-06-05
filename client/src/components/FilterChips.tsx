@@ -226,10 +226,10 @@ const FilterChips = ({
           </div>
         ) : (
           /* Desktop/Tablet version of filters */
-          <div className="flex items-center shadow-md backdrop-blur-sm rounded-full p-2 flex-grow transition-all duration-300 ease-in-out">
-            <div className="flex gap-4 px-2 divide-x divide-gray-200 transition-all duration-300 ease-in-out">
+          <div className="flex items-center border backdrop-blur-sm rounded-full p-2 flex-grow transition-all duration-300 ease-in-out">
+            <div className="flex gap-4 px-2 transition-all duration-300 ease-in-out">
               {/* Price Range Dropdown */}
-              <div className="w-full">
+              <div className="flex items-center">
                 <OriginDropdown
                   options={PRICE_RANGES.map((range) => ({
                     label: range.label,
@@ -247,13 +247,13 @@ const FilterChips = ({
               </div>
 
               {/* Bedrooms Dropdown */}
-              <div className="pl-4">
+              <div className="flex items-center">
                 <OriginDropdown
                   options={BEDROOM_OPTIONS.map((option) => ({
                     label: option.label,
                     value: option.label,
                   }))}
-                  className="rounded-lg"
+                  className="rounded-lg items-center"
                   onSelect={(value) => handleFilterChange("bedrooms", value)}
                   value={getCurrentValue("bedrooms")}
                   placeholder="Beds"
@@ -265,7 +265,7 @@ const FilterChips = ({
               </div>
 
               {/* Distance Dropdown */}
-              <div className="pl-4">
+              <div className="flex items-center">
                 <OriginDropdown
                   options={DISTANCE_OPTIONS.map((option) => ({
                     label: option.label,
@@ -281,26 +281,29 @@ const FilterChips = ({
                   minimal={true}
                 />
               </div>
-              
+
               {/* Search Party Dropdown - Integrated into filter bar */}
               {activeSearchParty && (
-                <div className="pl-6 flex items-center">
+                <div className="flex items-center">
                   <div className="flex items-center group">
                     {/* Search Party Filter Toggle */}
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleSearchPartyToggle(!filterBySearchParty)}
+                      onClick={() =>
+                        handleSearchPartyToggle(!filterBySearchParty)
+                      }
                       className={`
                         flex items-center gap-2 px-3 h-9 transition-all duration-300
-                        ${filterBySearchParty 
-                          ? "bg-primary/90 text-white hover:bg-primary" 
-                          : "text-primary hover:bg-primary/5"
+                        ${
+                          filterBySearchParty
+                            ? "bg-primary/90 text-white hover:bg-primary"
+                            : "text-primary hover:bg-primary/5"
                         }
                       `}
                     >
                       <UsersRound className="h-4 w-4" />
-                      <span className="text-xs font-medium">
+                      <span className="text-sm font-medium">
                         {filterBySearchParty ? "Filtering by" : "Filter by"}
                       </span>
                       <div
@@ -309,7 +312,7 @@ const FilterChips = ({
                         }`}
                       />
                     </Button>
-                    
+
                     {/* Search Party Selector */}
                     <div className="pl-1">
                       <OriginDropdown
