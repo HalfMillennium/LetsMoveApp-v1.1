@@ -94,7 +94,7 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
         </div>
 
         {/* Price */}
-        <p className="text-primary font-medium text-xl">
+        <p className="text-primary font-bold text-xl">
           ${apartment.price.toLocaleString()}
         </p>
 
