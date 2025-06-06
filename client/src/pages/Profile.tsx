@@ -34,6 +34,18 @@ const Profile = () => {
   const { toast } = useToast();
   const { searchParties } = useSearchParty();
   const { user, isLoaded } = useUser();
+
+  // Show loading state while Clerk is loading
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-gray-600 mt-4 text-center">Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
   const [formData, setFormData] = useState({
     fullName: user?.fullName || "",
     email: user?.emailAddresses[0]?.emailAddress || "",
