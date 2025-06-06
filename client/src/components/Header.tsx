@@ -1,31 +1,12 @@
 import { Link, useLocation } from "wouter";
-import { Menu, Search, CircleUserRound, LogOut } from "lucide-react";
+import { Menu, Search, CircleUserRound } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import appLogo from "../assets/searchparty_logo.png";
-import { useState, useEffect } from "react";
+import appLogo from "../assets/letsmove_logo_black.png";
 
 const Header = () => {
   const [location, setLocation] = useLocation();
-  const [user, setUser] = useState<any>(null);
-  const [isSignedIn, setIsSignedIn] = useState(false);
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('auth_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      setIsSignedIn(true);
-    }
-  }, []);
-
-  const signOut = () => {
-    localStorage.removeItem('auth_user');
-    setUser(null);
-    setIsSignedIn(false);
-    setLocation('/');
-  };
 
   const isActive = (path: string) => location === path;
 
@@ -33,7 +14,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 border-b border backdrop-blur-lg border-b backdrop-opacity-20 bg-white w-full">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link href="/">
-          <img src={appLogo} className="h-10 cursor-pointer" />
+          <img src={appLogo} className="h-8 cursor-pointer" />
         </Link>
         {!isMobile && (
           <div className="flex items-center space-x-12 text-sm">
@@ -93,42 +74,14 @@ const Header = () => {
             <Search className="h-6 w-6" />
           </button>
 
-          {isSignedIn ? (
-            <div className="flex items-center space-x-2">
-              <Link
-                href="/profile"
-                className="flex items-center text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20"
-              >
-                <CircleUserRound color="#1A4A4A" className="h-6 w-6" />
-              </Link>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => signOut()}
-                className="text-[#1A4A4A] hover:bg-[#C9DAD0]/20"
-              >
-                <LogOut className="h-4 w-4" />
-              </Button>
-            </div>
-          ) : (
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setLocation("/sign-in")}
-                className="text-[#1A4A4A] hover:bg-[#C9DAD0]/20"
-              >
-                Sign In
-              </Button>
-              <Button
-                size="sm"
-                onClick={() => setLocation("/sign-up")}
-                className="bg-[#E9927E] hover:bg-[#E9927E]/90 text-white"
-              >
-                Sign Up
-              </Button>
-            </div>
-          )}
+          <button className="">
+            <Link
+              href="/profile"
+              className="flex flex-1 w-full text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20"
+            >
+              <CircleUserRound color="#1A4A4A" className="h-6 w-6" />
+            </Link>
+          </button>
 
           {/* Mobile: Sheet/Drawer Menu */}
           {isMobile && (
@@ -176,40 +129,15 @@ const Header = () => {
                       Favorites
                     </span>
                   </Link>
-                  {isSignedIn ? (
-                    <>
-                      <Link href="/profile">
-                        <span
-                          className={`text-[#1A4A4A] font-medium text-lg block p-2 hover:bg-[#C9DAD0]/20 rounded-lg ${
-                            isActive("/profile") ? "bg-[#C9DAD0]/20" : ""
-                          }`}
-                        >
-                          Profile
-                        </span>
-                      </Link>
-                      <button
-                        onClick={() => signOut()}
-                        className="text-[#1A4A4A] font-medium text-lg block p-2 hover:bg-[#C9DAD0]/20 rounded-lg w-full text-left"
-                      >
-                        Sign Out
-                      </button>
-                    </>
-                  ) : (
-                    <div className="space-y-2">
-                      <button
-                        onClick={() => setLocation("/sign-in")}
-                        className="text-[#1A4A4A] font-medium text-lg block p-2 hover:bg-[#C9DAD0]/20 rounded-lg w-full text-left"
-                      >
-                        Sign In
-                      </button>
-                      <button
-                        onClick={() => setLocation("/sign-up")}
-                        className="bg-[#E9927E] text-white font-medium text-lg block p-2 rounded-lg w-full text-left"
-                      >
-                        Sign Up
-                      </button>
-                    </div>
-                  )}
+                  <Link href="/profile">
+                    <span
+                      className={`text-[#1A4A4A] font-medium text-lg block p-2 hover:bg-[#C9DAD0]/20 rounded-lg ${
+                        isActive("/profile") ? "bg-[#C9DAD0]/20" : ""
+                      }`}
+                    >
+                      Profile
+                    </span>
+                  </Link>
                 </div>
               </SheetContent>
             </Sheet>
