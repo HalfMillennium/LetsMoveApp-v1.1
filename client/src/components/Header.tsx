@@ -1,12 +1,24 @@
 import { Link, useLocation } from "wouter";
-import { Menu, Search, CircleUserRound } from "lucide-react";
+import { Menu, Search, CircleUserRound, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useUser, useClerk } from "@clerk/clerk-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import appLogo from "../assets/letsmove_logo_black.png";
 
 const Header = () => {
   const [location, setLocation] = useLocation();
   const isMobile = useIsMobile();
+  const { user, isSignedIn } = useUser();
+  const { signOut } = useClerk();
 
   const isActive = (path: string) => location === path;
 
@@ -74,14 +86,53 @@ const Header = () => {
             <Search className="h-6 w-6" />
           </button>
 
-          <button className="">
-            <Link
-              href="/profile"
-              className="flex flex-1 w-full text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20"
-            >
-              <CircleUserRound color="#1A4A4A" className="h-6 w-6" />
-            </Link>
-          </button>
+          {isSignedIn ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={user?.imageUrl} alt={user?.fullName || user?.emailAddresses[0]?.emailAddress} />
+                    <AvatarFallback className="bg-primary text-white">
+                      {user?.firstName?.charAt(0) || user?.emailAddresses[0]?.emailAddress?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <div className="flex items-center justify-start gap-2 p-2">
+                  <div className="flex flex-col space-y-1 leading-none">
+                    <p className="font-medium">{user?.fullName}</p>
+                    <p className="w-[200px] truncate text-sm text-muted-foreground">
+                      {user?.emailAddresses[0]?.emailAddress}
+                    </p>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/profile" className="w-full cursor-pointer">
+                    Profile Settings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onSelect={() => signOut()}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" asChild>
+                <Link href="/sign-in">Sign In</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/sign-up">Sign Up</Link>
+              </Button>
+            </div>
+          )}
 
           {/* Mobile: Sheet/Drawer Menu */}
           {isMobile && (
