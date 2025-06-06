@@ -23,7 +23,7 @@ const Favorites = () => {
           {favorites.length > 0 && (
             <Button
               onClick={() => (window.location.href = "/listings")}
-              className="mt-4 sm:mt-0 rounded-lg bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5"
+              className="mt-4 sm:mt-0 rounded-full bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5"
             >
               <Home className="mr-2 h-4 w-4" />
               Browse More
@@ -33,7 +33,7 @@ const Favorites = () => {
 
         {isLoading ? (
           <div className="space-y-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-200">
               <Skeleton className="h-8 w-48 mb-4" />
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[1, 2, 3].map((_, index) => (
@@ -53,7 +53,7 @@ const Favorites = () => {
             </div>
           </div>
         ) : favorites.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-200 p-8 text-center">
             <div className="max-w-md mx-auto">
               <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Heart className="h-8 w-8 text-white" />
@@ -67,7 +67,7 @@ const Favorites = () => {
               </p>
               <Button
                 onClick={() => (window.location.href = "/listings")}
-                className="bg-orange-400 hover:bg-orange-500 text-white rounded-lg px-6 py-2.5 font-medium"
+                className="bg-orange-400 hover:bg-orange-500 text-white rounded-full px-6 py-2.5 font-medium"
               >
                 <Home className="mr-2 h-4 w-4" />
                 Browse Apartments
@@ -77,7 +77,7 @@ const Favorites = () => {
         ) : (
           <div className="space-y-6">
             {/* Favorites Grid */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="bg-white rounded-3xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900">
                   Saved Apartments ({favorites.length})
@@ -99,7 +99,7 @@ const Favorites = () => {
 
             {/* Share with Search Parties */}
             {searchParties.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div className="bg-white rounded-3xl shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-bold text-gray-900 mb-1">
@@ -119,7 +119,7 @@ const Favorites = () => {
                     <Button
                       key={party.id}
                       variant="outline"
-                      className="border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg p-3 h-auto flex items-center justify-between"
+                      className="border-gray-300 hover:bg-gray-50 text-gray-700 rounded-full p-3 h-auto flex items-center justify-between"
                       onClick={() =>
                         (window.location.href = `/search-party/${party.id}`)
                       }
