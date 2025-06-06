@@ -20,9 +20,23 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/listings" component={Listings2} />
-      <Route path="/search-party" component={SearchParty} />
-      <Route path="/favorites" component={Favorites} />
-      <Route path="/profile" component={Profile} />
+      <Route path="/sign-in/*" component={SignIn} />
+      <Route path="/sign-up/*" component={SignUp} />
+      <Route path="/search-party">
+        <ProtectedRoute>
+          <SearchParty />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/favorites">
+        <ProtectedRoute>
+          <Favorites />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/profile">
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );
