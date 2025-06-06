@@ -24,7 +24,7 @@ function Router() {
       {/* Public routes */}
       <Route path="/sign-in" component={SignIn} />
       <Route path="/sign-up" component={SignUp} />
-      
+
       {/* Protected routes */}
       <Route path="/">
         {isLoaded && isSignedIn ? (
@@ -35,31 +35,31 @@ function Router() {
           <Home />
         )}
       </Route>
-      
+
       <Route path="/listings">
         <ProtectedRoute>
           <Listings2 />
         </ProtectedRoute>
       </Route>
-      
+
       <Route path="/search-party">
         <ProtectedRoute>
           <SearchParty />
         </ProtectedRoute>
       </Route>
-      
+
       <Route path="/favorites">
         <ProtectedRoute>
           <Favorites />
         </ProtectedRoute>
       </Route>
-      
+
       <Route path="/profile">
         <ProtectedRoute>
           <Profile />
         </ProtectedRoute>
       </Route>
-      
+
       <Route component={NotFound} />
     </Switch>
   );

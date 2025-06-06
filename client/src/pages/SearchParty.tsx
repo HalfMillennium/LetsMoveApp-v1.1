@@ -268,7 +268,7 @@ const SearchParty = () => {
                         ? listings.slice(0, 3).map((listing, idx) => (
                             <div
                               key={idx}
-                              className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:shadow-md transition-all cursor-pointer group"
+                              className="bg-gray-50 rounded-2xl overflow-hidden border border-gray-200 hover:shadow-xl transition-all cursor-pointer group"
                               onClick={() =>
                                 handleApartmentSelect(listing.apartment!)
                               }
