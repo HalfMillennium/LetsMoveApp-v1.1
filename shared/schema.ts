@@ -2,14 +2,17 @@ import { pgTable, text, serial, integer, boolean, jsonb, timestamp } from "drizz
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-// Basic user model
+// Basic user model with Clerk integration
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+  clerkId: text("clerk_id").notNull().unique(), // Clerk user ID
+  username: text("username"),
   email: text("email").notNull().unique(),
   fullName: text("full_name"),
-  profileImage: text("profile_image")
+  profileImage: text("profile_image"),
+  phoneNumber: text("phone_number"),
+  createdAt: timestamp("created_at").defaultNow(),
+  lastSignInAt: timestamp("last_sign_in_at")
 });
 
 // Apartment listings
@@ -52,7 +55,22 @@ export const searchPartyMembers = pgTable("search_party_members", {
   id: serial("id").primaryKey(),
   searchPartyId: integer("search_party_id").references(() => searchParties.id).notNull(),
   userId: integer("user_id").references(() => users.id).notNull(),
-  role: text("role").default("member")
+  role: text("role").default("member"), // "owner" or "member"
+  joinedAt: timestamp("joined_at").defaultNow()
+});
+
+// Search party invitations
+export const searchPartyInvitations = pgTable("search_party_invitations", {
+  id: serial("id").primaryKey(),
+  searchPartyId: integer("search_party_id").references(() => searchParties.id).notNull(),
+  invitedBy: integer("invited_by").references(() => users.id).notNull(),
+  contactInfo: text("contact_info").notNull(), // email or phone
+  contactType: text("contact_type").notNull(), // "email" or "phone"
+  invitationToken: text("invitation_token").notNull().unique(),
+  status: text("status").default("pending"), // "pending", "accepted", "declined", "expired"
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  acceptedAt: timestamp("accepted_at")
 });
 
 // Shared apartments within search parties
@@ -78,11 +96,12 @@ export const filterSettings = pgTable("filter_settings", {
 });
 
 // Create schemas for inserting data
-export const insertUserSchema = createInsertSchema(users).omit({ id: true });
+export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true, lastSignInAt: true });
 export const insertApartmentSchema = createInsertSchema(apartments).omit({ id: true });
 export const insertFavoriteSchema = createInsertSchema(favorites).omit({ id: true });
 export const insertSearchPartySchema = createInsertSchema(searchParties).omit({ id: true, createdAt: true });
-export const insertSearchPartyMemberSchema = createInsertSchema(searchPartyMembers).omit({ id: true });
+export const insertSearchPartyMemberSchema = createInsertSchema(searchPartyMembers).omit({ id: true, joinedAt: true });
+export const insertSearchPartyInvitationSchema = createInsertSchema(searchPartyInvitations).omit({ id: true, createdAt: true, acceptedAt: true });
 export const insertSearchPartyListingSchema = createInsertSchema(searchPartyListings).omit({ id: true, addedAt: true });
 export const insertFilterSettingsSchema = createInsertSchema(filterSettings).omit({ id: true });
 
@@ -92,6 +111,7 @@ export type InsertApartment = z.infer<typeof insertApartmentSchema>;
 export type InsertFavorite = z.infer<typeof insertFavoriteSchema>;
 export type InsertSearchParty = z.infer<typeof insertSearchPartySchema>;
 export type InsertSearchPartyMember = z.infer<typeof insertSearchPartyMemberSchema>;
+export type InsertSearchPartyInvitation = z.infer<typeof insertSearchPartyInvitationSchema>;
 export type InsertSearchPartyListing = z.infer<typeof insertSearchPartyListingSchema>;
 export type InsertFilterSettings = z.infer<typeof insertFilterSettingsSchema>;
 
@@ -100,5 +120,6 @@ export type Apartment = typeof apartments.$inferSelect;
 export type Favorite = typeof favorites.$inferSelect;
 export type SearchParty = typeof searchParties.$inferSelect;
 export type SearchPartyMember = typeof searchPartyMembers.$inferSelect;
+export type SearchPartyInvitation = typeof searchPartyInvitations.$inferSelect;
 export type SearchPartyListing = typeof searchPartyListings.$inferSelect;
 export type FilterSetting = typeof filterSettings.$inferSelect;

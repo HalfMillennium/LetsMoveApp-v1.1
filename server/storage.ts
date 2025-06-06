@@ -25,16 +25,16 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   getAllUsers(): Promise<User[]>;
-  
+
   // Apartment methods
   getApartments(): Promise<Apartment[]>;
   getApartment(id: number): Promise<Apartment | undefined>;
-  
+
   // Favorites methods
   getFavoritesByUserId(userId: number): Promise<Favorite[]>;
   addFavorite(favorite: InsertFavorite): Promise<Favorite>;
   removeFavorite(id: number): Promise<boolean>;
-  
+
   // Search Party methods
   getSearchPartiesByUserId(userId: number): Promise<SearchParty[]>;
   createSearchParty(searchParty: InsertSearchParty): Promise<SearchParty>;
@@ -50,7 +50,7 @@ export class MemStorage implements IStorage {
   private searchParties: Map<number, SearchParty>;
   private searchPartyMembers: Map<number, SearchPartyMember>;
   private searchPartyListings: Map<number, SearchPartyListing>;
-  
+
   private userIdCounter: number;
   private favoriteIdCounter: number;
   private searchPartyIdCounter: number;
@@ -64,41 +64,41 @@ export class MemStorage implements IStorage {
     this.searchParties = new Map();
     this.searchPartyMembers = new Map();
     this.searchPartyListings = new Map();
-    
+
     // Set ID counters to be greater than our example data
     this.userIdCounter = exampleUsers.length + 1;
     this.favoriteIdCounter = exampleFavorites.length + 1;
     this.searchPartyIdCounter = exampleSearchParties.length + 1;
     this.memberIdCounter = exampleSearchPartyMembers.length + 1;
     this.listingIdCounter = exampleSearchPartyListings.length + 1;
-    
+
     // Initialize with example data
-    
+
     // Add users
     exampleUsers.forEach(user => {
       this.users.set(user.id, user);
     });
-    
+
     // Add apartments
     exampleApartments.forEach(apt => {
       this.apartments.set(apt.id, apt);
     });
-    
+
     // Add favorites
     exampleFavorites.forEach(favorite => {
       this.favorites.set(favorite.id, favorite);
     });
-    
+
     // Add search parties
     exampleSearchParties.forEach(party => {
       this.searchParties.set(party.id, party);
     });
-    
+
     // Add search party members
     exampleSearchPartyMembers.forEach(member => {
       this.searchPartyMembers.set(member.id, member);
     });
-    
+
     // Add search party listings
     exampleSearchPartyListings.forEach(listing => {
       // Add apartment details to the listing
@@ -133,34 +133,34 @@ export class MemStorage implements IStorage {
     this.users.set(id, user);
     return user;
   }
-  
+
   async getAllUsers(): Promise<User[]> {
     return Array.from(this.users.values());
   }
-  
+
   // Apartment Methods
   async getApartments(): Promise<Apartment[]> {
     return Array.from(this.apartments.values());
   }
-  
+
   async getApartment(id: number): Promise<Apartment | undefined> {
     return this.apartments.get(id);
   }
-  
+
   // Favorites Methods
   async getFavoritesByUserId(userId: number): Promise<Favorite[]> {
     return Array.from(this.favorites.values()).filter(
       favorite => favorite.userId === userId
     );
   }
-  
+
   async addFavorite(insertFavorite: InsertFavorite): Promise<Favorite> {
     const id = this.favoriteIdCounter++;
     const favorite: Favorite = { ...insertFavorite, id };
     this.favorites.set(id, favorite);
     return favorite;
   }
-  
+
   async removeFavorite(id: number): Promise<boolean> {
     if (!this.favorites.has(id)) {
       return false;
@@ -168,29 +168,29 @@ export class MemStorage implements IStorage {
     this.favorites.delete(id);
     return true;
   }
-  
+
   // Search Party Methods
   async getSearchPartiesByUserId(userId: number): Promise<SearchParty[]> {
     // Get all search parties where the user is either the creator or a member
     const createdParties = Array.from(this.searchParties.values()).filter(
       party => party.createdById === userId
     );
-    
+
     // Get search party IDs where user is a member
     const memberPartyIds = Array.from(this.searchPartyMembers.values())
       .filter(member => member.userId === userId)
       .map(member => member.searchPartyId);
-    
+
     // Get those search parties
     const memberParties = Array.from(this.searchParties.values()).filter(
       party => memberPartyIds.includes(party.id)
     );
-    
+
     // Combine both arrays and remove duplicates
     const allParties = [...createdParties, ...memberParties];
     return Array.from(new Map(allParties.map(party => [party.id, party])).values());
   }
-  
+
   async createSearchParty(insertSearchParty: InsertSearchParty): Promise<SearchParty> {
     const id = this.searchPartyIdCounter++;
     const now = new Date();
@@ -202,7 +202,7 @@ export class MemStorage implements IStorage {
     this.searchParties.set(id, searchParty);
     return searchParty;
   }
-  
+
   async addSearchPartyMember(insertMember: InsertSearchPartyMember): Promise<SearchPartyMember> {
     const id = this.memberIdCounter++;
     const member: SearchPartyMember = { 
@@ -213,7 +213,7 @@ export class MemStorage implements IStorage {
     this.searchPartyMembers.set(id, member);
     return member;
   }
-  
+
   async addSearchPartyListing(insertListing: InsertSearchPartyListing): Promise<SearchPartyListing> {
     const id = this.listingIdCounter++;
     const now = new Date();
@@ -226,7 +226,7 @@ export class MemStorage implements IStorage {
     this.searchPartyListings.set(id, listing);
     return listing;
   }
-  
+
   async getSearchPartyListings(searchPartyId: number): Promise<SearchPartyListing[]> {
     return Array.from(this.searchPartyListings.values())
       .filter(listing => listing.searchPartyId === searchPartyId)

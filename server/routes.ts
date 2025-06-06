@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { clerkMiddleware, requireAuth, getAuth } from "@clerk/express";
+import { InsertUser } from "../shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create HTTP server
@@ -168,48 +169,213 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Search Party endpoints
-  app.get("/api/search-parties", async (req, res) => {
+  app.get("/api/search-parties", requireAuth(), async (req, res) => {
     try {
-      const userId = req.query.userId as string;
-
-      if (!userId) {
-        return res.status(400).json({ message: "UserId is required" });
+      const { userId: clerkId } = getAuth(req);
+      
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
       }
 
-      const searchParties = await storage.getSearchPartiesByUserId(
-        Number(userId),
-      );
+      const user = await storage.getUserByClerkId(clerkId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const searchParties = await storage.getSearchPartiesByUserId(user.id);
       res.json(searchParties);
     } catch (error) {
       res.status(500).json({ message: "Error fetching search parties" });
     }
   });
 
-  app.post("/api/search-parties", async (req, res) => {
+  app.post("/api/search-parties", requireAuth(), async (req, res) => {
     try {
-      const { name, createdById } = req.body;
+      const { userId: clerkId } = getAuth(req);
+      const { name, invitations } = req.body;
 
-      if (!name || !createdById) {
-        return res
-          .status(400)
-          .json({ message: "Name and createdById are required" });
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
       }
 
+      if (!name) {
+        return res.status(400).json({ message: "Name is required" });
+      }
+
+      const user = await storage.getUserByClerkId(clerkId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Create search party
       const searchParty = await storage.createSearchParty({
         name,
-        createdById: Number(createdById),
+        createdById: user.id,
       });
+
+      // Create invitations if provided
+      if (invitations && Array.isArray(invitations)) {
+        for (const invitation of invitations) {
+          const { contactInfo, contactType } = invitation;
+          
+          // Check if contact is already a user
+          const existingUser = await storage.findUserByContact(contactInfo);
+          
+          if (existingUser) {
+            // Add existing user directly to the search party
+            await storage.addSearchPartyMember({
+              searchPartyId: searchParty.id,
+              userId: existingUser.id,
+              role: "member"
+            });
+          } else {
+            // Create invitation for new user
+            await storage.createSearchPartyInvitation({
+              searchPartyId: searchParty.id,
+              invitedBy: user.id,
+              contactInfo,
+              contactType
+            });
+          }
+        }
+      }
 
       res.status(201).json(searchParty);
     } catch (error) {
+      console.error("Error creating search party:", error);
       res.status(500).json({ message: "Error creating search party" });
     }
   });
 
-  app.post("/api/search-parties/:id/members", async (req, res) => {
+  // Send invitations to a search party
+  app.post("/api/search-parties/:id/invite", requireAuth(), async (req, res) => {
     try {
+      const { userId: clerkId } = getAuth(req);
+      const { invitations } = req.body;
+      const searchPartyId = Number(req.params.id);
+
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const user = await storage.getUserByClerkId(clerkId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Verify user is a member of the search party
+      const member = await storage.getSearchPartyMember(searchPartyId, user.id);
+      if (!member) {
+        return res.status(403).json({ message: "You are not a member of this search party" });
+      }
+
+      const results = [];
+
+      for (const invitation of invitations) {
+        const { contactInfo, contactType } = invitation;
+        
+        // Check if contact is already a user
+        const existingUser = await storage.findUserByContact(contactInfo);
+        
+        if (existingUser) {
+          // Check if user is already a member
+          const existingMember = await storage.getSearchPartyMember(searchPartyId, existingUser.id);
+          if (!existingMember) {
+            const newMember = await storage.addSearchPartyMember({
+              searchPartyId,
+              userId: existingUser.id,
+              role: "member"
+            });
+            results.push({ type: 'member_added', user: existingUser, member: newMember });
+          } else {
+            results.push({ type: 'already_member', user: existingUser });
+          }
+        } else {
+          // Create invitation for new user
+          const newInvitation = await storage.createSearchPartyInvitation({
+            searchPartyId,
+            invitedBy: user.id,
+            contactInfo,
+            contactType
+          });
+          results.push({ type: 'invitation_sent', invitation: newInvitation });
+        }
+      }
+
+      res.status(201).json({ results });
+    } catch (error) {
+      console.error("Error sending invitations:", error);
+      res.status(500).json({ message: "Error sending invitations" });
+    }
+  });
+
+  // Accept invitation
+  app.post("/api/invitations/:token/accept", requireAuth(), async (req, res) => {
+    try {
+      const { userId: clerkId } = getAuth(req);
+      const { token } = req.params;
+
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const user = await storage.getUserByClerkId(clerkId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const member = await storage.acceptSearchPartyInvitation(token, user.id);
+      res.json(member);
+    } catch (error) {
+      console.error("Error accepting invitation:", error);
+      res.status(400).json({ message: error.message || "Error accepting invitation" });
+    }
+  });
+
+  // Get invitation details
+  app.get("/api/invitations/:token", async (req, res) => {
+    try {
+      const { token } = req.params;
+      const invitation = await storage.getSearchPartyInvitation(token);
+      
+      if (!invitation) {
+        return res.status(404).json({ message: "Invitation not found" });
+      }
+
+      if (invitation.status !== 'pending' || invitation.expiresAt < new Date()) {
+        return res.status(400).json({ message: "Invitation is invalid or expired" });
+      }
+
+      // Get search party details
+      const searchParty = await storage.getSearchParty(invitation.searchPartyId);
+      
+      res.json({
+        invitation: {
+          id: invitation.id,
+          searchPartyId: invitation.searchPartyId,
+          contactInfo: invitation.contactInfo,
+          contactType: invitation.contactType,
+          expiresAt: invitation.expiresAt
+        },
+        searchParty: {
+          id: searchParty?.id,
+          name: searchParty?.name
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching invitation" });
+    }
+  });
+
+  app.post("/api/search-parties/:id/members", requireAuth(), async (req, res) => {
+    try {
+      const { userId: clerkId } = getAuth(req);
       const { userId, role } = req.body;
       const searchPartyId = Number(req.params.id);
+
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
 
       if (!userId || !searchPartyId) {
         return res
@@ -226,6 +392,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(member);
     } catch (error) {
       res.status(500).json({ message: "Error adding member to search party" });
+    }
+  });
+
+  // Remove member from search party (only owner can remove)
+  app.delete("/api/search-parties/:id/members/:userId", requireAuth(), async (req, res) => {
+    try {
+      const { userId: clerkId } = getAuth(req);
+      const searchPartyId = Number(req.params.id);
+      const userIdToRemove = Number(req.params.userId);
+
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const currentUser = await storage.getUserByClerkId(clerkId);
+      if (!currentUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const success = await storage.removeSearchPartyMember(
+        searchPartyId, 
+        userIdToRemove, 
+        currentUser.id
+      );
+
+      if (success) {
+        res.status(204).send();
+      } else {
+        res.status(404).json({ message: "Member not found" });
+      }
+    } catch (error) {
+      console.error("Error removing member:", error);
+      res.status(403).json({ message: error.message || "Error removing member" });
     }
   });
 
@@ -267,18 +466,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // User endpoints
   app.get("/api/users", async (req, res) => {
     try {
-      // Get all users from storage
       const users = await storage.getAllUsers();
-
-      // Remove passwords from response
-      const usersWithoutPasswords = users.map((user) => {
-        const { password: _, ...userWithoutPassword } = user;
-        return userWithoutPassword;
-      });
-
-      res.json(usersWithoutPasswords);
+      res.json(users);
     } catch (error) {
       res.status(500).json({ message: "Error fetching users" });
+    }
+  });
+
+  // Sync Clerk user with local database
+  app.post("/api/users/sync", requireAuth(), async (req, res) => {
+    try {
+      const { userId: clerkId } = getAuth(req);
+      const { email, fullName, profileImage, phoneNumber } = req.body;
+
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Check if user already exists
+      let user = await storage.getUserByClerkId(clerkId);
+
+      if (!user) {
+        // Create new user
+        const newUser: InsertUser = {
+          clerkId,
+          email,
+          fullName,
+          profileImage,
+          phoneNumber
+        };
+        user = await storage.createUser(newUser);
+      } else {
+        // Update sign-in time
+        user = await storage.updateUserSignIn(clerkId);
+      }
+
+      res.json(user);
+    } catch (error) {
+      console.error("Error syncing user:", error);
+      res.status(500).json({ message: "Error syncing user" });
+    }
+  });
+
+  // Get current user
+  app.get("/api/users/me", requireAuth(), async (req, res) => {
+    try {
+      const { userId: clerkId } = getAuth(req);
+      
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const user = await storage.getUserByClerkId(clerkId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching user" });
     }
   });
 

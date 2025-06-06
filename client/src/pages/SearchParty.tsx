@@ -29,7 +29,7 @@ const SearchParty = () => {
   const { searchParties, isLoading, createSearchParty } = useSearchParty();
   const { toast } = useToast();
   const [newPartyName, setNewPartyName] = useState("");
-  const [invites, setInvites] = useState("");
+  const [invitations, setInvitations] = useState<string>("");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   // State for apartment details modal
@@ -56,6 +56,23 @@ const SearchParty = () => {
     setChatDrawerOpen(true);
   };
 
+  const parseInvitations = (invitationText: string) => {
+    if (!invitationText.trim()) return [];
+
+    return invitationText
+      .split(/[,\n]/)
+      .map(contact => contact.trim())
+      .filter(contact => contact.length > 0)
+      .map(contact => {
+        // Simple email detection
+        const isEmail = contact.includes('@') && contact.includes('.');
+        return {
+          contactInfo: contact,
+          contactType: isEmail ? 'email' as const : 'phone' as const
+        };
+      });
+  };
+
   const handleCreateParty = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -69,14 +86,16 @@ const SearchParty = () => {
     }
 
     try {
-      await createSearchParty(newPartyName);
+      const parsedInvitations = parseInvitations(invitations);
+      await createSearchParty(newPartyName, parsedInvitations);
+      
       setNewPartyName("");
-      setInvites("");
+      setInvitations("");
       setCreateDialogOpen(false);
 
       toast({
         title: "Success!",
-        description: "Your search party has been created.",
+        description: `Your search party has been created${parsedInvitations.length > 0 ? ' and invitations have been sent' : ''}.`,
       });
     } catch (error) {
       toast({
@@ -147,10 +166,10 @@ const SearchParty = () => {
                   </label>
                   <Textarea
                     id="invites"
-                    value={invites}
-                    onChange={(e) => setInvites(e.target.value)}
+                    value={invitations}
+                    onChange={(e) => setInvitations(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400"
-                    placeholder="Enter email addresses or phone numbers separated by commas"
+                    placeholder="Enter email addresses or phone numbers separated by commas or new lines"
                     rows={3}
                   />
                 </div>

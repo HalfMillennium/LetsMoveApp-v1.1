@@ -53,9 +53,29 @@ export interface SearchParty {
   id: number;
   name: string;
   createdById: number;
-  createdAt: string;
-  members?: Member[];
+  createdAt?: string;
+  userRole?: string;
+  members?: SearchPartyMember[];
   listings?: SearchPartyListing[];
+  pendingInvitations?: SearchPartyInvitation[];
+}
+
+export interface SearchPartyInvitation {
+  id: number;
+  searchPartyId: number;
+  invitedBy: number;
+  contactInfo: string;
+  contactType: "email" | "phone";
+  invitationToken: string;
+  status: "pending" | "accepted" | "declined" | "expired";
+  expiresAt: string;
+  createdAt: string;
+  acceptedAt?: string;
+}
+
+export interface InvitationRequest {
+  contactInfo: string;
+  contactType: "email" | "phone";
 }
 
 export interface Member {
@@ -96,4 +116,10 @@ export interface SearchPartyContextType {
   getSearchPartyListings: (
     searchPartyId: number,
   ) => Promise<SearchPartyListing[]>;
+}
+
+export interface SearchPartyMember {
+    userId: number;
+    role: string;
+    user?: User;
 }
