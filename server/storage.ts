@@ -6,15 +6,8 @@ import {
   searchPartyMembers, type SearchPartyMember, type InsertSearchPartyMember,
   searchPartyListings, type SearchPartyListing, type InsertSearchPartyListing
 } from "@shared/schema";
-import {
-  exampleUsers,
-  exampleApartments,
-  exampleFavorites,
-  exampleSearchParties,
-  exampleSearchPartyMembers,
-  exampleSearchPartyListings,
-  generateMoreApartments
-} from "../client/src/lib/mockData.simple";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -43,202 +36,108 @@ export interface IStorage {
   getSearchPartyListings(searchPartyId: number): Promise<SearchPartyListing[]>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private apartments: Map<number, Apartment>;
-  private favorites: Map<number, Favorite>;
-  private searchParties: Map<number, SearchParty>;
-  private searchPartyMembers: Map<number, SearchPartyMember>;
-  private searchPartyListings: Map<number, SearchPartyListing>;
-
-  private userIdCounter: number;
-  private favoriteIdCounter: number;
-  private searchPartyIdCounter: number;
-  private memberIdCounter: number;
-  private listingIdCounter: number;
-
-  constructor() {
-    this.users = new Map();
-    this.apartments = new Map();
-    this.favorites = new Map();
-    this.searchParties = new Map();
-    this.searchPartyMembers = new Map();
-    this.searchPartyListings = new Map();
-
-    // Set ID counters to be greater than our example data
-    this.userIdCounter = exampleUsers.length + 1;
-    this.favoriteIdCounter = exampleFavorites.length + 1;
-    this.searchPartyIdCounter = exampleSearchParties.length + 1;
-    this.memberIdCounter = exampleSearchPartyMembers.length + 1;
-    this.listingIdCounter = exampleSearchPartyListings.length + 1;
-
-    // Initialize with example data
-
-    // Add users
-    exampleUsers.forEach(user => {
-      this.users.set(user.id, user);
-    });
-
-    // Add apartments
-    exampleApartments.forEach(apt => {
-      this.apartments.set(apt.id, apt);
-    });
-
-    // Add favorites
-    exampleFavorites.forEach(favorite => {
-      this.favorites.set(favorite.id, favorite);
-    });
-
-    // Add search parties
-    exampleSearchParties.forEach(party => {
-      this.searchParties.set(party.id, party);
-    });
-
-    // Add search party members
-    exampleSearchPartyMembers.forEach(member => {
-      this.searchPartyMembers.set(member.id, member);
-    });
-
-    // Add search party listings
-    exampleSearchPartyListings.forEach(listing => {
-      // Add apartment details to the listing
-      const apartment = this.apartments.get(listing.apartmentId);
-      const enrichedListing = {
-        ...listing,
-        apartment
-      } as SearchPartyListing;
-      this.searchPartyListings.set(listing.id, enrichedListing);
-    });
-  }
-
-  // User Methods
+export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.userIdCounter++;
-    const user: User = { 
-      ...insertUser, 
-      id,
-      fullName: insertUser.fullName || null,
-      profileImage: insertUser.profileImage || null
-    };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
 
   async getAllUsers(): Promise<User[]> {
-    return Array.from(this.users.values());
+    return await db.select().from(users);
   }
 
-  // Apartment Methods
   async getApartments(): Promise<Apartment[]> {
-    return Array.from(this.apartments.values());
+    return await db.select().from(apartments);
   }
 
   async getApartment(id: number): Promise<Apartment | undefined> {
-    return this.apartments.get(id);
+    const [apartment] = await db.select().from(apartments).where(eq(apartments.id, id));
+    return apartment || undefined;
   }
 
-  // Favorites Methods
   async getFavoritesByUserId(userId: number): Promise<Favorite[]> {
-    return Array.from(this.favorites.values()).filter(
-      favorite => favorite.userId === userId
-    );
+    return await db.select().from(favorites).where(eq(favorites.userId, userId));
   }
 
   async addFavorite(insertFavorite: InsertFavorite): Promise<Favorite> {
-    const id = this.favoriteIdCounter++;
-    const favorite: Favorite = { ...insertFavorite, id };
-    this.favorites.set(id, favorite);
+    const [favorite] = await db
+      .insert(favorites)
+      .values(insertFavorite)
+      .returning();
     return favorite;
   }
 
   async removeFavorite(id: number): Promise<boolean> {
-    if (!this.favorites.has(id)) {
-      return false;
-    }
-    this.favorites.delete(id);
-    return true;
+    const result = await db.delete(favorites).where(eq(favorites.id, id));
+    return (result.rowCount || 0) > 0;
   }
 
-  // Search Party Methods
   async getSearchPartiesByUserId(userId: number): Promise<SearchParty[]> {
-    // Get all search parties where the user is either the creator or a member
-    const createdParties = Array.from(this.searchParties.values()).filter(
-      party => party.createdById === userId
-    );
+    // Get search parties where user is creator or member
+    const createdParties = await db
+      .select()
+      .from(searchParties)
+      .where(eq(searchParties.createdById, userId));
 
-    // Get search party IDs where user is a member
-    const memberPartyIds = Array.from(this.searchPartyMembers.values())
-      .filter(member => member.userId === userId)
-      .map(member => member.searchPartyId);
+    const memberParties = await db
+      .select({
+        id: searchParties.id,
+        name: searchParties.name,
+        createdById: searchParties.createdById,
+        createdAt: searchParties.createdAt
+      })
+      .from(searchParties)
+      .innerJoin(searchPartyMembers, eq(searchParties.id, searchPartyMembers.searchPartyId))
+      .where(eq(searchPartyMembers.userId, userId));
 
-    // Get those search parties
-    const memberParties = Array.from(this.searchParties.values()).filter(
-      party => memberPartyIds.includes(party.id)
-    );
-
-    // Combine both arrays and remove duplicates
+    // Combine and deduplicate
     const allParties = [...createdParties, ...memberParties];
     return Array.from(new Map(allParties.map(party => [party.id, party])).values());
   }
 
   async createSearchParty(insertSearchParty: InsertSearchParty): Promise<SearchParty> {
-    const id = this.searchPartyIdCounter++;
-    const now = new Date();
-    const searchParty: SearchParty = { 
-      ...insertSearchParty, 
-      id, 
-      createdAt: now 
-    };
-    this.searchParties.set(id, searchParty);
+    const [searchParty] = await db
+      .insert(searchParties)
+      .values(insertSearchParty)
+      .returning();
     return searchParty;
   }
 
   async addSearchPartyMember(insertMember: InsertSearchPartyMember): Promise<SearchPartyMember> {
-    const id = this.memberIdCounter++;
-    const member: SearchPartyMember = { 
-      ...insertMember, 
-      id,
-      role: insertMember.role || null
-    };
-    this.searchPartyMembers.set(id, member);
+    const [member] = await db
+      .insert(searchPartyMembers)
+      .values(insertMember)
+      .returning();
     return member;
   }
 
   async addSearchPartyListing(insertListing: InsertSearchPartyListing): Promise<SearchPartyListing> {
-    const id = this.listingIdCounter++;
-    const now = new Date();
-    const listing: SearchPartyListing = { 
-      ...insertListing, 
-      id, 
-      addedAt: now,
-      notes: insertListing.notes || null
-    };
-    this.searchPartyListings.set(id, listing);
+    const [listing] = await db
+      .insert(searchPartyListings)
+      .values(insertListing)
+      .returning();
     return listing;
   }
 
   async getSearchPartyListings(searchPartyId: number): Promise<SearchPartyListing[]> {
-    return Array.from(this.searchPartyListings.values())
-      .filter(listing => listing.searchPartyId === searchPartyId)
-      .map(listing => {
-        // Add apartment details to the listing
-        const apartment = this.apartments.get(listing.apartmentId);
-        return {
-          ...listing,
-          apartment
-        };
-      });
+    return await db
+      .select()
+      .from(searchPartyListings)
+      .where(eq(searchPartyListings.searchPartyId, searchPartyId));
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
