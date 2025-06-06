@@ -38,7 +38,7 @@ const Profile = () => {
   // Show loading state while Clerk is loading
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center w-full">
         <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
           <p className="text-gray-600 mt-4 text-center">Loading profile...</p>
@@ -67,7 +67,12 @@ const Profile = () => {
 
   // Collections data
   const [collections, setCollections] = useState([
-    { name: "Downtown Favorites", count: 12, icon: Building, color: "bg-blue-500" },
+    {
+      name: "Downtown Favorites",
+      count: 12,
+      icon: Building,
+      color: "bg-blue-500",
+    },
     { name: "Affordable 2BR", count: 8, icon: Home, color: "bg-green-500" },
     { name: "Luxury Options", count: 5, icon: Star, color: "bg-purple-500" },
     { name: "Near Office", count: 7, icon: Map, color: "bg-orange-500" },
@@ -76,7 +81,7 @@ const Profile = () => {
   // Neighborhood preferences
   const [neighborhoodPreferences, setNeighborhoodPreferences] = useState([
     "Near Public Transit",
-    "Walkable Area", 
+    "Walkable Area",
     "Grocery Stores",
     "Parks Nearby",
     "Coffee Shops",
@@ -106,23 +111,41 @@ const Profile = () => {
   };
 
   const settingsOptions = [
-    { icon: Bell, label: "Notifications", description: "Email and push notifications" },
-    { icon: Shield, label: "Privacy", description: "Control your data and visibility" },
-    { icon: CreditCard, label: "Billing", description: "Manage payment methods" },
-    { icon: Settings, label: "General", description: "App preferences and settings" },
+    {
+      icon: Bell,
+      label: "Notifications",
+      description: "Email and push notifications",
+    },
+    {
+      icon: Shield,
+      label: "Privacy",
+      description: "Control your data and visibility",
+    },
+    {
+      icon: CreditCard,
+      label: "Billing",
+      description: "Manage payment methods",
+    },
+    {
+      icon: Settings,
+      label: "General",
+      description: "App preferences and settings",
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 w-full">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile</h1>
-              <p className="text-gray-600">Manage your account and preferences</p>
+              <p className="text-gray-600">
+                Manage your account and preferences
+              </p>
             </div>
-            <Button 
+            <Button
               onClick={handleSave}
               className="bg-primary hover:bg-primary/90 text-white px-6 py-2"
             >
@@ -142,9 +165,14 @@ const Profile = () => {
                   <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2">
                     <div className="relative">
                       <Avatar className="w-20 h-20 border-4 border-white shadow-lg">
-                        <AvatarImage src={user?.imageUrl} alt={user?.fullName || ""} />
+                        <AvatarImage
+                          src={user?.imageUrl}
+                          alt={user?.fullName || ""}
+                        />
                         <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-lg font-semibold">
-                          {user?.firstName?.charAt(0) || user?.emailAddresses[0]?.emailAddress?.charAt(0) || "U"}
+                          {user?.firstName?.charAt(0) ||
+                            user?.emailAddresses[0]?.emailAddress?.charAt(0) ||
+                            "U"}
                         </AvatarFallback>
                       </Avatar>
                       <button className="absolute -bottom-1 -right-1 bg-white p-2 rounded-full border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
@@ -153,12 +181,14 @@ const Profile = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="mt-12 mb-6">
                   <h2 className="text-xl font-bold text-gray-900 mb-1">
                     {user?.fullName || user?.firstName || "User"}
                   </h2>
-                  <p className="text-gray-600 text-sm mb-2">{user?.emailAddresses[0]?.emailAddress}</p>
+                  <p className="text-gray-600 text-sm mb-2">
+                    {user?.emailAddresses[0]?.emailAddress}
+                  </p>
                   <div className="flex items-center justify-center text-gray-500 text-sm">
                     <MapPin size={14} className="mr-1" />
                     {formData.location}
@@ -196,8 +226,12 @@ const Profile = () => {
                         <option.icon size={16} className="text-gray-600" />
                       </div>
                       <div className="text-left">
-                        <div className="text-sm font-medium text-gray-900">{option.label}</div>
-                        <div className="text-xs text-gray-500">{option.description}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {option.label}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {option.description}
+                        </div>
                       </div>
                     </div>
                     <ChevronRight size={16} className="text-gray-400" />
@@ -212,7 +246,9 @@ const Profile = () => {
             {/* Personal Information */}
             <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-900">Personal Information</h3>
+                <h3 className="text-xl font-bold text-gray-900">
+                  Personal Information
+                </h3>
                 <Button variant="outline" size="sm" className="border-gray-200">
                   <Edit size={14} className="mr-2" />
                   Edit
@@ -274,7 +310,9 @@ const Profile = () => {
             {/* Housing Preferences */}
             <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-900">Housing Preferences</h3>
+                <h3 className="text-xl font-bold text-gray-900">
+                  Housing Preferences
+                </h3>
                 <Button variant="outline" size="sm" className="border-gray-200">
                   <Settings size={14} className="mr-2" />
                   Customize
@@ -286,22 +324,30 @@ const Profile = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   <div className="bg-blue-50 rounded-2xl p-4 text-center">
                     <Building className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-                    <div className="text-lg font-bold text-gray-900">{apartmentPreferences.minBedrooms}</div>
+                    <div className="text-lg font-bold text-gray-900">
+                      {apartmentPreferences.minBedrooms}
+                    </div>
                     <div className="text-xs text-gray-600">Min Bedrooms</div>
                   </div>
                   <div className="bg-green-50 rounded-2xl p-4 text-center">
                     <Home className="w-6 h-6 text-green-600 mx-auto mb-2" />
-                    <div className="text-lg font-bold text-gray-900">{apartmentPreferences.minBathrooms}</div>
+                    <div className="text-lg font-bold text-gray-900">
+                      {apartmentPreferences.minBathrooms}
+                    </div>
                     <div className="text-xs text-gray-600">Min Bathrooms</div>
                   </div>
                   <div className="bg-purple-50 rounded-2xl p-4 text-center">
                     <DollarSign className="w-6 h-6 text-purple-600 mx-auto mb-2" />
-                    <div className="text-lg font-bold text-gray-900">${apartmentPreferences.maxPrice}</div>
+                    <div className="text-lg font-bold text-gray-900">
+                      ${apartmentPreferences.maxPrice}
+                    </div>
                     <div className="text-xs text-gray-600">Max Budget</div>
                   </div>
                   <div className="bg-orange-50 rounded-2xl p-4 text-center">
                     <Heart className="w-6 h-6 text-orange-600 mx-auto mb-2" />
-                    <div className="text-lg font-bold text-gray-900">{apartmentPreferences.petFriendly ? 'Yes' : 'No'}</div>
+                    <div className="text-lg font-bold text-gray-900">
+                      {apartmentPreferences.petFriendly ? "Yes" : "No"}
+                    </div>
                     <div className="text-xs text-gray-600">Pet Friendly</div>
                   </div>
                 </div>
@@ -340,7 +386,9 @@ const Profile = () => {
                       >
                         {preference}
                         <button
-                          onClick={() => handleRemoveNeighborhoodPreference(preference)}
+                          onClick={() =>
+                            handleRemoveNeighborhoodPreference(preference)
+                          }
                           className="ml-2 hover:text-red-500"
                         >
                           <X size={12} />
@@ -355,7 +403,9 @@ const Profile = () => {
             {/* Collections */}
             <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-900">My Collections</h3>
+                <h3 className="text-xl font-bold text-gray-900">
+                  My Collections
+                </h3>
                 <Button variant="outline" size="sm" className="border-gray-200">
                   <Plus size={14} className="mr-2" />
                   New Collection
@@ -370,15 +420,24 @@ const Profile = () => {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
-                        <div className={`w-10 h-10 ${collection.color} rounded-xl flex items-center justify-center mr-3`}>
+                        <div
+                          className={`w-10 h-10 ${collection.color} rounded-xl flex items-center justify-center mr-3`}
+                        >
                           <collection.icon size={18} className="text-white" />
                         </div>
                         <div>
-                          <h4 className="font-medium text-gray-900">{collection.name}</h4>
-                          <p className="text-sm text-gray-500">{collection.count} listings</p>
+                          <h4 className="font-medium text-gray-900">
+                            {collection.name}
+                          </h4>
+                          <p className="text-sm text-gray-500">
+                            {collection.count} listings
+                          </p>
                         </div>
                       </div>
-                      <ChevronRight size={16} className="text-gray-400 group-hover:text-gray-600" />
+                      <ChevronRight
+                        size={16}
+                        className="text-gray-400 group-hover:text-gray-600"
+                      />
                     </div>
                   </div>
                 ))}
@@ -388,7 +447,9 @@ const Profile = () => {
             {/* Search Parties */}
             <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-900">Search Parties</h3>
+                <h3 className="text-xl font-bold text-gray-900">
+                  Search Parties
+                </h3>
                 <Button variant="outline" size="sm" className="border-gray-200">
                   <Users size={14} className="mr-2" />
                   Create Party
@@ -407,9 +468,12 @@ const Profile = () => {
                           <Users size={18} className="text-white" />
                         </div>
                         <div>
-                          <h4 className="font-medium text-gray-900">{party.name}</h4>
+                          <h4 className="font-medium text-gray-900">
+                            {party.name}
+                          </h4>
                           <p className="text-sm text-gray-500">
-                            Created {new Date(party.createdAt).toLocaleDateString()}
+                            Created{" "}
+                            {new Date(party.createdAt).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
