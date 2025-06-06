@@ -10,12 +10,14 @@ const Favorites = () => {
   const { searchParties } = useSearchParty();
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <section className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 w-full">
       <div className="container mx-auto px-6 py-8">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Favorites</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Your Favorites
+            </h1>
             <p className="text-gray-600">Save and share apartments you love</p>
           </div>
           {favorites.length > 0 && (
@@ -35,7 +37,10 @@ const Favorites = () => {
               <Skeleton className="h-8 w-48 mb-4" />
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[1, 2, 3].map((_, index) => (
-                  <div key={index} className="bg-gray-50 rounded-lg overflow-hidden">
+                  <div
+                    key={index}
+                    className="bg-gray-50 rounded-lg overflow-hidden"
+                  >
                     <Skeleton className="w-full h-48" />
                     <div className="p-4">
                       <Skeleton className="h-6 w-32 mb-2" />
@@ -57,7 +62,8 @@ const Favorites = () => {
                 No Favorites Yet
               </h3>
               <p className="text-gray-600 mb-6">
-                Start saving apartments you love and they'll appear here. Browse our listings to find your perfect place.
+                Start saving apartments you love and they'll appear here. Browse
+                our listings to find your perfect place.
               </p>
               <Button
                 onClick={() => (window.location.href = "/listings")}

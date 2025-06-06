@@ -96,28 +96,37 @@ const SearchParty = () => {
   ];
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <section className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 w-full">
       <div className="container mx-auto px-6 py-8">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Search Parties</h1>
-            <p className="text-gray-600">Collaborate with friends to find the perfect place</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Search Parties
+            </h1>
+            <p className="text-gray-600">
+              Collaborate with friends to find the perfect place
+            </p>
           </div>
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="mt-4 sm:mt-0 rounded-lg bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5">
+              <Button className="mt-4 sm:mt-0 rounded-full bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5">
                 <Plus className="mr-2 h-4 w-4" />
                 Create New Party
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-white border border-gray-200 rounded-xl shadow-lg">
               <DialogHeader>
-                <DialogTitle className="text-xl font-bold text-gray-900">Create a Search Party</DialogTitle>
+                <DialogTitle className="text-xl font-bold text-gray-900">
+                  Create a Search Party
+                </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleCreateParty} className="space-y-6 mt-4">
                 <div>
-                  <label htmlFor="party-name" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="party-name"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Search Party Name
                   </label>
                   <Input
@@ -130,7 +139,10 @@ const SearchParty = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="invites" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="invites"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Invite Members (Email or Phone)
                   </label>
                   <Textarea
@@ -145,7 +157,7 @@ const SearchParty = () => {
 
                 <Button
                   type="submit"
-                  className="w-full bg-orange-400 hover:bg-orange-500 text-white py-3 rounded-lg font-medium transition-colors"
+                  className="w-full bg-orange-400 hover:bg-orange-500 text-white py-3 rounded-full font-medium transition-colors"
                 >
                   Create Search Party
                 </Button>
@@ -156,7 +168,7 @@ const SearchParty = () => {
 
         {isLoading ? (
           <div className="space-y-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-200">
               <Skeleton className="h-8 w-48 mb-4" />
               <Skeleton className="h-4 w-32 mb-6" />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -180,16 +192,16 @@ const SearchParty = () => {
               return (
                 <div
                   key={searchParty.id}
-                  className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+                  className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden"
                 >
                   {/* Header Section */}
-                  <div className="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-4">
+                  <div className="bg-gradient-to-r from-orange-400 to-pink-500 px-6 py-4">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                       <div className="text-white">
                         <h2 className="text-xl font-bold mb-1">
                           {searchParty.name}
                         </h2>
-                        <div className="text-blue-100 text-sm">
+                        <div className="text-orange-100 text-sm">
                           {listingCount} listings • Updated {daysAgo} days ago
                         </div>
                       </div>
@@ -197,7 +209,7 @@ const SearchParty = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-lg"
+                          className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-full"
                           onClick={() => handleOpenChat(searchParty)}
                         >
                           <MessageCircle className="h-4 w-4 mr-1" />
@@ -206,7 +218,7 @@ const SearchParty = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-lg"
+                          className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-full"
                         >
                           <Calendar className="h-4 w-4 mr-1" />
                           Schedule
@@ -216,7 +228,6 @@ const SearchParty = () => {
                   </div>
 
                   <div className="p-6">
-
                     {/* Members section */}
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center">
@@ -237,7 +248,7 @@ const SearchParty = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-sm text-gray-600 hover:bg-gray-100 rounded-lg px-3 py-1"
+                        className="text-sm text-gray-600 hover:bg-gray-100 rounded-full px-3 py-1"
                       >
                         <Users className="h-4 w-4 mr-1" />
                         Manage
@@ -337,7 +348,8 @@ const SearchParty = () => {
                                   </h4>
                                   <div className="flex items-center text-gray-600 text-sm mb-2">
                                     <span className="font-medium">
-                                      {apartment.bedrooms} bed • {apartment.bathrooms} bath
+                                      {apartment.bedrooms} bed •{" "}
+                                      {apartment.bathrooms} bath
                                     </span>
                                     <span className="mx-2">•</span>
                                     <span>
@@ -362,7 +374,7 @@ const SearchParty = () => {
                     <div className="flex justify-center mt-6 pt-4 border-t border-gray-100">
                       <Button
                         variant="outline"
-                        className="text-gray-700 border-gray-300 hover:bg-gray-50 rounded-lg px-6 py-2"
+                        className="text-gray-700 border-gray-300 hover:bg-gray-50 rounded-full px-6 py-2"
                       >
                         View All {listingCount} Listings
                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -383,8 +395,8 @@ const SearchParty = () => {
                 No Search Parties Yet
               </h3>
               <p className="text-gray-600 mb-6">
-                Create your first search party to start collaborating with friends
-                and family on finding the perfect apartment.
+                Create your first search party to start collaborating with
+                friends and family on finding the perfect apartment.
               </p>
               <Button
                 onClick={() => setCreateDialogOpen(true)}
