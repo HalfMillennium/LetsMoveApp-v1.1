@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAuth } from '../context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 export default function SignUp() {
@@ -11,7 +10,6 @@ export default function SignUp() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signUp } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
@@ -20,7 +18,17 @@ export default function SignUp() {
     setLoading(true);
     
     try {
-      await signUp(email, password, firstName, lastName);
+      // Simple registration simulation
+      const mockUser = {
+        id: '1',
+        email,
+        firstName: firstName || email.split('@')[0],
+        lastName,
+        profileImage: `https://i.pravatar.cc/150?u=${email}`,
+      };
+      
+      localStorage.setItem('auth_user', JSON.stringify(mockUser));
+      
       toast({
         title: "Account created!",
         description: "Welcome to letsmove. Your account has been created successfully.",
