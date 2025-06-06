@@ -1,4 +1,4 @@
-import { useUser } from '@clerk/clerk-react';
+import { useUser } from '../context/AuthContext';
 import { useLocation } from 'wouter';
 import { useEffect } from 'react';
 

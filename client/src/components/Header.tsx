@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { Menu, Search, CircleUserRound, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useUser, useClerk } from "@clerk/clerk-react";
+import { useUser, useClerk } from "../context/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import appLogo from "../assets/searchparty_logo.png";
 
