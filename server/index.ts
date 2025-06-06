@@ -1,10 +1,14 @@
 import express, { type Request, Response, NextFunction } from "express";
+import { ClerkExpressWithAuth } from "@clerk/clerk-sdk-node";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Add Clerk middleware to populate req.auth
+app.use(ClerkExpressWithAuth());
 
 app.use((req, res, next) => {
   const start = Date.now();
