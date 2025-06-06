@@ -15,13 +15,16 @@ import { useSearchParty } from "../context/SearchPartyContext";
 
 interface SearchPartyCardProps {
   searchParty: SearchParty;
+  currentUser?: any;
 }
 
-const SearchPartyCard = ({ searchParty }: SearchPartyCardProps) => {
+const SearchPartyCard = ({ searchParty, currentUser }: SearchPartyCardProps) => {
   const [email, setEmail] = useState("");
-  //const { addMemberToParty } = useSearchParty();
+  const { inviteToSearchParty, removeMemberFromSearchParty } = useSearchParty();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  
+  const isOwner = searchParty.userRole === 'owner';
 
   // Mock data for shared favorites
   const sharedListings = searchParty.listings || [];
