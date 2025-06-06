@@ -1,16 +1,14 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { clerkMiddleware, requireAuth } from "@clerk/express";
+import { clerkMiddleware, requireAuth, getAuth } from "@clerk/express";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create HTTP server
   const httpServer = createServer(app);
 
   // Add Clerk authentication middleware
-  app.use(clerkMiddleware({
-    secretKey: process.env.CLERK_SECRET_KEY!,
-  }));
+  app.use(clerkMiddleware());
 
   const endpoint = "https://production-sfo.browserless.io/chromium/bql";
   const token = process.env.VITE_BROWSERLESS_API_KEY || "";
