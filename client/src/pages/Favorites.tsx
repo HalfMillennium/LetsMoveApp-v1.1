@@ -3,95 +3,131 @@ import ApartmentCard from "../components/ApartmentCard";
 import { useSearchParty } from "../context/SearchPartyContext";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Heart, Share, Home, ArrowRight } from "lucide-react";
 
 const Favorites = () => {
   const { favorites, isLoading } = useFavorites();
   const { searchParties } = useSearchParty();
 
   return (
-    <div className="py-8 bg-[#FFF9F2] flex flex-1">
-      <div className="container mx-auto px-4">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-[#1A4A4A]">Your Favorites</h2>
-          <p className="text-[#1A4A4A]/70 mt-2">
-            Save your favorite apartments and share them with your search party
-          </p>
+    <section className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="container mx-auto px-6 py-8">
+        {/* Header Section */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Favorites</h1>
+            <p className="text-gray-600">Save and share apartments you love</p>
+          </div>
+          {favorites.length > 0 && (
+            <Button
+              onClick={() => (window.location.href = "/listings")}
+              className="mt-4 sm:mt-0 rounded-lg bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5"
+            >
+              <Home className="mr-2 h-4 w-4" />
+              Browse More
+            </Button>
+          )}
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map((_, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-lg overflow-hidden shadow-md"
-              >
-                <Skeleton className="w-full h-64" />
-                <div className="p-4">
-                  <Skeleton className="h-6 w-32 mb-2" />
-                  <Skeleton className="h-4 w-full mb-2" />
-                  <Skeleton className="h-4 w-3/4 mb-3" />
-                  <div className="flex gap-2 mb-3">
-                    <Skeleton className="h-6 w-20" />
-                    <Skeleton className="h-6 w-20" />
-                    <Skeleton className="h-6 w-20" />
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <Skeleton className="h-8 w-48 mb-4" />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3].map((_, index) => (
+                  <div key={index} className="bg-gray-50 rounded-lg overflow-hidden">
+                    <Skeleton className="w-full h-48" />
+                    <div className="p-4">
+                      <Skeleton className="h-6 w-32 mb-2" />
+                      <Skeleton className="h-4 w-full mb-2" />
+                      <Skeleton className="h-4 w-3/4" />
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         ) : favorites.length === 0 ? (
-          <div className="glass-card rounded-xl border border-white/40 p-6 rounded-lg shadow-md text-center">
-            <h3 className="text-xl font-semibold text-[#1A4A4A] mb-3">
-              No Favorites Yet
-            </h3>
-            <p className="text-[#1A4A4A]/70 mb-4">
-              Start saving apartments you love and they'll appear here.
-            </p>
-            <Button
-              onClick={() => (window.location.href = "/listings")}
-              className="bg-[#E9927E] text-white hover:bg-[#E9927E]/90 rounded-full"
-            >
-              Browse Apartments
-            </Button>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+            <div className="max-w-md mx-auto">
+              <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Heart className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                No Favorites Yet
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Start saving apartments you love and they'll appear here. Browse our listings to find your perfect place.
+              </p>
+              <Button
+                onClick={() => (window.location.href = "/listings")}
+                className="bg-orange-400 hover:bg-orange-500 text-white rounded-lg px-6 py-2.5 font-medium"
+              >
+                <Home className="mr-2 h-4 w-4" />
+                Browse Apartments
+              </Button>
+            </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {favorites.map((favorite) => (
-              <ApartmentCard
-                key={favorite.id}
-                apartment={favorite.apartment!}
-              />
-            ))}
+          <div className="space-y-6">
+            {/* Favorites Grid */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900">
+                  Saved Apartments ({favorites.length})
+                </h2>
+                <div className="flex items-center text-sm text-gray-600">
+                  <Heart className="h-4 w-4 mr-1 text-red-500" />
+                  <span>Your favorites</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {favorites.map((favorite) => (
+                  <ApartmentCard
+                    key={favorite.id}
+                    apartment={favorite.apartment!}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
         {searchParties.length > 0 && favorites.length > 0 && (
-          <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold text-[#1A4A4A] mb-3">
-              Share with Search Party
-            </h3>
-            <p className="text-[#1A4A4A]/70 mb-4">
-              Share your favorites with your search party members to collaborate
-              on finding the perfect apartment.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">
+                  Share with Search Parties
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Collaborate with your search party members
+                </p>
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <Share className="h-4 w-4 mr-1 text-blue-500" />
+                <span>Collaboration</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {searchParties.map((party) => (
                 <Button
                   key={party.id}
                   variant="outline"
-                  className="border-[#C9DAD0] hover:bg-[#C9DAD0]/10"
+                  className="border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg p-3 h-auto flex items-center justify-between"
                   onClick={() =>
                     (window.location.href = `/search-party/${party.id}`)
                   }
                 >
-                  {party.name}
+                  <span className="font-medium">{party.name}</span>
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               ))}
             </div>
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

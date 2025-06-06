@@ -96,57 +96,48 @@ const SearchParty = () => {
   ];
 
   return (
-    <section className="py-8 bg-[#FFF9F2] flex flex-1">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-6">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-[#1A4A4A]">
-              Your Search Parties
-            </h2>
-            <p className="text-[#1A4A4A]/70 mt-2">
-              View your active search parties and their listings.
-            </p>
+    <section className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="container mx-auto px-6 py-8">
+        {/* Header Section */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Search Parties</h1>
+            <p className="text-gray-600">Collaborate with friends to find the perfect place</p>
           </div>
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="rounded-full bg-[#E9927E] hover:bg-[#E9927E]/90">
+              <Button className="mt-4 sm:mt-0 rounded-lg bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5">
                 <Plus className="mr-2 h-4 w-4" />
-                Create New
+                Create New Party
               </Button>
             </DialogTrigger>
-            <DialogContent className="glass-card bg-white/60 backdrop-blur-md border border-white/40">
+            <DialogContent className="bg-white border border-gray-200 rounded-xl shadow-lg">
               <DialogHeader>
-                <DialogTitle>Create a Search Party</DialogTitle>
+                <DialogTitle className="text-xl font-bold text-gray-900">Create a Search Party</DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleCreateParty} className="space-y-4 mt-4">
+              <form onSubmit={handleCreateParty} className="space-y-6 mt-4">
                 <div>
-                  <label
-                    htmlFor="party-name"
-                    className="block text-[#1A4A4A] text-sm mb-2"
-                  >
+                  <label htmlFor="party-name" className="block text-sm font-medium text-gray-700 mb-2">
                     Search Party Name
                   </label>
                   <Input
                     id="party-name"
                     value={newPartyName}
                     onChange={(e) => setNewPartyName(e.target.value)}
-                    className="w-full px-4 py-2 bg-white/50 border border-white/40 focus:border-[#E9927E]/70 focus:ring-[#E9927E]/30 rounded-lg"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400"
                     placeholder="e.g., NYC Summer 2025 Hunt"
                   />
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="invites"
-                    className="block text-[#1A4A4A] text-sm mb-2"
-                  >
+                  <label htmlFor="invites" className="block text-sm font-medium text-gray-700 mb-2">
                     Invite Members (Email or Phone)
                   </label>
                   <Textarea
                     id="invites"
                     value={invites}
                     onChange={(e) => setInvites(e.target.value)}
-                    className="w-full px-4 py-2 bg-white/50 border border-white/40 focus:border-[#E9927E]/70 focus:ring-[#E9927E]/30 rounded-lg"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400"
                     placeholder="Enter email addresses or phone numbers separated by commas"
                     rows={3}
                   />
@@ -154,7 +145,7 @@ const SearchParty = () => {
 
                 <Button
                   type="submit"
-                  className="w-full bg-[#E9927E] text-white py-3 rounded-full font-medium hover:bg-[#E9927E]/90 transition-colors"
+                  className="w-full bg-orange-400 hover:bg-orange-500 text-white py-3 rounded-lg font-medium transition-colors"
                 >
                   Create Search Party
                 </Button>
@@ -165,8 +156,15 @@ const SearchParty = () => {
 
         {isLoading ? (
           <div className="space-y-6">
-            <Skeleton className="h-64 w-full rounded-xl" />
-            <Skeleton className="h-64 w-full rounded-xl" />
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <Skeleton className="h-8 w-48 mb-4" />
+              <Skeleton className="h-4 w-32 mb-6" />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Skeleton className="h-48 rounded-lg" />
+                <Skeleton className="h-48 rounded-lg" />
+                <Skeleton className="h-48 rounded-lg" />
+              </div>
+            </div>
           </div>
         ) : searchParties.length > 0 ? (
           <div className="space-y-6">
@@ -182,23 +180,24 @@ const SearchParty = () => {
               return (
                 <div
                   key={searchParty.id}
-                  className="glass-card rounded-xl overflow-hidden border border-white/40"
+                  className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
                 >
-                  <div className="p-6">
-                    <div className="flex justify-between items-center mb-4">
-                      <div>
-                        <h2 className="text-xl font-semibold text-[#1A4A4A]">
+                  {/* Header Section */}
+                  <div className="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                      <div className="text-white">
+                        <h2 className="text-xl font-bold mb-1">
                           {searchParty.name}
                         </h2>
-                        <div className="text-sm text-gray-600 mt-1">
+                        <div className="text-blue-100 text-sm">
                           {listingCount} listings • Updated {daysAgo} days ago
                         </div>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 mt-3 sm:mt-0">
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border-blue-500 text-blue-500 hover:bg-blue-50 rounded-full"
+                          className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-lg"
                           onClick={() => handleOpenChat(searchParty)}
                         >
                           <MessageCircle className="h-4 w-4 mr-1" />
@@ -207,50 +206,58 @@ const SearchParty = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border-[#1A4A4A] hover:bg-white/80 text-[#1A4A4A] rounded-full"
+                          className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-lg"
                         >
                           <Calendar className="h-4 w-4 mr-1" />
                           Schedule
                         </Button>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="p-6">
 
                     {/* Members section */}
-                    <div className="flex items-center mb-5">
-                      <div className="flex -space-x-2 mr-3">
-                        {mockUserImages.slice(0, 4).map((img, idx) => (
-                          <img
-                            key={idx}
-                            src={img}
-                            alt={`Member ${idx + 1}`}
-                            className="w-8 h-8 rounded-full border-2 border-white/90 object-cover shadow-sm"
-                          />
-                        ))}
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center">
+                        <div className="flex -space-x-2 mr-3">
+                          {mockUserImages.slice(0, 4).map((img, idx) => (
+                            <img
+                              key={idx}
+                              src={img}
+                              alt={`Member ${idx + 1}`}
+                              className="w-8 h-8 rounded-full border-2 border-white object-cover shadow-sm"
+                            />
+                          ))}
+                        </div>
+                        <span className="text-sm text-gray-600 font-medium">
+                          {mockUserImages.length} members
+                        </span>
                       </div>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-xs text-gray-600 hover:bg-gray-100/50 rounded-full px-3"
+                        className="text-sm text-gray-600 hover:bg-gray-100 rounded-lg px-3 py-1"
                       >
-                        <Users className="h-3 w-3 mr-1" />
-                        Manage Members
+                        <Users className="h-4 w-4 mr-1" />
+                        Manage
                       </Button>
                     </div>
 
                     {/* Recently Added Section */}
                     <div className="mb-4">
-                      <h3 className="text-sm font-medium text-gray-700 mb-3">
-                        Recently Added
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Recent Listings
                       </h3>
                     </div>
 
-                    {/* Listings grid with taller cards */}
+                    {/* Listings grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {listings.length > 0
                         ? listings.slice(0, 3).map((listing, idx) => (
                             <div
                               key={idx}
-                              className="rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
+                              className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:shadow-md transition-all cursor-pointer group"
                               onClick={() =>
                                 handleApartmentSelect(listing.apartment!)
                               }
@@ -262,34 +269,34 @@ const SearchParty = () => {
                                     `https://source.unsplash.com/random/300x200/?apartment,${idx}`
                                   }
                                   alt="Apartment"
-                                  className="w-full h-40 object-cover"
+                                  className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-200"
                                 />
-                                <div className="absolute top-2 right-2 bg-white/90 text-gray-700 text-xs font-medium px-2 py-1 rounded-full">
+                                <div className="absolute top-3 right-3 bg-white/95 text-gray-900 text-sm font-semibold px-3 py-1 rounded-full shadow-sm">
                                   $
                                   {listing.apartment?.price || 1500 + idx * 300}
                                   /mo
                                 </div>
                               </div>
-                              <div className="p-3 bg-white">
-                                <h4 className="font-medium text-gray-800 mb-1 line-clamp-1">
+                              <div className="p-4 bg-white">
+                                <h4 className="font-semibold text-gray-900 mb-2 line-clamp-1">
                                   {listing.apartment?.title ||
                                     `Apartment ${idx + 1}`}
                                 </h4>
-                                <div className="flex items-center text-gray-600 text-sm mb-1">
+                                <div className="flex items-center text-gray-600 text-sm mb-2">
                                   <span className="font-medium">
                                     {listing.apartment?.bedrooms ||
                                       (idx % 3) + 1}{" "}
-                                    bed, {listing.apartment?.bathrooms || 1}{" "}
+                                    bed • {listing.apartment?.bathrooms || 1}{" "}
                                     bath
                                   </span>
-                                  <span className="mx-1">•</span>
+                                  <span className="mx-2">•</span>
                                   <span>
                                     {listing.apartment?.squareFeet ||
                                       800 + idx * 100}{" "}
                                     sq ft
                                   </span>
                                 </div>
-                                <div className="text-gray-500 text-sm line-clamp-1">
+                                <div className="text-gray-500 text-sm mb-3 line-clamp-1">
                                   {listing.apartment?.location ||
                                     (idx === 0
                                       ? "New York, NY"
@@ -298,7 +305,7 @@ const SearchParty = () => {
                                         : "Jersey City, NJ")}
                                 </div>
                                 {listing.notes && (
-                                  <div className="mt-2 text-xs text-gray-600 italic line-clamp-2 bg-gray-50 p-2 rounded">
+                                  <div className="mt-3 text-xs text-gray-600 italic line-clamp-2 bg-gray-50 p-3 rounded-lg">
                                     "{listing.notes}"
                                   </div>
                                 )}
@@ -311,38 +318,37 @@ const SearchParty = () => {
                             return (
                               <div
                                 key={idx}
-                                className="rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
+                                className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:shadow-md transition-all cursor-pointer group"
                                 onClick={() => handleApartmentSelect(apartment)}
                               >
                                 <div className="relative">
                                   <img
                                     src={apartment.images[0]}
                                     alt={apartment.title}
-                                    className="w-full h-40 object-cover"
+                                    className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-200"
                                   />
-                                  <div className="absolute top-2 right-2 bg-white/90 text-gray-700 text-xs font-medium px-2 py-1 rounded-full">
+                                  <div className="absolute top-3 right-3 bg-white/95 text-gray-900 text-sm font-semibold px-3 py-1 rounded-full shadow-sm">
                                     ${apartment.price}/mo
                                   </div>
                                 </div>
-                                <div className="p-3">
-                                  <h4 className="font-medium text-gray-800 mb-1 line-clamp-1">
+                                <div className="p-4 bg-white">
+                                  <h4 className="font-semibold text-gray-900 mb-2 line-clamp-1">
                                     {apartment.title}
                                   </h4>
-                                  <div className="flex items-center text-gray-600 text-sm mb-1">
+                                  <div className="flex items-center text-gray-600 text-sm mb-2">
                                     <span className="font-medium">
-                                      {apartment.bedrooms} bed,{" "}
-                                      {apartment.bathrooms} bath
+                                      {apartment.bedrooms} bed • {apartment.bathrooms} bath
                                     </span>
-                                    <span className="mx-1">•</span>
+                                    <span className="mx-2">•</span>
                                     <span>
                                       {apartment.squareFeet || 800 + idx * 100}{" "}
                                       sq ft
                                     </span>
                                   </div>
-                                  <div className="text-gray-500 text-sm line-clamp-1">
+                                  <div className="text-gray-500 text-sm mb-3 line-clamp-1">
                                     {apartment.location}
                                   </div>
-                                  <div className="mt-2 bg-gray-50 py-1 px-2 text-xs text-gray-500 rounded flex justify-between items-center">
+                                  <div className="flex items-center justify-between text-xs text-gray-500 bg-gray-50 py-2 px-3 rounded-lg">
                                     <span>Added 2 days ago</span>
                                     <ExternalLink className="h-3 w-3" />
                                   </div>
@@ -352,39 +358,42 @@ const SearchParty = () => {
                           })}
                     </div>
 
-                    {/* View all listings button */}
-                    {(listings.length > 3 || listingCount > 3) && (
-                      <div className="mt-4 text-center">
-                        <Button
-                          variant="ghost"
-                          className="text-[#E9927E] hover:bg-[#E9927E]/10"
-                        >
-                          View all {listingCount} listings
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </div>
-                    )}
+                    {/* View All button */}
+                    <div className="flex justify-center mt-6 pt-4 border-t border-gray-100">
+                      <Button
+                        variant="outline"
+                        className="text-gray-700 border-gray-300 hover:bg-gray-50 rounded-lg px-6 py-2"
+                      >
+                        View All {listingCount} Listings
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               );
             })}
           </div>
         ) : (
-          <div className="glass-card rounded-xl p-6 border border-white/40">
-            <h3 className="text-xl font-semibold text-[#1A4A4A] mb-4">
-              No Search Parties Yet
-            </h3>
-            <p className="text-[#1A4A4A] mb-6">
-              You don't have any search parties. Create one to start
-              collaborating with friends and roommates on your apartment hunt.
-            </p>
-            <Button
-              onClick={() => setCreateDialogOpen(true)}
-              className="bg-[#E9927E] hover:bg-[#E9927E]/90 text-white rounded-full"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Create Your First Search Party
-            </Button>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+            <div className="max-w-md mx-auto">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                No Search Parties Yet
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Create your first search party to start collaborating with friends
+                and family on finding the perfect apartment.
+              </p>
+              <Button
+                onClick={() => setCreateDialogOpen(true)}
+                className="bg-orange-400 hover:bg-orange-500 text-white rounded-lg px-6 py-2.5 font-medium"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Create Your First Search Party
+              </Button>
+            </div>
           </div>
         )}
       </div>
