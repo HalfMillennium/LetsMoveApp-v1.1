@@ -1,16 +1,24 @@
-import { useUser } from '../context/AuthContext';
 import { useLocation } from 'wouter';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isLoaded, isSignedIn } = useUser();
+  const [user, setUser] = useState<any>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [, setLocation] = useLocation();
 
-  // Wait for Clerk to finish loading
+  useEffect(() => {
+    const storedUser = localStorage.getItem('auth_user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    setIsLoaded(true);
+  }, []);
+
+  // Wait for auth check to complete
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -24,12 +32,12 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   // Redirect unauthenticated users to sign in
   useEffect(() => {
-    if (isLoaded && !isSignedIn) {
+    if (isLoaded && !user) {
       setLocation('/sign-in');
     }
-  }, [isLoaded, isSignedIn, setLocation]);
+  }, [isLoaded, user, setLocation]);
 
-  if (!isSignedIn) {
+  if (!user) {
     return null;
   }
 

@@ -2,14 +2,12 @@ import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAuth } from '../context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
@@ -18,7 +16,16 @@ export default function SignIn() {
     setLoading(true);
     
     try {
-      await signIn(email, password);
+      // Simple authentication simulation
+      const mockUser = {
+        id: '1',
+        email,
+        firstName: email.split('@')[0],
+        profileImage: `https://i.pravatar.cc/150?u=${email}`,
+      };
+      
+      localStorage.setItem('auth_user', JSON.stringify(mockUser));
+      
       toast({
         title: "Welcome back!",
         description: "You have successfully signed in.",

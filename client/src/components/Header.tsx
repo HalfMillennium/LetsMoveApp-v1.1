@@ -2,15 +2,30 @@ import { Link, useLocation } from "wouter";
 import { Menu, Search, CircleUserRound, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useUser, useClerk } from "../context/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import appLogo from "../assets/searchparty_logo.png";
+import { useState, useEffect } from "react";
 
 const Header = () => {
   const [location, setLocation] = useLocation();
-  const { user, isSignedIn } = useUser();
-  const { signOut } = useClerk();
+  const [user, setUser] = useState<any>(null);
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('auth_user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setIsSignedIn(true);
+    }
+  }, []);
+
+  const signOut = () => {
+    localStorage.removeItem('auth_user');
+    setUser(null);
+    setIsSignedIn(false);
+    setLocation('/');
+  };
 
   const isActive = (path: string) => location === path;
 
