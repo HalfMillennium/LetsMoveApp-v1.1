@@ -11,6 +11,7 @@ interface MapBackgroundProps {
 const MapBackground = ({ children, variant = "map" }: MapBackgroundProps) => {
   return (
     <div className="flex flex-col flex-1">
+      <Header />
       <div
         className="flex-1 flex flex-col justify-center items-center bg-cover bg-center"
         style={{
@@ -20,7 +21,6 @@ const MapBackground = ({ children, variant = "map" }: MapBackgroundProps) => {
           backgroundColor: variant === "cityscape" ? undefined : "#FFF5E6",
         }}
       >
-        <Header />
         <div className="w-full">{children}</div>
       </div>
     </div>

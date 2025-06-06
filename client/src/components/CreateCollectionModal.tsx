@@ -1,8 +1,28 @@
 import React, { useState } from "react";
-import { Check, X, Plus, Home, Building, MapPin, Trees, Sparkles, Briefcase, Utensils, ShoppingBag, Globe } from "lucide-react";
+import {
+  Check,
+  X,
+  Plus,
+  Home,
+  Building,
+  MapPin,
+  Trees,
+  Sparkles,
+  Briefcase,
+  Utensils,
+  ShoppingBag,
+  Globe,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const COLLECTION_ICONS = [
   { icon: <Home className="h-6 w-6" />, name: "Home" },
@@ -28,7 +48,9 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
   onCreateCollection,
 }) => {
   const [collectionName, setCollectionName] = useState("");
-  const [selectedIconIndex, setSelectedIconIndex] = useState<number | null>(null);
+  const [selectedIconIndex, setSelectedIconIndex] = useState<number | null>(
+    null,
+  );
 
   const handleCreate = () => {
     if (collectionName.trim() && selectedIconIndex !== null) {
@@ -102,12 +124,17 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
         </div>
 
         <DialogFooter className="flex justify-between sm:justify-between">
-          <Button variant="outline" onClick={handleCancel}>
+          <Button
+            className="rounded-full"
+            variant="outline"
+            onClick={handleCancel}
+          >
             Cancel
           </Button>
           <Button
             onClick={handleCreate}
             disabled={!collectionName.trim() || selectedIconIndex === null}
+            className="rounded-full"
           >
             Create Collection
           </Button>
