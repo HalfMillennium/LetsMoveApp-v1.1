@@ -1,4 +1,5 @@
 import { pgTable, text, serial, integer, boolean, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -114,6 +115,92 @@ export type InsertSearchPartyMember = z.infer<typeof insertSearchPartyMemberSche
 export type InsertSearchPartyInvitation = z.infer<typeof insertSearchPartyInvitationSchema>;
 export type InsertSearchPartyListing = z.infer<typeof insertSearchPartyListingSchema>;
 export type InsertFilterSettings = z.infer<typeof insertFilterSettingsSchema>;
+
+// Define relations
+export const usersRelations = relations(users, ({ many }) => ({
+  createdApartments: many(apartments),
+  favorites: many(favorites),
+  createdSearchParties: many(searchParties),
+  searchPartyMemberships: many(searchPartyMembers),
+  sentInvitations: many(searchPartyInvitations, { relationName: "invitedBy" }),
+  addedListings: many(searchPartyListings),
+  filterSettings: many(filterSettings)
+}));
+
+export const apartmentsRelations = relations(apartments, ({ one, many }) => ({
+  createdBy: one(users, {
+    fields: [apartments.createdById],
+    references: [users.id]
+  }),
+  favorites: many(favorites),
+  searchPartyListings: many(searchPartyListings)
+}));
+
+export const favoritesRelations = relations(favorites, ({ one }) => ({
+  user: one(users, {
+    fields: [favorites.userId],
+    references: [users.id]
+  }),
+  apartment: one(apartments, {
+    fields: [favorites.apartmentId],
+    references: [apartments.id]
+  })
+}));
+
+export const searchPartiesRelations = relations(searchParties, ({ one, many }) => ({
+  createdBy: one(users, {
+    fields: [searchParties.createdById],
+    references: [users.id]
+  }),
+  members: many(searchPartyMembers),
+  invitations: many(searchPartyInvitations),
+  listings: many(searchPartyListings)
+}));
+
+export const searchPartyMembersRelations = relations(searchPartyMembers, ({ one }) => ({
+  searchParty: one(searchParties, {
+    fields: [searchPartyMembers.searchPartyId],
+    references: [searchParties.id]
+  }),
+  user: one(users, {
+    fields: [searchPartyMembers.userId],
+    references: [users.id]
+  })
+}));
+
+export const searchPartyInvitationsRelations = relations(searchPartyInvitations, ({ one }) => ({
+  searchParty: one(searchParties, {
+    fields: [searchPartyInvitations.searchPartyId],
+    references: [searchParties.id]
+  }),
+  invitedByUser: one(users, {
+    fields: [searchPartyInvitations.invitedBy],
+    references: [users.id],
+    relationName: "invitedBy"
+  })
+}));
+
+export const searchPartyListingsRelations = relations(searchPartyListings, ({ one }) => ({
+  searchParty: one(searchParties, {
+    fields: [searchPartyListings.searchPartyId],
+    references: [searchParties.id]
+  }),
+  apartment: one(apartments, {
+    fields: [searchPartyListings.apartmentId],
+    references: [apartments.id]
+  }),
+  addedBy: one(users, {
+    fields: [searchPartyListings.addedById],
+    references: [users.id]
+  })
+}));
+
+export const filterSettingsRelations = relations(filterSettings, ({ one }) => ({
+  user: one(users, {
+    fields: [filterSettings.userId],
+    references: [users.id]
+  })
+}));
 
 export type User = typeof users.$inferSelect;
 export type Apartment = typeof apartments.$inferSelect;
