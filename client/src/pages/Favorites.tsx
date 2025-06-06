@@ -90,40 +90,41 @@ const Favorites = () => {
                 ))}
               </div>
             </div>
-          </div>
-        )}
 
-        {searchParties.length > 0 && favorites.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-1">
-                  Share with Search Parties
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Collaborate with your search party members
-                </p>
+            {/* Share with Search Parties */}
+            {searchParties.length > 0 && (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">
+                      Share with Search Parties
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      Collaborate with your search party members
+                    </p>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-600">
+                    <Share className="h-4 w-4 mr-1 text-blue-500" />
+                    <span>Collaboration</span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {searchParties.map((party) => (
+                    <Button
+                      key={party.id}
+                      variant="outline"
+                      className="border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg p-3 h-auto flex items-center justify-between"
+                      onClick={() =>
+                        (window.location.href = `/search-party/${party.id}`)
+                      }
+                    >
+                      <span className="font-medium">{party.name}</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  ))}
+                </div>
               </div>
-              <div className="flex items-center text-sm text-gray-600">
-                <Share className="h-4 w-4 mr-1 text-blue-500" />
-                <span>Collaboration</span>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {searchParties.map((party) => (
-                <Button
-                  key={party.id}
-                  variant="outline"
-                  className="border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg p-3 h-auto flex items-center justify-between"
-                  onClick={() =>
-                    (window.location.href = `/search-party/${party.id}`)
-                  }
-                >
-                  <span className="font-medium">{party.name}</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              ))}
-            </div>
+            )}
           </div>
         )}
       </div>
