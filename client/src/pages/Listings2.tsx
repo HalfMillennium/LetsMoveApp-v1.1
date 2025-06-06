@@ -40,7 +40,6 @@ import CollectionsPopover from "../components/CollectionsPopover";
 import { useSearchParty } from "../context/SearchPartyContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ApartmentListingCard } from "@/components/ApartmentListingCard";
-import DraggableApartmentCard from "@/components/DraggableApartmentCard";
 
 const Listings2 = () => {
   const [location] = useLocation();

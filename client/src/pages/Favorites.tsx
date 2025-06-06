@@ -10,7 +10,7 @@ const Favorites = () => {
   const { searchParties } = useSearchParty();
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 w-full">
+    <section className="min-h-screen bg-gradient-to-br from-[#FFF9F2] via-white to-[#FFF5E6] w-full">
       <div className="container mx-auto px-6 py-8">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
