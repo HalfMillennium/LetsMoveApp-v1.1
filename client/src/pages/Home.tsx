@@ -3,6 +3,7 @@ import MapBackground from "../components/MapBackground";
 import SearchBar from "../components/SearchBar";
 import { Navigation } from "../components/Navigation";
 import { useRef, useEffect } from "react";
+import AuthTest from "../components/AuthTest";
 
 const Home = () => {
   const [, navigate] = useLocation();
