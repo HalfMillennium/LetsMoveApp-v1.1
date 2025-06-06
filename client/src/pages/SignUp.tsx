@@ -2,7 +2,7 @@ import { SignUp } from "@clerk/clerk-react";
 
 export default function SignUpPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4 w-full">
+    <div className="max-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-16 w-full">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -12,7 +12,7 @@ export default function SignUpPage() {
             Create your account and start finding your perfect home
           </p>
         </div>
-        <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
+        <div>
           <SignUp
             appearance={{
               elements: {

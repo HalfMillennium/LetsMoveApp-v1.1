@@ -89,17 +89,30 @@ const Header = () => {
           {isSignedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                <Button
+                  variant="ghost"
+                  className="relative h-10 w-10 rounded-full"
+                >
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={user?.imageUrl} alt={user?.fullName || user?.emailAddresses[0]?.emailAddress} />
+                    <AvatarImage
+                      src={user?.imageUrl}
+                      alt={
+                        user?.fullName || user?.emailAddresses[0]?.emailAddress
+                      }
+                    />
                     <AvatarFallback className="bg-primary text-white">
-                      {user?.firstName?.charAt(0) || user?.emailAddresses[0]?.emailAddress?.charAt(0)}
+                      {user?.firstName?.charAt(0) ||
+                        user?.emailAddresses[0]?.emailAddress?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <div className="flex items-center justify-start gap-2 p-2">
+              <DropdownMenuContent
+                className="flex flex-col gap-1 w-56 rounded-2xl p-4"
+                align="end"
+                forceMount
+              >
+                <div className="flex items-center justify-start gap-4 p-2">
                   <div className="flex flex-col space-y-1 leading-none">
                     <p className="font-medium">{user?.fullName}</p>
                     <p className="w-[200px] truncate text-sm text-muted-foreground">
@@ -108,27 +121,27 @@ const Header = () => {
                   </div>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem className="rounded-lg" asChild>
                   <Link href="/profile" className="w-full cursor-pointer">
                     Profile Settings
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  className="cursor-pointer"
+                  className="cursor-pointer rounded-lg"
                   onSelect={() => signOut()}
                 >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Sign out
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="ghost" asChild>
+              <Button className="rounded-full" variant="ghost" asChild>
                 <Link href="/sign-in">Sign In</Link>
               </Button>
-              <Button asChild>
+              <Button className="rounded-full" asChild>
                 <Link href="/sign-up">Sign Up</Link>
               </Button>
             </div>

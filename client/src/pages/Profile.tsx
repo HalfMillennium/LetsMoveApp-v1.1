@@ -147,7 +147,7 @@ const Profile = () => {
             </div>
             <Button
               onClick={handleSave}
-              className="bg-primary hover:bg-primary/90 text-white px-6 py-2"
+              className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-full"
             >
               Save Changes
             </Button>
@@ -219,7 +219,7 @@ const Profile = () => {
                 {settingsOptions.map((option, index) => (
                   <button
                     key={index}
-                    className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-white/50 transition-colors group"
+                    className="w-full flex items-center justify-between py-3 rounded-xl hover:bg-white/50 transition-colors group"
                   >
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-gray-200 transition-colors">
@@ -249,8 +249,12 @@ const Profile = () => {
                 <h3 className="text-xl font-bold text-gray-900">
                   Personal Information
                 </h3>
-                <Button variant="outline" size="sm" className="border-gray-200">
-                  <Edit size={14} className="mr-2" />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-gray-200 rounded-full"
+                >
+                  <Edit size={14} />
                   Edit
                 </Button>
               </div>
@@ -313,8 +317,12 @@ const Profile = () => {
                 <h3 className="text-xl font-bold text-gray-900">
                   Housing Preferences
                 </h3>
-                <Button variant="outline" size="sm" className="border-gray-200">
-                  <Settings size={14} className="mr-2" />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-gray-200 rounded-full"
+                >
+                  <Settings size={14} />
                   Customize
                 </Button>
               </div>
@@ -372,8 +380,12 @@ const Profile = () => {
                     <label className="text-sm font-medium text-gray-700">
                       Neighborhood Preferences
                     </label>
-                    <Button variant="ghost" size="sm" className="text-primary">
-                      <Plus size={14} className="mr-1" />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-primary rounded-full"
+                    >
+                      <Plus size={14} />
                       Add
                     </Button>
                   </div>
@@ -406,8 +418,12 @@ const Profile = () => {
                 <h3 className="text-xl font-bold text-gray-900">
                   My Collections
                 </h3>
-                <Button variant="outline" size="sm" className="border-gray-200">
-                  <Plus size={14} className="mr-2" />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-gray-200 rounded-full"
+                >
+                  <Plus size={14} />
                   New Collection
                 </Button>
               </div>
@@ -450,8 +466,12 @@ const Profile = () => {
                 <h3 className="text-xl font-bold text-gray-900">
                   Search Parties
                 </h3>
-                <Button variant="outline" size="sm" className="border-gray-200">
-                  <Users size={14} className="mr-2" />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-gray-200 rounded-full"
+                >
+                  <Users size={14} />
                   Create Party
                 </Button>
               </div>
