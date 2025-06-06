@@ -17,7 +17,7 @@ interface AuthContextType {
   signOut: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
@@ -88,29 +88,17 @@ export function useAuth() {
 
 // For compatibility with existing Clerk hooks
 export const useUser = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    return {
-      user: null,
-      isSignedIn: false,
-      isLoaded: false,
-    };
-  }
+  const auth = useAuth();
   return {
-    user: context.user,
-    isSignedIn: context.isSignedIn,
-    isLoaded: context.isLoaded,
+    user: auth.user,
+    isSignedIn: auth.isSignedIn,
+    isLoaded: auth.isLoaded,
   };
 };
 
 export const useClerk = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    return {
-      signOut: () => {},
-    };
-  }
+  const auth = useAuth();
   return {
-    signOut: context.signOut,
+    signOut: auth.signOut,
   };
 };

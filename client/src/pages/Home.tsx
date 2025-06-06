@@ -3,7 +3,6 @@ import MapBackground from "../components/MapBackground";
 import SearchBar from "../components/SearchBar";
 import { Navigation } from "../components/Navigation";
 import { useRef, useEffect } from "react";
-import AuthTest from "../components/AuthTest";
 
 const Home = () => {
   const [, navigate] = useLocation();
@@ -66,9 +65,6 @@ const Home = () => {
           <div ref={navigationRef} className="w-full max-w-xl mx-auto mb-16 opacity-0 transition-opacity duration-700">
             <Navigation darkMode={true} />
           </div>
-          
-          {/* Auth Test Component */}
-          <AuthTest />
         </div>
       </div>
     </MapBackground>
