@@ -12,7 +12,7 @@ export default function SignInPage() {
             Sign in to continue your apartment search
           </p>
         </div>
-        <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
+        <div>
           <SignIn
             appearance={{
               elements: {
