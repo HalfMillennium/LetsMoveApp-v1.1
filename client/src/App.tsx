@@ -67,16 +67,18 @@ function Router() {
 
 function AppContent() {
   const [location] = useLocation();
+  const { isSignedIn } = useUser();
   const isListings2Page = location === "/listings";
+  const isAuthPage = location === "/sign-in" || location === "/sign-up";
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0D2436]">
-      {location !== "/" && <Header />}
+      {!isAuthPage && location !== "/" && <Header />}
       <main className={`flex-1 flex`}>
         <Router />
       </main>
-      <HomeFooter />
-      {!isListings2Page && <MobileNavBar />}
+      {!isAuthPage && <HomeFooter />}
+      {!isListings2Page && !isAuthPage && isSignedIn && <MobileNavBar />}
       <Toaster />
     </div>
   );
