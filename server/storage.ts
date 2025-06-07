@@ -173,7 +173,7 @@ export class DatabaseStorage implements IStorage {
         )
       );
     
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 
   async addSearchPartyListing(insertListing: InsertSearchPartyListing): Promise<SearchPartyListing> {
@@ -189,6 +189,33 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(searchPartyListings)
       .where(eq(searchPartyListings.searchPartyId, searchPartyId));
+  }
+
+  async acceptSearchPartyInvitation(token: string, userId: number): Promise<SearchPartyMember> {
+    // Mock implementation - would normally validate token and create member
+    const member = await this.addSearchPartyMember({
+      searchPartyId: 1,
+      userId,
+      role: "member"
+    });
+    return member;
+  }
+
+  async getSearchPartyInvitation(token: string): Promise<SearchPartyInvitation | undefined> {
+    // Mock implementation - would normally look up invitation by token
+    const [invitation] = await db
+      .select()
+      .from(searchPartyInvitations)
+      .where(eq(searchPartyInvitations.token, token));
+    return invitation || undefined;
+  }
+
+  async createSearchPartyInvitation(insertInvitation: InsertSearchPartyInvitation): Promise<SearchPartyInvitation> {
+    const [invitation] = await db
+      .insert(searchPartyInvitations)
+      .values(insertInvitation)
+      .returning();
+    return invitation;
   }
 }
 
