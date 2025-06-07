@@ -61,14 +61,14 @@ const SearchParty = () => {
 
     return invitationText
       .split(/[,\n]/)
-      .map(contact => contact.trim())
-      .filter(contact => contact.length > 0)
-      .map(contact => {
+      .map((contact) => contact.trim())
+      .filter((contact) => contact.length > 0)
+      .map((contact) => {
         // Simple email detection
-        const isEmail = contact.includes('@') && contact.includes('.');
+        const isEmail = contact.includes("@") && contact.includes(".");
         return {
           contactInfo: contact,
-          contactType: isEmail ? 'email' as const : 'phone' as const
+          contactType: isEmail ? ("email" as const) : ("phone" as const),
         };
       });
   };
@@ -88,14 +88,14 @@ const SearchParty = () => {
     try {
       const parsedInvitations = parseInvitations(invitations);
       await createSearchParty(newPartyName, parsedInvitations);
-      
+
       setNewPartyName("");
       setInvitations("");
       setCreateDialogOpen(false);
 
       toast({
         title: "Success!",
-        description: `Your search party has been created${parsedInvitations.length > 0 ? ' and invitations have been sent' : ''}.`,
+        description: `Your search party has been created${parsedInvitations.length > 0 ? " and invitations have been sent" : ""}.`,
       });
     } catch (error) {
       toast({
@@ -419,7 +419,7 @@ const SearchParty = () => {
               </p>
               <Button
                 onClick={() => setCreateDialogOpen(true)}
-                className="bg-orange-400 hover:bg-orange-500 text-white rounded-lg px-6 py-2.5 font-medium"
+                className="bg-orange-400 hover:bg-orange-500 text-white rounded-full px-6 py-2.5 font-medium"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Create Your First Search Party

@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import appLogo from "../assets/letsmove_logo_black.png";
+import appLogo from "../assets/searchparty_logo.png";
 
 const Header = () => {
   const [location, setLocation] = useLocation();
@@ -26,7 +26,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 border-b border backdrop-blur-lg border-b backdrop-opacity-20 bg-white w-full">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link href="/">
-          <img src={appLogo} className="h-8 cursor-pointer" />
+          <img src={appLogo} className="h-10 cursor-pointer" />
         </Link>
         {!isMobile && (
           <div className="flex items-center space-x-12 text-sm">
