@@ -54,7 +54,7 @@ export const SearchPartyProvider: React.FC<{ children: React.ReactNode }> = ({
     queryKey: ["/api/search-parties"],
     queryFn: async () => {
       try {
-        const response = await apiRequest("/api/search-parties", "GET");
+        const response = await apiRequest("GET", "/api/search-parties");
         if (!response.ok) {
           throw new Error("Failed to fetch search parties");
         }
