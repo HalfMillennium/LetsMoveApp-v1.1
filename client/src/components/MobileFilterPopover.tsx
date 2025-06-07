@@ -26,6 +26,8 @@ interface MobileFilterPopoverProps {
   activeSearchParty?: { id: number; name: string; createdById?: number; createdAt?: string } | null;
   filterBySearchParty: boolean;
   onSearchPartyFilterToggle: (enabled: boolean) => void;
+  searchParties: Array<{ id: number; name: string; createdById?: number; createdAt?: string }>;
+  onSearchPartyChange: (searchPartyId: number) => void;
 }
 
 const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
@@ -36,9 +38,11 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
   activeSearchParty,
   filterBySearchParty,
   onSearchPartyFilterToggle,
+  searchParties,
+  onSearchPartyChange,
 }) => {
-  // Count active filters (excluding search party)
-  const activeFilterCount = Object.keys(activeFilters).length;
+  // Count active filters (including search party filter)
+  const activeFilterCount = Object.keys(activeFilters).length + (filterBySearchParty ? 1 : 0);
   
   return (
     <Popover>
@@ -56,7 +60,7 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[280px] p-0" align="start">
+      <PopoverContent className="w-[320px] p-0" align="start">
         <Command>
           <CommandList className="max-h-[300px]">
             <CommandGroup heading="Price Range">
@@ -139,28 +143,52 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
               </CommandItem>
             </CommandGroup>
             
-            {/* Search Party Filter */}
-            {activeSearchParty && (
+            {/* Search Party Section */}
+            {searchParties.length > 0 && (
               <>
                 <CommandSeparator />
-                <CommandGroup heading="Search Party">
-                  <CommandItem
-                    className="flex items-center gap-2 py-3"
-                    onSelect={() => onSearchPartyFilterToggle(!filterBySearchParty)}
-                  >
-                    <div className="flex items-center gap-2 flex-1">
-                      <Users className="h-4 w-4 text-[#A259FF]" />
-                      <div className="flex flex-col">
-                        <span className="text-sm">Filter by {activeSearchParty.name}</span>
-                        <span className="text-xs text-gray-500">Show only apartments in this search party</span>
+                <CommandGroup heading="Search Parties">
+                  {/* Search Party Selection */}
+                  {searchParties.map((party) => (
+                    <CommandItem
+                      key={party.id}
+                      value={party.name}
+                      onSelect={() => onSearchPartyChange(party.id)}
+                      className="flex items-center gap-2 py-2"
+                    >
+                      <div className="flex items-center gap-2 flex-1">
+                        <Users className="h-4 w-4 text-[#A259FF]" />
+                        <span>{party.name}</span>
                       </div>
-                    </div>
-                    <Switch 
-                      checked={filterBySearchParty} 
-                      onCheckedChange={onSearchPartyFilterToggle}
-                      className="data-[state=checked]:bg-[#A259FF]"
-                    />
-                  </CommandItem>
+                      {activeSearchParty?.id === party.id && (
+                        <div className="h-2 w-2 rounded-full bg-[#A259FF]" />
+                      )}
+                    </CommandItem>
+                  ))}
+                  
+                  {/* Filter Toggle for Active Search Party */}
+                  {activeSearchParty && (
+                    <>
+                      <CommandSeparator />
+                      <CommandItem
+                        className="flex items-center gap-2 py-3"
+                        onSelect={() => onSearchPartyFilterToggle(!filterBySearchParty)}
+                      >
+                        <div className="flex items-center gap-2 flex-1">
+                          <Users className="h-4 w-4 text-[#A259FF]" />
+                          <div className="flex flex-col">
+                            <span className="text-sm">Filter by {activeSearchParty.name}</span>
+                            <span className="text-xs text-gray-500">Show only apartments in this search party</span>
+                          </div>
+                        </div>
+                        <Switch 
+                          checked={filterBySearchParty} 
+                          onCheckedChange={onSearchPartyFilterToggle}
+                          className="data-[state=checked]:bg-[#A259FF]"
+                        />
+                      </CommandItem>
+                    </>
+                  )}
                 </CommandGroup>
               </>
             )}
