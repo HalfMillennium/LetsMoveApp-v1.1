@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { useSearchParty } from "../context/SearchPartyContext";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -115,10 +116,20 @@ const SearchParty = () => {
   ];
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-[#FFF9F2] via-white to-[#FFF5E6] w-full">
+    <motion.section 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-gradient-to-br from-[#FFF9F2] via-white to-[#FFF5E6] w-full"
+    >
       <div className="container mx-auto px-6 py-8">
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="flex flex-col sm:flex-row sm:items-center justify-between mb-8"
+        >
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Search Parties
@@ -183,7 +194,7 @@ const SearchParty = () => {
               </form>
             </DialogContent>
           </Dialog>
-        </div>
+        </motion.div>
 
         {isLoading ? (
           <div className="space-y-6">
@@ -198,8 +209,13 @@ const SearchParty = () => {
             </div>
           </div>
         ) : searchParties.length > 0 ? (
-          <div className="space-y-6">
-            {searchParties.map((searchParty) => {
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className="space-y-6"
+          >
+            {searchParties.map((searchParty, index) => {
               // Show 3 sample apartments per search party
               const listings = searchParty.listings || [];
               const listingCount =
@@ -209,9 +225,13 @@ const SearchParty = () => {
               const daysAgo = Math.floor(Math.random() * 7) + 1;
 
               return (
-                <div
+                <motion.div
                   key={searchParty.id}
-                  className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ y: -2, transition: { duration: 0.2 } }}
+                  className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300"
                 >
                   {/* Header Section */}
                   <div className="bg-gradient-to-r from-orange-400 to-pink-500 px-6 py-4">
@@ -448,7 +468,7 @@ const SearchParty = () => {
         onClose={() => setChatDrawerOpen(false)}
         searchParty={activeSearchParty}
       />
-    </section>
+    </motion.section>
   );
 };
 
