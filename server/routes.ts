@@ -11,6 +11,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Add Clerk authentication middleware
   app.use(clerkMiddleware());
 
+  // Helper function to get or create user
+  async function getOrCreateUser(clerkId: string) {
+    let user = await storage.getUserByClerkId(clerkId);
+    if (!user) {
+      // Create a basic user profile from Clerk data
+      const newUser: InsertUser = {
+        clerkId,
+        email: "", // Will be updated when user syncs
+        fullName: "User", // Default name
+        profileImage: null,
+        phoneNumber: null
+      };
+      user = await storage.createUser(newUser);
+    }
+    return user;
+  }
+
   const endpoint = "https://production-sfo.browserless.io/chromium/bql";
   const token = process.env.VITE_BROWSERLESS_API_KEY || "";
 
@@ -177,11 +194,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      const user = await storage.getUserByClerkId(clerkId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
+      const user = await getOrCreateUser(clerkId);
       const searchParties = await storage.getSearchPartiesByUserId(user.id);
       res.json(searchParties);
     } catch (error) {
@@ -202,10 +215,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Name is required" });
       }
 
-      const user = await storage.getUserByClerkId(clerkId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
+      const user = await getOrCreateUser(clerkId);
 
       // Create search party
       const searchParty = await storage.createSearchParty({
