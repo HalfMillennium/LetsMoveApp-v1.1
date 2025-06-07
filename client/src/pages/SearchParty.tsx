@@ -116,18 +116,32 @@ const SearchParty = () => {
   ];
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-[#FFF9F2] via-white to-[#FFF5E6] w-full">
+    <motion.section 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-gradient-to-br from-[#FFF9F2] via-white to-[#FFF5E6] w-full"
+    >
       <div className="container mx-auto px-6 py-8">
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
-          <div>
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="flex flex-col sm:flex-row sm:items-center justify-between mb-8"
+        >
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Search Parties
             </h1>
             <p className="text-gray-600">
               Collaborate with friends to find the perfect place
             </p>
-          </div>
+          </motion.div>
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
               <Button className="mt-4 sm:mt-0 rounded-full bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5">
@@ -184,7 +198,7 @@ const SearchParty = () => {
               </form>
             </DialogContent>
           </Dialog>
-        </div>
+        </motion.div>
 
         {isLoading ? (
           <div className="space-y-6">
@@ -199,8 +213,13 @@ const SearchParty = () => {
             </div>
           </div>
         ) : searchParties.length > 0 ? (
-          <div className="space-y-6">
-            {searchParties.map((searchParty) => {
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="space-y-6"
+          >
+            {searchParties.map((searchParty, index) => {
               // Show 3 sample apartments per search party
               const listings = searchParty.listings || [];
               const listingCount =
@@ -210,9 +229,13 @@ const SearchParty = () => {
               const daysAgo = Math.floor(Math.random() * 7) + 1;
 
               return (
-                <div
+                <motion.div
                   key={searchParty.id}
-                  className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+                  whileHover={{ y: -2, transition: { duration: 0.2 } }}
+                  className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300"
                 >
                   {/* Header Section */}
                   <div className="bg-gradient-to-r from-orange-400 to-pink-500 px-6 py-4">
@@ -401,32 +424,58 @@ const SearchParty = () => {
                       </Button>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center"
+          >
             <div className="max-w-md mx-auto">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <motion.div 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.5 }}
+                className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4"
+              >
                 <Users className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
+              </motion.div>
+              <motion.h3 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, delay: 0.6 }}
+                className="text-xl font-bold text-gray-900 mb-3"
+              >
                 No Search Parties Yet
-              </h3>
-              <p className="text-gray-600 mb-6">
+              </motion.h3>
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, delay: 0.7 }}
+                className="text-gray-600 mb-6"
+              >
                 Create your first search party to start collaborating with
                 friends and family on finding the perfect apartment.
-              </p>
-              <Button
-                onClick={() => setCreateDialogOpen(true)}
-                className="bg-orange-400 hover:bg-orange-500 text-white rounded-full px-6 py-2.5 font-medium"
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.8 }}
               >
-                <Plus className="mr-2 h-4 w-4" />
-                Create Your First Search Party
-              </Button>
+                <Button
+                  onClick={() => setCreateDialogOpen(true)}
+                  className="bg-orange-400 hover:bg-orange-500 text-white rounded-full px-6 py-2.5 font-medium"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Create Your First Search Party
+                </Button>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
 
@@ -449,7 +498,7 @@ const SearchParty = () => {
         onClose={() => setChatDrawerOpen(false)}
         searchParty={activeSearchParty}
       />
-    </section>
+    </motion.section>
   );
 };
 
