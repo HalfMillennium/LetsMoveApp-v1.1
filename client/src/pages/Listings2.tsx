@@ -407,7 +407,7 @@ const Listings2 = () => {
 
           {/* Desktop Collections Tabs - Only visible on medium screens and up */}
           <div className="hidden md:block">
-            <div className="container mx-auto px-6 py-4 flex items-center overflow-x-auto scrollbar-hide">
+            <div className="container mx-auto px-6 py-4 flex items-center overflow-x-auto scrollbar-hide gap-8">
               {allCollectionsList.map((collection, idx) => (
                 <button
                   key={collection.id}
