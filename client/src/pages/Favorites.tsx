@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useFavorites } from "../context/FavoritesContext";
 import ApartmentCard from "../components/ApartmentCard";
 import { useSearchParty } from "../context/SearchPartyContext";
@@ -10,26 +11,46 @@ const Favorites = () => {
   const { searchParties } = useSearchParty();
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-[#FFF9F2] via-white to-[#FFF5E6] w-full">
+    <motion.section 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-gradient-to-br from-[#FFF9F2] via-white to-[#FFF5E6] w-full"
+    >
       <div className="container mx-auto px-6 py-8">
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
-          <div>
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="flex flex-col sm:flex-row sm:items-center justify-between mb-8"
+        >
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Your Favorites
             </h1>
             <p className="text-gray-600">Save and share apartments you love</p>
-          </div>
+          </motion.div>
           {favorites.length > 0 && (
-            <Button
-              onClick={() => (window.location.href = "/listings")}
-              className="mt-4 sm:mt-0 rounded-full bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5"
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <Home className="mr-2 h-4 w-4" />
-              Browse More
-            </Button>
+              <Button
+                onClick={() => (window.location.href = "/listings")}
+                className="mt-4 sm:mt-0 rounded-full bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5"
+              >
+                <Home className="mr-2 h-4 w-4" />
+                Browse More
+              </Button>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
 
         {isLoading ? (
           <div className="space-y-6">
@@ -134,7 +155,7 @@ const Favorites = () => {
           </div>
         )}
       </div>
-    </section>
+    </motion.section>
   );
 };
 
