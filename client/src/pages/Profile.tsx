@@ -39,7 +39,7 @@ const Profile = () => {
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center w-full">
-        <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
+        <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-gray-200 shadow-lg">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
           <p className="text-gray-600 mt-4 text-center">Loading profile...</p>
         </div>
@@ -158,7 +158,7 @@ const Profile = () => {
           {/* Left Column - Profile Info */}
           <div className="lg:col-span-1 space-y-6">
             {/* Profile Card */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 border border-white/20 shadow-lg">
+            <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 border border-gray-200 shadow-lg">
               <div className="text-center">
                 {/* Cover gradient */}
                 <div className="h-20 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-2xl mb-4 relative">
@@ -213,7 +213,7 @@ const Profile = () => {
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 border border-white/20 shadow-lg">
+            <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 border border-gray-200 shadow-lg">
               <h3 className="font-semibold text-gray-900 mb-4">Settings</h3>
               <div className="space-y-2">
                 {settingsOptions.map((option, index) => (
@@ -244,7 +244,7 @@ const Profile = () => {
           {/* Right Column - Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Personal Information */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
+            <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-gray-200 shadow-lg">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
                   Personal Information
@@ -312,7 +312,7 @@ const Profile = () => {
             </div>
 
             {/* Housing Preferences */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
+            <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-gray-200 shadow-lg">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
                   Housing Preferences
@@ -413,7 +413,7 @@ const Profile = () => {
             </div>
 
             {/* Collections */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
+            <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-gray-200 shadow-lg">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
                   My Collections
@@ -461,7 +461,7 @@ const Profile = () => {
             </div>
 
             {/* Search Parties */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg">
+            <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-gray-200 shadow-lg">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">
                   Search Parties
