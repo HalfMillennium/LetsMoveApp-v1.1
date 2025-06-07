@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
@@ -134,29 +135,54 @@ const Profile = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF9F2] via-white to-[#FFF5E6] w-full">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-gradient-to-br from-[#FFF9F2] via-white to-[#FFF5E6] w-full"
+    >
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-8"
+        >
           <div className="flex items-center justify-between">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile</h1>
               <p className="text-gray-600">
                 Manage your account and preferences
               </p>
-            </div>
-            <Button
-              onClick={handleSave}
-              className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-full"
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             >
-              Save Changes
-            </Button>
+              <Button
+                onClick={handleSave}
+                className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-full"
+              >
+                Save Changes
+              </Button>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Profile Info */}
-          <div className="lg:col-span-1 space-y-6">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="lg:col-span-1 space-y-6"
+          >
             {/* Profile Card */}
             <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 border border-gray-200 shadow-lg">
               <div className="text-center">
@@ -239,10 +265,15 @@ const Profile = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column - Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="lg:col-span-2 space-y-6"
+          >
             {/* Personal Information */}
             <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-gray-200 shadow-lg">
               <div className="flex items-center justify-between mb-6">
@@ -505,10 +536,10 @@ const Profile = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
