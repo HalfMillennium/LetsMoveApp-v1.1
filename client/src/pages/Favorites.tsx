@@ -77,13 +77,23 @@ const Favorites = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
         ) : favorites.length === 0 ? (
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-200 p-8 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="bg-white rounded-3xl shadow-sm border border-gray-200 p-8 text-center"
+          >
             <div className="max-w-md mx-auto">
-              <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <motion.div 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.6 }}
+                className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4"
+              >
                 <Heart className="h-8 w-8 text-white" />
-              </div>
+              </motion.div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">
                 No Favorites Yet
               </h3>
@@ -91,15 +101,21 @@ const Favorites = () => {
                 Start saving apartments you love and they'll appear here. Browse
                 our listings to find your perfect place.
               </p>
-              <Button
-                onClick={() => (window.location.href = "/listings")}
-                className="bg-orange-400 hover:bg-orange-500 text-white rounded-full px-6 py-2.5 font-medium"
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.8 }}
               >
-                <Home className="mr-2 h-4 w-4" />
-                Browse Apartments
-              </Button>
+                <Button
+                  onClick={() => (window.location.href = "/listings")}
+                  className="bg-orange-400 hover:bg-orange-500 text-white rounded-full px-6 py-2.5 font-medium"
+                >
+                  <Home className="mr-2 h-4 w-4" />
+                  Browse Apartments
+                </Button>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         ) : (
           <div className="space-y-6">
             {/* Favorites Grid */}
