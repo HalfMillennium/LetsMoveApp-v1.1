@@ -72,7 +72,7 @@ export const SearchPartyProvider: React.FC<{ children: React.ReactNode }> = ({
   // Create a new search party
   const createSearchPartyMutation = useMutation({
     mutationFn: async ({ name, invitations }: { name: string; invitations?: InvitationRequest[] }) => {
-      const response = await apiRequest("/api/search-parties", "POST", {
+      const response = await apiRequest("POST", "/api/search-parties", {
         name,
         invitations,
       });
@@ -109,8 +109,8 @@ export const SearchPartyProvider: React.FC<{ children: React.ReactNode }> = ({
       notes?: string;
     }) => {
       const response = await apiRequest(
-        `/api/search-parties/${searchPartyId}/listings`,
         "POST",
+        `/api/search-parties/${searchPartyId}/listings`,
         {
           apartmentId,
           notes,
@@ -146,8 +146,8 @@ export const SearchPartyProvider: React.FC<{ children: React.ReactNode }> = ({
       invitations: InvitationRequest[];
     }) => {
       const response = await apiRequest(
-        `/api/search-parties/${searchPartyId}/invite`,
         "POST",
+        `/api/search-parties/${searchPartyId}/invite`,
         { invitations },
       );
       return response.json();
@@ -181,8 +181,8 @@ export const SearchPartyProvider: React.FC<{ children: React.ReactNode }> = ({
       userId: number;
     }) => {
       const response = await apiRequest(
-        `/api/search-parties/${searchPartyId}/members/${userId}`,
         "DELETE",
+        `/api/search-parties/${searchPartyId}/members/${userId}`,
       );
       return response;
     },
@@ -209,8 +209,8 @@ export const SearchPartyProvider: React.FC<{ children: React.ReactNode }> = ({
   const acceptInvitationMutation = useMutation({
     mutationFn: async (token: string) => {
       const response = await apiRequest(
-        `/api/invitations/${token}/accept`,
         "POST",
+        `/api/invitations/${token}/accept`,
       );
       return response.json() as Promise<SearchPartyMember>;
     },
