@@ -166,7 +166,7 @@ const FilterChips = ({
       <div className="w-full flex flex-wrap gap-3 items-center">
         {/* Mobile version of filters */}
         {isMobile ? (
-          <div className="flex space-y-8 w-full justify-between items-center">
+          <div className="flex w-full">
             <MobileFilterPopover
               activeFilters={activeFilters}
               onFilterChange={handleFilterChange}
@@ -175,54 +175,15 @@ const FilterChips = ({
               activeSearchParty={activeSearchParty}
               filterBySearchParty={filterBySearchParty}
               onSearchPartyFilterToggle={handleSearchPartyToggle}
+              searchParties={searchParties}
+              onSearchPartyChange={(searchPartyId) => {
+                window.dispatchEvent(
+                  new CustomEvent("switch-search-party", {
+                    detail: { searchPartyId },
+                  }),
+                );
+              }}
             />
-            {/* Mobile Search Party Controls */}
-            {activeSearchParty && (
-              <div className="ml-auto flex items-center gap-2">
-                {/* Toggle Button */}
-                <Button
-                  variant={filterBySearchParty ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleSearchPartyToggle(!filterBySearchParty)}
-                  className={`
-                    flex items-center gap-1.5 h-9 px-3 transition-all duration-300 rounded-full
-                    ${filterBySearchParty ? "bg-primary text-white" : "border-primary/40 text-primary"}
-                  `}
-                >
-                  <UsersRound className="h-3.5 w-3.5" />
-                  <span className="text-xs font-medium truncate max-w-[80px]">
-                    {activeSearchParty.name}
-                  </span>
-                  <div
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      filterBySearchParty ? "bg-white" : "bg-primary/40"
-                    }`}
-                  />
-                </Button>
-
-                {/* Mobile OriginDropdown for Search Party selection */}
-                <div className="relative">
-                  <OriginDropdown
-                    options={searchParties.map((party) => ({
-                      label: party.name,
-                      value: party.id.toString(),
-                    }))}
-                    onSelect={(value) => {
-                      const searchPartyId = parseInt(value, 10);
-                      window.dispatchEvent(
-                        new CustomEvent("switch-search-party", {
-                          detail: { searchPartyId },
-                        }),
-                      );
-                    }}
-                    value={activeSearchParty.name}
-                    placeholder="Switch"
-                    icon={<UsersRound className="h-3.5 w-3.5 text-primary" />}
-                    minimal={true}
-                  />
-                </div>
-              </div>
-            )}
           </div>
         ) : (
           /* Desktop/Tablet version of filters */
