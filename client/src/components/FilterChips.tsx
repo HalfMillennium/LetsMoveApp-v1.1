@@ -166,7 +166,7 @@ const FilterChips = ({
       <div className="w-full flex flex-wrap gap-3 items-center">
         {/* Mobile version of filters */}
         {isMobile ? (
-          <div className="flex w-full justify-between items-center">
+          <div className="flex space-y-8 w-full justify-between items-center">
             <MobileFilterPopover
               activeFilters={activeFilters}
               onFilterChange={handleFilterChange}
