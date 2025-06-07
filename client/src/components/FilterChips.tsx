@@ -163,7 +163,7 @@ const FilterChips = ({
 
   return (
     <div className="flex w-full md:w-auto">
-      <div className="w-full flex flex-wrap gap-3 items-center mb-3">
+      <div className="w-full flex flex-wrap gap-3 items-center">
         {/* Mobile version of filters */}
         {isMobile ? (
           <div className="flex w-full justify-between items-center">

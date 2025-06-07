@@ -385,26 +385,6 @@ const Listings2 = () => {
           ref={headerRef}
           className="top-0 z-10 bg-white opacity-0 transform -translate-y-4 transition-all duration-500"
         >
-          {/* Mobile Collections Popover - Only visible on small screens */}
-          <div className="md:hidden container mx-auto px-6 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <CollectionsPopover
-                collections={allCollectionsList}
-                activeCollection={activeCollection}
-                onSelectCollection={handleCollectionChange}
-                onAddCollection={handleAddCollection}
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-full flex items-center gap-2 border-gray-200 bg-white/90 hover:bg-white"
-                onClick={handleAddCollection}
-              >
-                <ListPlus className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-
           {/* Desktop Collections Tabs - Only visible on medium screens and up */}
           <div className="hidden md:block">
             <div className="container mx-auto px-6 py-4 flex items-center overflow-x-auto scrollbar-hide gap-8">
@@ -456,13 +436,13 @@ const Listings2 = () => {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 container mx-auto px-6 py-6">
-          <div className="flex flex-1 flex-col md:flex-row items-start md:items-center justify-between md:mb-8">
+        <main className="flex-1 container mx-auto px-6 py-6 space-y-8">
+          <div className="flex flex-1 flex-col md:flex-row items-start md:items-center justify-between md:mb-8 gap-4 md:gap-8">
             <div className="flex flex-col flex-1">
               <p className="text-xs text-gray-600">
                 {apartments.length} listings available
               </p>
-              <div className="flex items-center gap-1 mb-4 gap-2">
+              <div className="flex items-center gap-1 gap-2">
                 {activeCollection.id !== "all" && (
                   <div className="flex items-center justify-center p-2 bg-[#E9927E40] rounded-full">
                     <Puzzle className="h-4 w-4 text-gray-700" />
@@ -476,16 +456,37 @@ const Listings2 = () => {
                 </h1>
               </div>
             </div>
-            <FilterChips
-              onFilterChange={handleFilterChange}
-              updateActiveFilters={updateActiveFilters}
-              activeSearchParty={activeSearchParty}
-              onSearchPartyFilterToggle={handleSearchPartyFilterToggle}
-            />
+            <div className="flex items-center gap-4 w-full sm:w-auto justify-between">
+              <FilterChips
+                onFilterChange={handleFilterChange}
+                updateActiveFilters={updateActiveFilters}
+                activeSearchParty={activeSearchParty}
+                onSearchPartyFilterToggle={handleSearchPartyFilterToggle}
+              />
+              {/* Mobile Collections Popover - Only visible on small screens */}
+              <div className="md:hidden container flex items-center justify-end">
+                <div className="flex items-center gap-3">
+                  <CollectionsPopover
+                    collections={allCollectionsList}
+                    activeCollection={activeCollection}
+                    onSelectCollection={handleCollectionChange}
+                    onAddCollection={handleAddCollection}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full flex items-center gap-2 border-gray-200 bg-white/90 hover:bg-white"
+                    onClick={handleAddCollection}
+                  >
+                    <ListPlus className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Main Grid with Map Split */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="flex flex-col grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Apartment Listings */}
             <div className={`${mapExpanded ? "hidden lg:block" : ""}`}>
               {isLoading ? (

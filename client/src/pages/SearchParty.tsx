@@ -99,6 +99,7 @@ const SearchParty = () => {
         description: `Your search party has been created${parsedInvitations.length > 0 ? " and invitations have been sent" : ""}.`,
       });
     } catch (error) {
+      console.error("Error creating search party:", error);
       toast({
         title: "Error",
         description: "Failed to create search party. Please try again.",
@@ -116,7 +117,7 @@ const SearchParty = () => {
   ];
 
   return (
-    <motion.section 
+    <motion.section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
@@ -124,7 +125,7 @@ const SearchParty = () => {
     >
       <div className="container mx-auto px-6 py-8">
         {/* Header Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
@@ -213,7 +214,7 @@ const SearchParty = () => {
             </div>
           </div>
         ) : searchParties.length > 0 ? (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -429,14 +430,14 @@ const SearchParty = () => {
             })}
           </motion.div>
         ) : (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center"
           >
             <div className="max-w-md mx-auto">
-              <motion.div 
+              <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.5 }}
@@ -444,7 +445,7 @@ const SearchParty = () => {
               >
                 <Users className="h-8 w-8 text-white" />
               </motion.div>
-              <motion.h3 
+              <motion.h3
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.6 }}
@@ -452,7 +453,7 @@ const SearchParty = () => {
               >
                 No Search Parties Yet
               </motion.h3>
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.7 }}

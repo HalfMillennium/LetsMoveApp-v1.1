@@ -4,10 +4,11 @@ import {
   favorites, type Favorite, type InsertFavorite,
   searchParties, type SearchParty, type InsertSearchParty,
   searchPartyMembers, type SearchPartyMember, type InsertSearchPartyMember,
-  searchPartyListings, type SearchPartyListing, type InsertSearchPartyListing
+  searchPartyListings, type SearchPartyListing, type InsertSearchPartyListing,
+  searchPartyInvitations, type SearchPartyInvitation, type InsertSearchPartyInvitation
 } from "@shared/schema";
 import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -16,6 +17,7 @@ export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByClerkId(clerkId: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   getAllUsers(): Promise<User[]>;
 
@@ -30,10 +32,18 @@ export interface IStorage {
 
   // Search Party methods
   getSearchPartiesByUserId(userId: number): Promise<SearchParty[]>;
+  getSearchParty(id: number): Promise<SearchParty | undefined>;
   createSearchParty(searchParty: InsertSearchParty): Promise<SearchParty>;
   addSearchPartyMember(member: InsertSearchPartyMember): Promise<SearchPartyMember>;
+  getSearchPartyMember(searchPartyId: number, userId: number): Promise<SearchPartyMember | undefined>;
+  removeSearchPartyMember(searchPartyId: number, userIdToRemove: number, currentUserId: number): Promise<boolean>;
   addSearchPartyListing(listing: InsertSearchPartyListing): Promise<SearchPartyListing>;
   getSearchPartyListings(searchPartyId: number): Promise<SearchPartyListing[]>;
+  
+  // Invitation methods
+  acceptSearchPartyInvitation(token: string, userId: number): Promise<SearchPartyMember>;
+  getSearchPartyInvitation(token: string): Promise<SearchPartyInvitation | undefined>;
+  createSearchPartyInvitation(invitation: InsertSearchPartyInvitation): Promise<SearchPartyInvitation>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -44,6 +54,11 @@ export class DatabaseStorage implements IStorage {
 
   async getUserByUsername(username: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async getUserByClerkId(clerkId: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.clerkId, clerkId));
     return user || undefined;
   }
 
@@ -122,6 +137,43 @@ export class DatabaseStorage implements IStorage {
       .values(insertMember)
       .returning();
     return member;
+  }
+
+  async getSearchParty(id: number): Promise<SearchParty | undefined> {
+    const [searchParty] = await db.select().from(searchParties).where(eq(searchParties.id, id));
+    return searchParty || undefined;
+  }
+
+  async getSearchPartyMember(searchPartyId: number, userId: number): Promise<SearchPartyMember | undefined> {
+    const [member] = await db
+      .select()
+      .from(searchPartyMembers)
+      .where(
+        and(
+          eq(searchPartyMembers.searchPartyId, searchPartyId),
+          eq(searchPartyMembers.userId, userId)
+        )
+      );
+    return member || undefined;
+  }
+
+  async removeSearchPartyMember(searchPartyId: number, userIdToRemove: number, currentUserId: number): Promise<boolean> {
+    // Check if current user is the owner of the search party
+    const searchParty = await this.getSearchParty(searchPartyId);
+    if (!searchParty || searchParty.createdById !== currentUserId) {
+      throw new Error("Only the search party owner can remove members");
+    }
+
+    const result = await db
+      .delete(searchPartyMembers)
+      .where(
+        and(
+          eq(searchPartyMembers.searchPartyId, searchPartyId),
+          eq(searchPartyMembers.userId, userIdToRemove)
+        )
+      );
+    
+    return result.rowCount > 0;
   }
 
   async addSearchPartyListing(insertListing: InsertSearchPartyListing): Promise<SearchPartyListing> {
