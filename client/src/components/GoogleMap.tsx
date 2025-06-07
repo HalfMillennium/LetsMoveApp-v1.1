@@ -14,7 +14,7 @@ import { COLORS, MAP_STYLES, MapStyleTypes } from "@/lib/constants";
 const containerStyle = {
   width: "100%",
   height: "100%",
-  borderRadius: 10,
+  borderRadius: 12,
 };
 
 // Default map center (will be updated with user's location)
