@@ -31,7 +31,7 @@ export const SearchPartyProvider: React.FC<{ children: React.ReactNode }> = ({
     const syncUser = async () => {
       if (isLoaded && clerkUser) {
         try {
-          const response = await apiRequest("/api/users/sync", "POST", {
+          const response = await apiRequest("POST", "/api/users/sync", {
             email: clerkUser.primaryEmailAddress?.emailAddress,
             fullName: clerkUser.fullName,
             profileImage: clerkUser.imageUrl,
