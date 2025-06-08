@@ -12,10 +12,22 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { Sliders, DollarSign, Bed, Map, PawPrint, Trash2, Users } from "lucide-react";
+import {
+  Sliders,
+  DollarSign,
+  Bed,
+  Map,
+  PawPrint,
+  Trash2,
+  Users,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterSettings, ActiveFilters } from "../types";
-import { PRICE_RANGES, BEDROOM_OPTIONS, DISTANCE_OPTIONS } from "../lib/constants";
+import {
+  PRICE_RANGES,
+  BEDROOM_OPTIONS,
+  DISTANCE_OPTIONS,
+} from "../lib/constants";
 import { Switch } from "@/components/ui/switch";
 
 interface MobileFilterPopoverProps {
@@ -23,10 +35,20 @@ interface MobileFilterPopoverProps {
   onFilterChange: (filterType: string, value: string) => void;
   clearAllFilters: () => void;
   onPetFriendlyToggle: () => void;
-  activeSearchParty?: { id: number; name: string; createdById?: number; createdAt?: string } | null;
+  activeSearchParty?: {
+    id: number;
+    name: string;
+    createdById?: number;
+    createdAt?: string;
+  } | null;
   filterBySearchParty: boolean;
   onSearchPartyFilterToggle: (enabled: boolean) => void;
-  searchParties: Array<{ id: number; name: string; createdById?: number; createdAt?: string }>;
+  searchParties: Array<{
+    id: number;
+    name: string;
+    createdById?: number;
+    createdAt?: string;
+  }>;
   onSearchPartyChange: (searchPartyId: number) => void;
 }
 
@@ -42,8 +64,9 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
   onSearchPartyChange,
 }) => {
   // Count active filters (including search party filter)
-  const activeFilterCount = Object.keys(activeFilters).length + (filterBySearchParty ? 1 : 0);
-  
+  const activeFilterCount =
+    Object.keys(activeFilters).length + (filterBySearchParty ? 1 : 0);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -61,15 +84,15 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[320px] p-0" align="start">
-        <Command>
-          <CommandList className="max-h-[300px]">
+        <Command className="rounded-2xl">
+          <CommandList className="max-h-[300px] p-2 rounded-2xl">
             <CommandGroup heading="Price Range">
               {PRICE_RANGES.map((range) => (
                 <CommandItem
                   key={range.label}
                   value={range.label}
                   onSelect={() => onFilterChange("price", range.label)}
-                  className="flex items-center gap-2 py-2"
+                  className="flex items-center gap-2 py-2 rounded-xl"
                 >
                   <div className="flex items-center gap-2 flex-1">
                     <DollarSign className="h-4 w-4 text-gray-500" />
@@ -81,9 +104,9 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
                 </CommandItem>
               ))}
             </CommandGroup>
-            
+
             <CommandSeparator />
-            
+
             <CommandGroup heading="Bedrooms">
               {BEDROOM_OPTIONS.map((option) => (
                 <CommandItem
@@ -102,9 +125,9 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
                 </CommandItem>
               ))}
             </CommandGroup>
-            
+
             <CommandSeparator />
-            
+
             <CommandGroup heading="Distance">
               {DISTANCE_OPTIONS.map((option) => (
                 <CommandItem
@@ -123,9 +146,9 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
                 </CommandItem>
               ))}
             </CommandGroup>
-            
+
             <CommandSeparator />
-            
+
             <CommandGroup>
               <CommandItem
                 onSelect={onPetFriendlyToggle}
@@ -135,14 +158,14 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
                   <PawPrint className="h-4 w-4 text-gray-500" />
                   <span>Pet Friendly</span>
                 </div>
-                <Switch 
-                  checked={!!activeFilters.petFriendly} 
+                <Switch
+                  checked={!!activeFilters.petFriendly}
                   onCheckedChange={() => onPetFriendlyToggle()}
                   className="data-[state=checked]:bg-[#E9927E]"
                 />
               </CommandItem>
             </CommandGroup>
-            
+
             {/* Search Party Section */}
             {searchParties.length > 0 && (
               <>
@@ -154,7 +177,7 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
                       key={party.id}
                       value={party.name}
                       onSelect={() => onSearchPartyChange(party.id)}
-                      className="flex items-center gap-2 py-2"
+                      className="flex items-center gap-2 py-2 mb-1"
                     >
                       <div className="flex items-center gap-2 flex-1">
                         <Users className="h-4 w-4 text-[#A259FF]" />
@@ -165,24 +188,30 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
                       )}
                     </CommandItem>
                   ))}
-                  
+
                   {/* Filter Toggle for Active Search Party */}
                   {activeSearchParty && (
                     <>
                       <CommandSeparator />
                       <CommandItem
-                        className="flex items-center gap-2 py-3"
-                        onSelect={() => onSearchPartyFilterToggle(!filterBySearchParty)}
+                        className="flex items-center gap-2 py-3 mt-1"
+                        onSelect={() =>
+                          onSearchPartyFilterToggle(!filterBySearchParty)
+                        }
                       >
                         <div className="flex items-center gap-2 flex-1">
                           <Users className="h-4 w-4 text-[#A259FF]" />
                           <div className="flex flex-col">
-                            <span className="text-sm">Filter by {activeSearchParty.name}</span>
-                            <span className="text-xs text-gray-500">Show only apartments in this search party</span>
+                            <span className="text-sm">
+                              Filter by {activeSearchParty.name}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              Show only apartments in this search party
+                            </span>
                           </div>
                         </div>
-                        <Switch 
-                          checked={filterBySearchParty} 
+                        <Switch
+                          checked={filterBySearchParty}
                           onCheckedChange={onSearchPartyFilterToggle}
                           className="data-[state=checked]:bg-[#A259FF]"
                         />
@@ -192,7 +221,7 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
                 </CommandGroup>
               </>
             )}
-            
+
             {activeFilterCount > 0 && (
               <>
                 <CommandSeparator />
