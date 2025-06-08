@@ -131,6 +131,9 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
       drawnRegion.setMap(null);
     }
     
+    // Make the polygon editable to show vertex circles
+    polygon.setEditable(true);
+    
     setDrawnRegion(polygon);
     setIsDrawingMode(false);
     
@@ -170,6 +173,22 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
     console.log("Region bounds:", regionData.bounds);
     console.log("Region center:", regionData.center);
     console.log("Region area (square meters):", regionData.area);
+    
+    // Listen for path changes if user edits the polygon
+    path.addListener('set_at', () => {
+      console.log("Polygon vertex moved");
+      // Could recalculate and log updated region data here
+    });
+    
+    path.addListener('insert_at', () => {
+      console.log("Polygon vertex added");
+      // Could recalculate and log updated region data here
+    });
+    
+    path.addListener('remove_at', () => {
+      console.log("Polygon vertex removed");
+      // Could recalculate and log updated region data here
+    });
   }, [drawnRegion]);
 
   // Clear drawn region
@@ -246,7 +265,7 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
                 clickable: false,
-                editable: false,
+                editable: true,
                 zIndex: 1,
               },
             }}
