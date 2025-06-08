@@ -1,14 +1,16 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
   Marker,
   InfoWindow,
   OverlayView,
+  DrawingManager,
 } from "@react-google-maps/api";
 import { Apartment } from "../types";
-import { Building, Pin } from "lucide-react";
+import { Building, Pin, Edit3, Square } from "lucide-react";
 import { COLORS, MAP_STYLES, MapStyleTypes } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
 
 // Map container style
 const containerStyle = {
@@ -56,14 +58,18 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
     lat: number;
     lng: number;
   } | null>(null);
+  const [isDrawingMode, setIsDrawingMode] = useState(false);
+  const [drawnRegion, setDrawnRegion] = useState<google.maps.Polygon | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
 
   const mapsKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
 
-  // Load Google Maps API
+  // Load Google Maps API with drawing and geometry libraries
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     mapIds: ["ebe32cd9465194d6"],
     googleMapsApiKey: mapsKey,
+    libraries: ["drawing", "geometry"],
   });
 
   // Get user's current location
@@ -105,8 +111,75 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
 
   // Handle map load
   const onMapLoad = useCallback((map: google.maps.Map) => {
-    // Map loaded callback
+    mapRef.current = map;
   }, []);
+
+  // Handle drawing mode toggle
+  const toggleDrawingMode = useCallback(() => {
+    setIsDrawingMode(!isDrawingMode);
+    // Clear existing drawn region when toggling drawing mode
+    if (!isDrawingMode && drawnRegion) {
+      drawnRegion.setMap(null);
+      setDrawnRegion(null);
+    }
+  }, [isDrawingMode, drawnRegion]);
+
+  // Handle polygon completion
+  const onPolygonComplete = useCallback((polygon: google.maps.Polygon) => {
+    // Remove any existing drawn region
+    if (drawnRegion) {
+      drawnRegion.setMap(null);
+    }
+    
+    setDrawnRegion(polygon);
+    setIsDrawingMode(false);
+    
+    // Get polygon coordinates
+    const path = polygon.getPath();
+    const coordinates: { lat: number; lng: number }[] = [];
+    
+    for (let i = 0; i < path.getLength(); i++) {
+      const latLng = path.getAt(i);
+      coordinates.push({
+        lat: latLng.lat(),
+        lng: latLng.lng(),
+      });
+    }
+    
+    // Calculate bounds and area
+    const bounds = new google.maps.LatLngBounds();
+    coordinates.forEach(coord => bounds.extend(coord));
+    
+    const regionData = {
+      coordinates,
+      bounds: {
+        north: bounds.getNorthEast().lat(),
+        south: bounds.getSouthWest().lat(),
+        east: bounds.getNorthEast().lng(),
+        west: bounds.getSouthWest().lng(),
+      },
+      center: {
+        lat: bounds.getCenter().lat(),
+        lng: bounds.getCenter().lng(),
+      },
+      area: google.maps.geometry.spherical.computeArea(path),
+    };
+    
+    console.log("Region drawn by user:", regionData);
+    console.log("Polygon coordinates:", coordinates);
+    console.log("Region bounds:", regionData.bounds);
+    console.log("Region center:", regionData.center);
+    console.log("Region area (square meters):", regionData.area);
+  }, [drawnRegion]);
+
+  // Clear drawn region
+  const clearDrawnRegion = useCallback(() => {
+    if (drawnRegion) {
+      drawnRegion.setMap(null);
+      setDrawnRegion(null);
+      console.log("Drawn region cleared");
+    }
+  }, [drawnRegion]);
 
   if (loadError) {
     return (
@@ -125,7 +198,32 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
   }
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full relative">
+      {/* Drawing Controls */}
+      <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+        <Button
+          onClick={toggleDrawingMode}
+          variant={isDrawingMode ? "default" : "outline"}
+          size="sm"
+          className="bg-white shadow-md hover:bg-gray-100 flex items-center gap-2"
+        >
+          <Edit3 className="h-4 w-4" />
+          {isDrawingMode ? "Stop Drawing" : "Draw Region"}
+        </Button>
+        
+        {drawnRegion && (
+          <Button
+            onClick={clearDrawnRegion}
+            variant="outline"
+            size="sm"
+            className="bg-white shadow-md hover:bg-gray-100 flex items-center gap-2"
+          >
+            <Square className="h-4 w-4" />
+            Clear Region
+          </Button>
+        )}
+      </div>
+
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={mapCenter}
@@ -134,6 +232,26 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
         onLoad={onMapLoad}
         options={mapOptions}
       >
+        {/* Drawing Manager */}
+        {isDrawingMode && (
+          <DrawingManager
+            onPolygonComplete={onPolygonComplete}
+            options={{
+              drawingControl: false,
+              drawingMode: google.maps.drawing.OverlayType.POLYGON,
+              polygonOptions: {
+                fillColor: '#E9927E',
+                fillOpacity: 0.3,
+                strokeColor: '#E9927E',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                clickable: false,
+                editable: false,
+                zIndex: 1,
+              },
+            }}
+          />
+        )}
         {/* User's location marker */}
         {userLocation && (
           <OverlayView
