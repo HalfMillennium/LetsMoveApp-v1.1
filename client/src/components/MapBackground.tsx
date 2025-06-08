@@ -10,10 +10,10 @@ interface MapBackgroundProps {
 
 const MapBackground = ({ children, variant = "map" }: MapBackgroundProps) => {
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 w-full">
       <Header />
       <div
-        className="flex-1 flex flex-col justify-center items-center bg-cover bg-center"
+        className="flex-1 flex flex-col justify-center items-center bg-cover bg-center w-full"
         style={{
           backdropFilter: "opacity(20%)",
           backgroundImage:

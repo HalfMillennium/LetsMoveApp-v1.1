@@ -26,7 +26,7 @@ export const Navigation = ({
 
   return (
     <nav className="w-full z-10">
-      <ul className="flex justify-between gap-2">
+      <ul className="w-full flex justify-between gap-2">
         <li className="flex-1">
           <Link
             href="/favorites"
