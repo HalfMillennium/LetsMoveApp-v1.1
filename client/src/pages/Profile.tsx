@@ -2,11 +2,17 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@clerk/clerk-react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSearchParty } from "../context/SearchPartyContext";
+import { 
+  HousingPreferencesDialog, 
+  NotificationPreferencesDialog, 
+  ProfileEditDialog 
+} from "../components/PreferenceDialogs";
 import {
   MapPin,
   User,
@@ -34,10 +40,16 @@ import { Badge } from "@/components/ui/badge";
 const Profile = () => {
   const { toast } = useToast();
   const { searchParties } = useSearchParty();
-  const { user, isLoaded } = useUser();
+  const { user: clerkUser, isLoaded } = useUser();
 
-  // Show loading state while Clerk is loading
-  if (!isLoaded) {
+  // Fetch current user data from database
+  const { data: user, isLoading: userLoading } = useQuery({
+    queryKey: ["/api/users/me"],
+    enabled: isLoaded && !!clerkUser,
+  });
+
+  // Show loading state while Clerk or user data is loading
+  if (!isLoaded || userLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center w-full">
         <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-gray-200 shadow-lg">
@@ -47,27 +59,30 @@ const Profile = () => {
       </div>
     );
   }
-  const [formData, setFormData] = useState({
-    fullName: user?.fullName || "",
-    email: user?.emailAddresses[0]?.emailAddress || "",
-    mobileNumber: user?.phoneNumbers[0]?.phoneNumber || "",
-    location: "New York, NY",
-    bio: "Looking for a 2-bedroom apartment in downtown with access to public transportation. I work as a software engineer and need a home office.",
-  });
+  // Early return if no user data
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center w-full">
+        <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-gray-200 shadow-lg">
+          <p className="text-gray-600 text-center">Unable to load user profile.</p>
+        </div>
+      </div>
+    );
+  }
 
-  // Housing preferences
-  const [apartmentPreferences, setApartmentPreferences] = useState({
-    minBedrooms: 2,
-    minBathrooms: 1,
-    maxPrice: 3000,
-    petFriendly: true,
-    parking: true,
-    furnished: false,
-    laundry: true,
-  });
+  // Use data from database
+  const apartmentPreferences = {
+    minBedrooms: user.minBedrooms || 1,
+    minBathrooms: user.minBathrooms || 1,
+    maxPrice: user.maxPrice || 3000,
+    petFriendly: user.petFriendly || false,
+    parking: user.parking || false,
+    furnished: user.furnished || false,
+    laundry: user.laundry || false,
+  };
 
-  // Collections data
-  const [collections, setCollections] = useState([
+  // Collections data (static for now)
+  const collections = [
     {
       name: "Downtown Favorites",
       count: 12,
@@ -77,50 +92,27 @@ const Profile = () => {
     { name: "Affordable 2BR", count: 8, icon: Home, color: "bg-green-500" },
     { name: "Luxury Options", count: 5, icon: Star, color: "bg-purple-500" },
     { name: "Near Office", count: 7, icon: Map, color: "bg-orange-500" },
-  ]);
+  ];
 
-  // Neighborhood preferences
-  const [neighborhoodPreferences, setNeighborhoodPreferences] = useState([
+  // Neighborhood preferences from database
+  const neighborhoodPreferences = user.neighborhoodPreferences || [
     "Near Public Transit",
-    "Walkable Area",
-    "Grocery Stores",
-    "Parks Nearby",
-    "Coffee Shops",
-    "Safe Neighborhood",
-  ]);
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSave = () => {
-    // Note: Clerk user data updates should be handled through Clerk's API
-    // For now, we'll just show a success message for local form data
-    toast({
-      title: "Profile Updated",
-      description: "Your profile has been successfully updated.",
-    });
-  };
-
-  const handleRemoveNeighborhoodPreference = (preference: string) => {
-    setNeighborhoodPreferences(
-      neighborhoodPreferences.filter((item) => item !== preference),
-    );
-  };
+    "Walkable Area", 
+    "Safe Neighborhood"
+  ];
 
   const settingsOptions = [
     {
       icon: Bell,
       label: "Notifications",
       description: "Email and push notifications",
+      component: NotificationPreferencesDialog,
     },
     {
       icon: Settings,
       label: "General",
       description: "App preferences and settings",
+      component: null,
     },
   ];
 
@@ -200,14 +192,14 @@ const Profile = () => {
 
                 <div className="mt-12 mb-6">
                   <h2 className="text-xl font-bold text-gray-900 mb-1">
-                    {user?.fullName || user?.firstName || "User"}
+                    {user?.fullName || clerkUser?.fullName || clerkUser?.firstName || "User"}
                   </h2>
                   <p className="text-gray-600 text-sm mb-2">
-                    {user?.emailAddresses[0]?.emailAddress}
+                    {user?.email || clerkUser?.emailAddresses[0]?.emailAddress}
                   </p>
                   <div className="flex items-center justify-center text-gray-500 text-sm">
                     <MapPin size={14} className="mr-1" />
-                    {formData.location}
+                    {user?.location || "Not set"}
                   </div>
                 </div>
 
@@ -232,27 +224,58 @@ const Profile = () => {
             <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 border border-gray-200 shadow-lg">
               <h3 className="font-semibold text-gray-900 mb-4">Settings</h3>
               <div className="space-y-2">
-                {settingsOptions.map((option, index) => (
-                  <button
-                    key={index}
-                    className="w-full flex items-center justify-between py-3 rounded-xl hover:bg-white/50 transition-colors group"
-                  >
-                    <div className="flex items-center">
-                      <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-gray-200 transition-colors">
-                        <option.icon size={16} className="text-gray-600" />
-                      </div>
-                      <div className="text-left">
-                        <div className="text-sm font-medium text-gray-900">
-                          {option.label}
+                {settingsOptions.map((option, index) => {
+                  const SettingComponent = option.component;
+                  
+                  if (SettingComponent) {
+                    return (
+                      <SettingComponent
+                        key={index}
+                        user={user || {}}
+                        trigger={
+                          <button className="w-full flex items-center justify-between py-3 rounded-xl hover:bg-white/50 transition-colors group">
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-gray-200 transition-colors">
+                                <option.icon size={16} className="text-gray-600" />
+                              </div>
+                              <div className="text-left">
+                                <div className="text-sm font-medium text-gray-900">
+                                  {option.label}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {option.description}
+                                </div>
+                              </div>
+                            </div>
+                            <ChevronRight size={16} className="text-gray-400" />
+                          </button>
+                        }
+                      />
+                    );
+                  }
+                  
+                  return (
+                    <button
+                      key={index}
+                      className="w-full flex items-center justify-between py-3 rounded-xl hover:bg-white/50 transition-colors group"
+                    >
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-gray-200 transition-colors">
+                          <option.icon size={16} className="text-gray-600" />
                         </div>
-                        <div className="text-xs text-gray-500">
-                          {option.description}
+                        <div className="text-left">
+                          <div className="text-sm font-medium text-gray-900">
+                            {option.label}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {option.description}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <ChevronRight size={16} className="text-gray-400" />
-                  </button>
-                ))}
+                      <ChevronRight size={16} className="text-gray-400" />
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </motion.div>
@@ -270,14 +293,19 @@ const Profile = () => {
                 <h3 className="text-xl font-bold text-gray-900">
                   Personal Information
                 </h3>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-gray-200 rounded-full"
-                >
-                  <Edit size={14} />
-                  Edit
-                </Button>
+                <ProfileEditDialog
+                  user={user}
+                  trigger={
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-gray-200 rounded-full"
+                    >
+                      <Edit size={14} />
+                      Edit
+                    </Button>
+                  }
+                />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -338,14 +366,19 @@ const Profile = () => {
                 <h3 className="text-xl font-bold text-gray-900">
                   Housing Preferences
                 </h3>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-gray-200 rounded-full"
-                >
-                  <Settings size={14} />
-                  Customize
-                </Button>
+                <HousingPreferencesDialog
+                  user={user}
+                  trigger={
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-gray-200 rounded-full"
+                    >
+                      <Settings size={14} />
+                      Customize
+                    </Button>
+                  }
+                />
               </div>
 
               <div className="space-y-6">
