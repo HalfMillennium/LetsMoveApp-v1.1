@@ -12,6 +12,22 @@ export const users = pgTable("users", {
   fullName: text("full_name"),
   profileImage: text("profile_image"),
   phoneNumber: text("phone_number"),
+  location: text("location"),
+  bio: text("bio"),
+  // Housing preferences
+  minBedrooms: integer("min_bedrooms"),
+  minBathrooms: integer("min_bathrooms"),
+  maxPrice: integer("max_price"),
+  petFriendly: boolean("pet_friendly"),
+  parking: boolean("parking"),
+  furnished: boolean("furnished"),
+  laundry: boolean("laundry"),
+  // Notification preferences
+  emailNotifications: boolean("email_notifications").default(true),
+  pushNotifications: boolean("push_notifications").default(true),
+  searchAlerts: boolean("search_alerts").default(true),
+  // Other preferences
+  neighborhoodPreferences: text("neighborhood_preferences").array(),
   createdAt: timestamp("created_at").defaultNow(),
   lastSignInAt: timestamp("last_sign_in_at")
 });

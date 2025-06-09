@@ -162,7 +162,7 @@ const FilterChips = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className="flex w-full md:w-auto">
+    <div className="flex flex-1">
       <div className="w-full flex flex-wrap gap-3 items-center">
         {/* Mobile version of filters */}
         {isMobile ? (

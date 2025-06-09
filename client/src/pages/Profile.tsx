@@ -118,16 +118,6 @@ const Profile = () => {
       description: "Email and push notifications",
     },
     {
-      icon: Shield,
-      label: "Privacy",
-      description: "Control your data and visibility",
-    },
-    {
-      icon: CreditCard,
-      label: "Billing",
-      description: "Manage payment methods",
-    },
-    {
       icon: Settings,
       label: "General",
       description: "App preferences and settings",
@@ -135,7 +125,7 @@ const Profile = () => {
   ];
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
@@ -143,7 +133,7 @@ const Profile = () => {
     >
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
@@ -177,7 +167,7 @@ const Profile = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Profile Info */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -268,7 +258,7 @@ const Profile = () => {
           </motion.div>
 
           {/* Right Column - Main Content */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}

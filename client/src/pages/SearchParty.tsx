@@ -373,7 +373,7 @@ const SearchParty = () => {
                             return (
                               <div
                                 key={idx}
-                                className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:shadow-md transition-all cursor-pointer group"
+                                className="bg-gray-50 rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg transition-all cursor-pointer group"
                                 onClick={() => handleApartmentSelect(apartment)}
                               >
                                 <div className="relative">

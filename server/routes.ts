@@ -586,6 +586,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update user preferences
+  app.patch("/api/users/preferences", requireAuth(), async (req, res) => {
+    try {
+      const { userId: clerkId } = getAuth(req);
+      
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const updates = req.body;
+      const user = await storage.updateUser(clerkId, updates);
+      
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Error updating user preferences" });
+    }
+  });
+
   app.post("/api/users", async (req, res) => {
     try {
       const { username, password, email, fullName, profileImage } = req.body;

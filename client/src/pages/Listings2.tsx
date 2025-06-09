@@ -437,7 +437,7 @@ const Listings2 = () => {
 
         {/* Main Content */}
         <main className="flex-1 container mx-auto px-6 py-6 space-y-8">
-          <div className="flex flex-1 flex-col md:flex-row items-start md:items-center justify-between md:mb-8 gap-4 md:gap-8">
+          <div className="flex flex-1 flex-col lg:flex-row items-start lg:items-center justify-between lg:mb-8 gap-4 md:gap-8">
             <div className="flex flex-col flex-1">
               <p className="text-xs text-gray-600">
                 {apartments.length} listings available

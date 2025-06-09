@@ -8,7 +8,7 @@ import {
   DrawingManager,
 } from "@react-google-maps/api";
 import { Apartment } from "../types";
-import { Building, Pin, Edit3, Square } from "lucide-react";
+import { Building, Pin, Edit3, X } from "lucide-react";
 import { COLORS, MAP_STYLES, MapStyleTypes } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 
@@ -59,7 +59,9 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
     lng: number;
   } | null>(null);
   const [isDrawingMode, setIsDrawingMode] = useState(false);
-  const [drawnRegion, setDrawnRegion] = useState<google.maps.Polygon | null>(null);
+  const [drawnRegion, setDrawnRegion] = useState<google.maps.Polygon | null>(
+    null,
+  );
   const mapRef = useRef<google.maps.Map | null>(null);
 
   const mapsKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
@@ -125,71 +127,74 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
   }, [isDrawingMode, drawnRegion]);
 
   // Handle polygon completion
-  const onPolygonComplete = useCallback((polygon: google.maps.Polygon) => {
-    // Remove any existing drawn region
-    if (drawnRegion) {
-      drawnRegion.setMap(null);
-    }
-    
-    // Make the polygon editable to show vertex circles
-    polygon.setEditable(true);
-    
-    setDrawnRegion(polygon);
-    setIsDrawingMode(false);
-    
-    // Get polygon coordinates
-    const path = polygon.getPath();
-    const coordinates: { lat: number; lng: number }[] = [];
-    
-    for (let i = 0; i < path.getLength(); i++) {
-      const latLng = path.getAt(i);
-      coordinates.push({
-        lat: latLng.lat(),
-        lng: latLng.lng(),
+  const onPolygonComplete = useCallback(
+    (polygon: google.maps.Polygon) => {
+      // Remove any existing drawn region
+      if (drawnRegion) {
+        drawnRegion.setMap(null);
+      }
+
+      // Make the polygon editable to show vertex circles
+      polygon.setEditable(true);
+
+      setDrawnRegion(polygon);
+      setIsDrawingMode(false);
+
+      // Get polygon coordinates
+      const path = polygon.getPath();
+      const coordinates: { lat: number; lng: number }[] = [];
+
+      for (let i = 0; i < path.getLength(); i++) {
+        const latLng = path.getAt(i);
+        coordinates.push({
+          lat: latLng.lat(),
+          lng: latLng.lng(),
+        });
+      }
+
+      // Calculate bounds and area
+      const bounds = new google.maps.LatLngBounds();
+      coordinates.forEach((coord) => bounds.extend(coord));
+
+      const regionData = {
+        coordinates,
+        bounds: {
+          north: bounds.getNorthEast().lat(),
+          south: bounds.getSouthWest().lat(),
+          east: bounds.getNorthEast().lng(),
+          west: bounds.getSouthWest().lng(),
+        },
+        center: {
+          lat: bounds.getCenter().lat(),
+          lng: bounds.getCenter().lng(),
+        },
+        area: google.maps.geometry.spherical.computeArea(path),
+      };
+
+      console.log("Region drawn by user:", regionData);
+      console.log("Polygon coordinates:", coordinates);
+      console.log("Region bounds:", regionData.bounds);
+      console.log("Region center:", regionData.center);
+      console.log("Region area (square meters):", regionData.area);
+
+      // Listen for path changes if user edits the polygon
+      path.addListener("set_at", () => {
+        console.log("Polygon vertex moved");
+        // Could recalculate and log updated region data here
       });
-    }
-    
-    // Calculate bounds and area
-    const bounds = new google.maps.LatLngBounds();
-    coordinates.forEach(coord => bounds.extend(coord));
-    
-    const regionData = {
-      coordinates,
-      bounds: {
-        north: bounds.getNorthEast().lat(),
-        south: bounds.getSouthWest().lat(),
-        east: bounds.getNorthEast().lng(),
-        west: bounds.getSouthWest().lng(),
-      },
-      center: {
-        lat: bounds.getCenter().lat(),
-        lng: bounds.getCenter().lng(),
-      },
-      area: google.maps.geometry.spherical.computeArea(path),
-    };
-    
-    console.log("Region drawn by user:", regionData);
-    console.log("Polygon coordinates:", coordinates);
-    console.log("Region bounds:", regionData.bounds);
-    console.log("Region center:", regionData.center);
-    console.log("Region area (square meters):", regionData.area);
-    
-    // Listen for path changes if user edits the polygon
-    path.addListener('set_at', () => {
-      console.log("Polygon vertex moved");
-      // Could recalculate and log updated region data here
-    });
-    
-    path.addListener('insert_at', () => {
-      console.log("Polygon vertex added");
-      // Could recalculate and log updated region data here
-    });
-    
-    path.addListener('remove_at', () => {
-      console.log("Polygon vertex removed");
-      // Could recalculate and log updated region data here
-    });
-  }, [drawnRegion]);
+
+      path.addListener("insert_at", () => {
+        console.log("Polygon vertex added");
+        // Could recalculate and log updated region data here
+      });
+
+      path.addListener("remove_at", () => {
+        console.log("Polygon vertex removed");
+        // Could recalculate and log updated region data here
+      });
+    },
+    [drawnRegion],
+  );
 
   // Clear drawn region
   const clearDrawnRegion = useCallback(() => {
@@ -224,20 +229,20 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
           onClick={toggleDrawingMode}
           variant={isDrawingMode ? "default" : "outline"}
           size="sm"
-          className="bg-white shadow-md hover:bg-gray-100 flex items-center gap-2"
+          className="bg-white shadow-md hover:bg-gray-100 flex items-center gap-2 rounded-xl"
         >
           <Edit3 className="h-4 w-4" />
           {isDrawingMode ? "Stop Drawing" : "Draw Region"}
         </Button>
-        
+
         {drawnRegion && (
           <Button
             onClick={clearDrawnRegion}
             variant="outline"
             size="sm"
-            className="bg-white shadow-md hover:bg-gray-100 flex items-center gap-2"
+            className="bg-white shadow-md hover:bg-gray-100 flex items-center gap-2 rounded-xl"
           >
-            <Square className="h-4 w-4" />
+            <X className="h-4 w-4" />
             Clear Region
           </Button>
         )}
@@ -259,9 +264,9 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
               drawingControl: false,
               drawingMode: google.maps.drawing.OverlayType.POLYGON,
               polygonOptions: {
-                fillColor: '#E9927E',
+                fillColor: "#E9927E",
                 fillOpacity: 0.3,
-                strokeColor: '#E9927E',
+                strokeColor: "#E9927E",
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
                 clickable: false,
