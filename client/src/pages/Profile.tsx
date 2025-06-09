@@ -424,21 +424,13 @@ const Profile = () => {
                     </Button>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {neighborhoodPreferences.map((preference, index) => (
+                    {neighborhoodPreferences.map((preference: string, index: number) => (
                       <Badge
                         key={index}
                         variant="secondary"
                         className="bg-white/60 text-gray-700 border border-gray-200 hover:bg-white/80 px-3 py-1"
                       >
                         {preference}
-                        <button
-                          onClick={() =>
-                            handleRemoveNeighborhoodPreference(preference)
-                          }
-                          className="ml-2 hover:text-red-500"
-                        >
-                          <X size={12} />
-                        </button>
                       </Badge>
                     ))}
                   </div>
@@ -527,7 +519,7 @@ const Profile = () => {
                           </h4>
                           <p className="text-sm text-gray-500">
                             Created{" "}
-                            {new Date(party.createdAt).toLocaleDateString()}
+                            {party.createdAt ? new Date(party.createdAt as string).toLocaleDateString() : "Unknown"}
                           </p>
                         </div>
                       </div>
