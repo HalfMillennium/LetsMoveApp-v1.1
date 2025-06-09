@@ -43,7 +43,7 @@ const Profile = () => {
   const { user: clerkUser, isLoaded } = useUser();
 
   // Fetch current user data from database
-  const { data: user, isLoading: userLoading } = useQuery({
+  const { data: user, isLoading: userLoading } = useQuery<any>({
     queryKey: ["/api/users/me"],
     enabled: isLoaded && !!clerkUser,
   });
@@ -70,15 +70,15 @@ const Profile = () => {
     );
   }
 
-  // Use data from database
+  // Use data from database with safe property access
   const apartmentPreferences = {
-    minBedrooms: user.minBedrooms || 1,
-    minBathrooms: user.minBathrooms || 1,
-    maxPrice: user.maxPrice || 3000,
-    petFriendly: user.petFriendly || false,
-    parking: user.parking || false,
-    furnished: user.furnished || false,
-    laundry: user.laundry || false,
+    minBedrooms: user?.minBedrooms || 1,
+    minBathrooms: user?.minBathrooms || 1,
+    maxPrice: user?.maxPrice || 3000,
+    petFriendly: user?.petFriendly || false,
+    parking: user?.parking || false,
+    furnished: user?.furnished || false,
+    laundry: user?.laundry || false,
   };
 
   // Collections data (static for now)
@@ -95,7 +95,7 @@ const Profile = () => {
   ];
 
   // Neighborhood preferences from database
-  const neighborhoodPreferences = user.neighborhoodPreferences || [
+  const neighborhoodPreferences = user?.neighborhoodPreferences || [
     "Near Public Transit",
     "Walkable Area", 
     "Safe Neighborhood"
@@ -146,13 +146,9 @@ const Profile = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
+              className="text-sm text-gray-500"
             >
-              <Button
-                onClick={handleSave}
-                className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-full"
-              >
-                Save Changes
-              </Button>
+              Changes are saved automatically
             </motion.div>
           </div>
         </motion.div>
@@ -314,23 +310,17 @@ const Profile = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Full Name
                     </label>
-                    <Input
-                      name="fullName"
-                      value={formData.fullName}
-                      onChange={handleInputChange}
-                      className="bg-white/60 border-gray-200 focus:border-primary/50 focus:ring-primary/20"
-                    />
+                    <div className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-gray-900">
+                      {user.fullName || clerkUser?.fullName || "Not set"}
+                    </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Email Address
                     </label>
-                    <Input
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="bg-white/60 border-gray-200 focus:border-primary/50 focus:ring-primary/20"
-                    />
+                    <div className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-gray-900">
+                      {user.email || clerkUser?.emailAddresses[0]?.emailAddress || "Not set"}
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-4">
@@ -338,23 +328,17 @@ const Profile = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Phone Number
                     </label>
-                    <Input
-                      name="mobileNumber"
-                      value={formData.mobileNumber}
-                      onChange={handleInputChange}
-                      className="bg-white/60 border-gray-200 focus:border-primary/50 focus:ring-primary/20"
-                    />
+                    <div className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-gray-900">
+                      {user.phoneNumber || clerkUser?.phoneNumbers[0]?.phoneNumber || "Not set"}
+                    </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Location
                     </label>
-                    <Input
-                      name="location"
-                      value={formData.location}
-                      onChange={handleInputChange}
-                      className="bg-white/60 border-gray-200 focus:border-primary/50 focus:ring-primary/20"
-                    />
+                    <div className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-gray-900">
+                      {user.location || "Not set"}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -419,13 +403,9 @@ const Profile = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     About Your Housing Needs
                   </label>
-                  <Textarea
-                    name="bio"
-                    value={formData.bio}
-                    onChange={handleInputChange}
-                    className="min-h-24 bg-white/60 border-gray-200 focus:border-primary/50 focus:ring-primary/20"
-                    placeholder="Tell us about your ideal living situation..."
-                  />
+                  <div className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 min-h-24 text-gray-900">
+                    {user.bio || "No bio provided"}
+                  </div>
                 </div>
 
                 {/* Neighborhood Preferences */}
