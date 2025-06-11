@@ -8,7 +8,7 @@ import {
   DrawingManager,
 } from "@react-google-maps/api";
 import { Apartment } from "../types";
-import { Building, Pin, Edit3, X } from "lucide-react";
+import { Building, Pin, Edit3, X, Map as MapIcon } from "lucide-react";
 import { COLORS, MAP_STYLES, MapStyleTypes } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 
@@ -62,7 +62,11 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
   const [drawnRegion, setDrawnRegion] = useState<google.maps.Polygon | null>(
     null,
   );
+  const [showBoroughs, setShowBoroughs] = useState(false);
+  const [showNeighborhoods, setShowNeighborhoods] = useState(false);
   const mapRef = useRef<google.maps.Map | null>(null);
+  const boroughLayerRef = useRef<google.maps.Data | null>(null);
+  const neighborhoodLayerRef = useRef<google.maps.Data | null>(null);
 
   const mapsKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
 
@@ -111,10 +115,76 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
     setSelectedApartment(null);
   }, []);
 
+  // Load GeoJSON data for NYC boroughs and neighborhoods
+  const loadGeoJSONData = useCallback(async (map: google.maps.Map) => {
+    try {
+      // Create data layers
+      const boroughLayer = new google.maps.Data();
+      const neighborhoodLayer = new google.maps.Data();
+      
+      boroughLayerRef.current = boroughLayer;
+      neighborhoodLayerRef.current = neighborhoodLayer;
+
+      // Set styles for boroughs (thicker lines)
+      boroughLayer.setStyle({
+        strokeColor: '#1A4A4A',
+        strokeWeight: 3,
+        strokeOpacity: 0.8,
+        fillColor: '#E9927E',
+        fillOpacity: 0.1,
+      });
+
+      // Set styles for neighborhoods (thinner lines)
+      neighborhoodLayer.setStyle({
+        strokeColor: '#E9927E',
+        strokeWeight: 1.5,
+        strokeOpacity: 0.6,
+        fillColor: '#C9DAD0',
+        fillOpacity: 0.05,
+      });
+
+      // Load NYC Boroughs GeoJSON
+      // Using NYC Open Data API
+      const boroughResponse = await fetch('https://data.cityofnewyork.us/api/geospatial/tqmj-j8zm?method=export&format=GeoJSON');
+      if (boroughResponse.ok) {
+        const boroughData = await boroughResponse.json();
+        boroughLayer.addGeoJson(boroughData);
+      }
+
+      // Load NYC Neighborhoods GeoJSON  
+      const neighborhoodResponse = await fetch('https://data.cityofnewyork.us/api/geospatial/xyye-rtrs?method=export&format=GeoJSON');
+      if (neighborhoodResponse.ok) {
+        const neighborhoodData = await neighborhoodResponse.json();
+        neighborhoodLayer.addGeoJson(neighborhoodData);
+      }
+
+      // Add info window for borough/neighborhood names
+      const infoWindow = new google.maps.InfoWindow();
+      
+      const addClickListener = (layer: google.maps.Data, nameProperty: string) => {
+        layer.addListener('click', (event: google.maps.Data.MouseEvent) => {
+          const feature = event.feature;
+          const name = feature.getProperty(nameProperty) || feature.getProperty('name') || 'Unknown';
+          
+          infoWindow.setContent(`<div style="padding: 8px; font-weight: bold;">${name}</div>`);
+          infoWindow.setPosition(event.latLng);
+          infoWindow.open(map);
+        });
+      };
+
+      addClickListener(boroughLayer, 'boro_name');
+      addClickListener(neighborhoodLayer, 'ntaname');
+
+    } catch (error) {
+      console.error('Error loading GeoJSON data:', error);
+    }
+  }, []);
+
   // Handle map load
   const onMapLoad = useCallback((map: google.maps.Map) => {
     mapRef.current = map;
-  }, []);
+    loadGeoJSONData(map);
+  }, [loadGeoJSONData]);
 
   // Handle drawing mode toggle
   const toggleDrawingMode = useCallback(() => {
@@ -205,6 +275,30 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
     }
   }, [drawnRegion]);
 
+  // Toggle borough outlines
+  const toggleBoroughs = useCallback(() => {
+    if (boroughLayerRef.current && mapRef.current) {
+      if (showBoroughs) {
+        boroughLayerRef.current.setMap(null);
+      } else {
+        boroughLayerRef.current.setMap(mapRef.current);
+      }
+      setShowBoroughs(!showBoroughs);
+    }
+  }, [showBoroughs]);
+
+  // Toggle neighborhood outlines
+  const toggleNeighborhoods = useCallback(() => {
+    if (neighborhoodLayerRef.current && mapRef.current) {
+      if (showNeighborhoods) {
+        neighborhoodLayerRef.current.setMap(null);
+      } else {
+        neighborhoodLayerRef.current.setMap(mapRef.current);
+      }
+      setShowNeighborhoods(!showNeighborhoods);
+    }
+  }, [showNeighborhoods]);
+
   if (loadError) {
     return (
       <div className="h-full flex items-center justify-center">
@@ -246,6 +340,29 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
             Clear Region
           </Button>
         )}
+      </div>
+
+      {/* Borough and Neighborhood Controls */}
+      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+        <Button
+          onClick={toggleBoroughs}
+          variant={showBoroughs ? "default" : "outline"}
+          size="sm"
+          className="bg-white shadow-md hover:bg-gray-100 flex items-center gap-2 rounded-xl"
+        >
+          <Building className="h-4 w-4" />
+          {showBoroughs ? "Hide Boroughs" : "Show Boroughs"}
+        </Button>
+
+        <Button
+          onClick={toggleNeighborhoods}
+          variant={showNeighborhoods ? "default" : "outline"}
+          size="sm"
+          className="bg-white shadow-md hover:bg-gray-100 flex items-center gap-2 rounded-xl"
+        >
+          <MapIcon className="h-4 w-4" />
+          {showNeighborhoods ? "Hide Neighborhoods" : "Show Neighborhoods"}
+        </Button>
       </div>
 
       <GoogleMap
