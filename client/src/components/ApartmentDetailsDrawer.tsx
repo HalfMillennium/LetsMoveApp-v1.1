@@ -38,29 +38,32 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
 
   return (
     <>
-      {/* Overlay that appears behind the drawer */}
+      {/* Glass overlay with blur effect */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/20 z-30 top-[63px]"
+          className="fixed inset-0 bg-black/10 backdrop-blur-sm z-30 top-[63px]"
           onClick={onClose}
         ></div>
       )}
       <div
-        className={`fixed top-[63px] bottom-0 left-0 z-40 flex flex-col w-full md:w-2/3 lg:w-2/5 bg-white border-r shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto ${
+        className={`fixed top-[63px] bottom-0 left-0 z-40 flex flex-col w-full md:w-2/3 lg:w-2/5 backdrop-blur-xl bg-white/80 border-r border-white/20 shadow-2xl transform transition-all duration-500 ease-out overflow-y-auto ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Header */}
-        <div className="sticky top-0 z-10 bg-white p-4 border-b">
+        {/* Glass header */}
+        <div className="sticky top-0 z-10 backdrop-blur-md bg-white/70 p-6 border-b border-white/20">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold truncate">
-              {apartment.title}
-            </h2>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                {apartment.title}
+              </h2>
+              <p className="text-gray-600">{apartment.address}</p>
+            </div>
             <Button
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="rounded-full hover:bg-gray-100 transition-colors"
+              className="rounded-full hover:bg-white/50 backdrop-blur-sm transition-all duration-200 border border-white/20"
             >
               <X className="h-5 w-5" />
             </Button>
@@ -69,274 +72,187 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
-          {/* Images */}
-          <div className="relative overflow-hidden group">
-            <div className="w-full">
+          {/* Hero Image with Glass Elements */}
+          <div className="relative overflow-hidden group m-4">
+            <div className="w-full rounded-3xl overflow-hidden">
               <img
                 src={apartment.images[0]}
                 alt={apartment.title}
-                className="w-full h-[280px] object-cover transition duration-700 ease-in-out group-hover:scale-105"
+                className="w-full h-[320px] object-cover transition duration-700 ease-in-out group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-50"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
-            <div className="absolute right-4 bottom-4 flex space-x-2">
+            
+            {/* Floating Save Button - Top Right */}
+            <div className="absolute top-4 right-4">
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-white/90 hover:bg-white rounded-full shadow-sm transition-all"
+                className="backdrop-blur-md bg-white/80 hover:bg-white/90 rounded-full shadow-lg border-white/20 transition-all duration-200 px-4"
                 onClick={() => onAddToFavorites?.(apartment.id)}
               >
-                <Heart className="h-4 w-4 text-rose-500" />
+                <Heart className="h-4 w-4 text-rose-500 mr-2" />
                 Save
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-white/90 hover:bg-white rounded-full shadow-sm transition-all"
-              >
-                <Share2 className="h-4 w-4 text-blue-500" />
-                Share
               </Button>
             </div>
 
             {/* Image pagination dots */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1">
-              {[0, 1, 2, 3].map((index) => (
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+              {[0, 1, 2, 3, 4].map((index) => (
                 <div
                   key={index}
-                  className={`w-2 h-2 rounded-full ${
-                    index === 0 ? "bg-white" : "bg-white/50"
+                  className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                    index === 0 ? "bg-white w-6" : "bg-white/60"
                   }`}
                 />
               ))}
             </div>
           </div>
 
-          {/* Main apartment details */}
-          <div className="p-6 space-y-6 w-full">
-            {/* Basic info and price - responsive layout */}
-            <div className="flex flex-1 flex-col md:flex-row md:gap-4 md:justify-between items-center">
-              {/* Left column - Title and interest */}
-              <div className="md:flex-1 flex md:flex-col gap-8">
-                <div className="flex flex-col">
-                  <h1 className="text-2xl font-semibold text-gray-900">
-                    {apartment.title}
-                  </h1>
-                  <p className="text-gray-600">{apartment.address}</p>
+          {/* Glass Card Content */}
+          <div className="px-6 space-y-6">
+            {/* Price and Basic Info Card */}
+            <div className="backdrop-blur-md bg-white/60 rounded-3xl p-6 border border-white/20 shadow-lg">
+              <div className="flex flex-col space-y-4">
+                <div className="flex items-baseline space-x-2">
+                  <span className="text-3xl font-bold text-gray-900">
+                    ${apartment.price}
+                  </span>
+                  <span className="text-gray-600 text-lg">/month</span>
                 </div>
-
-                {/* People who saved this listing */}
-                <div className="flex flex-col">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">
-                    People interested in this listing
-                  </h3>
-                  <div className="flex -space-x-2 overflow-hidden">
-                    {[1, 2, 3, 4, 5].map((index) => (
-                      <div
-                        key={index}
-                        className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
-                        style={{
-                          backgroundColor: [
-                            "#FFA07A",
-                            "#98FB98",
-                            "#87CEFA",
-                            "#FFD700",
-                            "#FF69B4",
-                          ][index % 5],
-                          zIndex: 10 - index,
-                        }}
-                      >
-                        <span className="sr-only">User {index}</span>
-                      </div>
-                    ))}
-                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gray-200 ring-2 ring-white text-xs font-medium text-gray-500">
-                      +8
-                    </div>
+                
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="flex flex-col items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
+                    <Home className="h-5 w-5 text-gray-600 mb-1" />
+                    <span className="text-sm font-medium">{apartment.bedrooms} bed</span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    This apartment is in 3 search parties
-                  </p>
-                </div>
-              </div>
-
-              {/* Right column - Price and details (only visible on md+ screens) */}
-              <div className="hidden md:block md:w-[320px] flex flex-1">
-                <div className="glass-card bg-white/60 p-4 rounded-xl h-full">
-                  <div className="flex flex-col h-full justify-between">
-                    <div className="flex flex-col">
-                      <div className="flex justify-between md:justify-start items-center mb-2 gap-1">
-                        <span className="text-2xl font-semibold text-gray-900">
-                          ${apartment.price}
-                        </span>
-                        <span className="text-gray-500">/month</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 mb-4">
-                        <div className="flex items-center">
-                          <Home className="h-4 w-4 mr-2 text-gray-500" />
-                          <span>{apartment.bedrooms} bed</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Bath className="h-4 w-4 mr-2 text-gray-500" />
-                          <span>{apartment.bathrooms} bath</span>
-                        </div>
-                        {apartment.squareFeet && (
-                          <div className="flex items-center">
-                            <Ruler className="h-4 w-4 mr-2 text-gray-500" />
-                            <span>{apartment.squareFeet} sq ft</span>
-                          </div>
-                        )}
-                        <div className="flex items-center">
-                          <MapPin className="h-4 w-4 mr-2 text-gray-500" />
-                          <span>{apartment.location}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <Button
-                      className="w-full rounded-full"
-                      onClick={() => onAddToSearchParty?.(apartment.id)}
-                    >
-                      <Plus className="h-4 w-4" />
-                      Add to Search Party
-                    </Button>
+                  <div className="flex flex-col items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
+                    <Bath className="h-5 w-5 text-gray-600 mb-1" />
+                    <span className="text-sm font-medium">{apartment.bathrooms} bath</span>
+                  </div>
+                  <div className="flex flex-col items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
+                    <MapPin className="h-5 w-5 text-gray-600 mb-1" />
+                    <span className="text-sm font-medium">{apartment.location}</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <Separator />
-
-            {/* Price and details - Mobile only */}
-            <div className="md:hidden w-full">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <div className="flex flex-col">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-lg font-semibold text-gray-900">
-                      ${apartment.price}
-                    </span>
-                    <span className="text-gray-500">/month</span>
+            {/* People Interested Card */}
+            <div className="backdrop-blur-md bg-white/60 rounded-3xl p-6 border border-white/20 shadow-lg">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                People interested in this listing
+              </h3>
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="flex -space-x-2">
+                  {[1, 2, 3].map((index) => (
+                    <div
+                      key={index}
+                      className="w-8 h-8 rounded-full border-2 border-white shadow-sm"
+                      style={{
+                        backgroundColor: ["#10B981", "#F59E0B", "#8B5CF6"][index - 1],
+                      }}
+                    />
+                  ))}
+                  <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium text-gray-600">
+                    +8
                   </div>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="flex items-center">
-                      <Home className="h-4 w-4 mr-2 text-gray-500" />
-                      <span>{apartment.bedrooms} bed</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Bath className="h-4 w-4 mr-2 text-gray-500" />
-                      <span>{apartment.bathrooms} bath</span>
-                    </div>
-                    {apartment.squareFeet && (
-                      <div className="flex items-center">
-                        <Ruler className="h-4 w-4 mr-2 text-gray-500" />
-                        <span>{apartment.squareFeet} sq ft</span>
-                      </div>
-                    )}
-                    <div className="flex items-center">
-                      <MapPin className="h-4 w-4 mr-2 text-gray-500" />
-                      <span>{apartment.location}</span>
-                    </div>
-                  </div>
-                  <Button
-                    className="w-full"
-                    onClick={() => onAddToSearchParty?.(apartment.id)}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add to Search Party
-                  </Button>
                 </div>
+                <span className="text-sm text-gray-600">
+                  This apartment is in 3 search parties
+                </span>
               </div>
+              
+              <Button
+                className="w-full rounded-2xl backdrop-blur-sm bg-gray-900/90 hover:bg-gray-900 text-white border-0 shadow-lg"
+                onClick={() => onAddToSearchParty?.(apartment.id)}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add to Search Party
+              </Button>
             </div>
 
-            {/* Description */}
-            <div className="w-full">
-              <h3 className="text-lg font-semibold mb-2">
+            {/* Description Card */}
+            <div className="backdrop-blur-md bg-white/60 rounded-3xl p-6 border border-white/20 shadow-lg">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
                 About this apartment
               </h3>
-              <p className="text-gray-700 whitespace-pre-line">
+              <p className="text-gray-700 leading-relaxed">
                 {apartment.description ||
-                  `This beautiful ${apartment.bedrooms}-bedroom, ${
-                    apartment.bathrooms
-                  }-bathroom apartment 
-                  features modern amenities and a spacious layout${
-                    apartment.squareFeet
-                      ? ` with ${apartment.squareFeet} square feet of living space`
-                      : ""
-                  }. 
-                  Located in ${
-                    apartment.location
-                  } with easy access to transportation, shopping, and dining.`}
+                  `This beautiful ${apartment.bedrooms}-bedroom, ${apartment.bathrooms}-bathroom apartment features modern amenities and a spacious layout${
+                    apartment.squareFeet ? ` with ${apartment.squareFeet} square feet of living space` : ""
+                  }. Located in ${apartment.location} with easy access to transportation, shopping, and dining.`}
               </p>
             </div>
 
-            <Separator />
-
-            {/* Amenities */}
-            <div className="w-full">
-              <h3 className="text-lg font-semibold mb-3">
+            {/* Amenities Card */}
+            <div className="backdrop-blur-md bg-white/60 rounded-3xl p-6 border border-white/20 shadow-lg">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
                 What this place offers
               </h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-3">
                 {apartment.amenities && apartment.amenities.length > 0 ? (
-                  apartment.amenities.slice(0, 4).map((amenity, index) => (
-                    <div key={index} className="flex items-center">
-                      <CheckCircle2 className="h-4 w-4 mr-3 text-gray-500" />
-                      <span>{amenity}</span>
+                  apartment.amenities.slice(0, 6).map((amenity, index) => (
+                    <div key={index} className="flex items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
+                      <CheckCircle2 className="h-5 w-5 mr-3 text-green-600" />
+                      <span className="font-medium">{amenity}</span>
                     </div>
                   ))
                 ) : (
                   <>
-                    <div className="flex items-center">
-                      <Wifi className="h-4 w-4 mr-3 text-gray-500" />
-                      <span>High-speed WiFi</span>
+                    <div className="flex items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
+                      <Wifi className="h-5 w-5 mr-3 text-blue-600" />
+                      <span className="font-medium">High-speed WiFi</span>
                     </div>
-                    <div className="flex items-center">
-                      <DollarSign className="h-4 w-4 mr-3 text-gray-500" />
-                      <span>Utilities included</span>
+                    <div className="flex items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
+                      <DollarSign className="h-5 w-5 mr-3 text-green-600" />
+                      <span className="font-medium">Utilities included</span>
                     </div>
-                    <div className="flex items-center">
-                      <BadgeCheck className="h-4 w-4 mr-3 text-gray-500" />
-                      <span>Modern appliances</span>
+                    <div className="flex items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
+                      <BadgeCheck className="h-5 w-5 mr-3 text-purple-600" />
+                      <span className="font-medium">Modern appliances</span>
                     </div>
-                    <div className="flex items-center">
-                      <Map className="h-4 w-4 mr-3 text-gray-500" />
-                      <span>Close to transit</span>
+                    <div className="flex items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
+                      <Map className="h-5 w-5 mr-3 text-orange-600" />
+                      <span className="font-medium">Close to transit</span>
                     </div>
                   </>
                 )}
               </div>
-              {apartment.amenities && apartment.amenities.length > 4 && (
-                <Button variant="outline" className="w-full mt-4">
-                  Show all amenities
-                </Button>
-              )}
             </div>
 
-            <Separator />
-
-            {/* Location */}
-            <div className="w-full">
-              <h3 className="text-lg font-semibold mb-3">Location</h3>
-              <div className="h-[200px] bg-gray-100 rounded-lg overflow-hidden">
+            {/* Location Card */}
+            <div className="backdrop-blur-md bg-white/60 rounded-3xl p-6 border border-white/20 shadow-lg">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Location</h3>
+              <div className="h-[220px] rounded-2xl overflow-hidden mb-4">
                 <img
                   src={`https://maps.googleapis.com/maps/api/staticmap?center=${apartment.latitude},${apartment.longitude}&zoom=14&size=600x300&markers=color:red%7C${apartment.latitude},${apartment.longitude}`}
                   alt="Location map"
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-full h-full object-cover"
                 />
               </div>
-              <p className="mt-2 text-gray-700">
-                {apartment.address} • {apartment.location}
-              </p>
+              <div className="flex items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
+                <MapPin className="h-5 w-5 mr-3 text-red-600" />
+                <span className="font-medium">{apartment.address}</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Fixed footer for mobile */}
-        <div className="md:hidden sticky bottom-0 border-t bg-white p-4">
+        {/* Glass Footer */}
+        <div className="sticky bottom-0 backdrop-blur-md bg-white/80 border-t border-white/20 p-6 m-4 rounded-3xl shadow-lg">
           <div className="flex justify-between items-center">
-            <div>
-              <span className="text-lg font-semibold">${apartment.price}</span>
-              <span className="text-gray-500">/month</span>
+            <div className="flex flex-col">
+              <div className="flex items-baseline space-x-2">
+                <span className="text-2xl font-bold text-gray-900">${apartment.price}</span>
+                <span className="text-gray-600">/month</span>
+              </div>
+              <span className="text-sm text-gray-500">Best price in area</span>
             </div>
-            <Button size="sm" className="px-6">
+            <Button 
+              size="lg" 
+              className="px-8 py-3 rounded-2xl bg-gray-900 hover:bg-gray-800 text-white shadow-lg"
+            >
               Apply Now
             </Button>
           </div>

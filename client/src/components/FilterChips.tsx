@@ -246,7 +246,7 @@ const FilterChips = ({
               {/* Search Party Dropdown - Integrated into filter bar */}
               {activeSearchParty && (
                 <div className="flex items-center">
-                  <div className="flex items-center group">
+                  <div className="flex items-center group gap-4">
                     {/* Search Party Filter Toggle */}
                     <Button
                       variant="ghost"
@@ -255,7 +255,7 @@ const FilterChips = ({
                         handleSearchPartyToggle(!filterBySearchParty)
                       }
                       className={`
-                        flex items-center gap-2 px-3 h-9 transition-all duration-300
+                        flex items-center gap-2 px-3 h-8 rounded-lg transition-all duration-300
                         ${
                           filterBySearchParty
                             ? "bg-primary/90 text-white hover:bg-primary"
@@ -264,7 +264,7 @@ const FilterChips = ({
                       `}
                     >
                       <UsersRound className="h-4 w-4" />
-                      <span className="text-sm font-medium">
+                      <span className="text-md font-medium">
                         {filterBySearchParty ? "Filtering by" : "Filter by"}
                       </span>
                       <div
@@ -275,7 +275,7 @@ const FilterChips = ({
                     </Button>
 
                     {/* Search Party Selector */}
-                    <div className="pl-1">
+                    <div>
                       <OriginDropdown
                         options={searchParties.map((party) => ({
                           label: party.name,

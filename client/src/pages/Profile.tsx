@@ -1,23 +1,18 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSearchParty } from "../context/SearchPartyContext";
-import { 
-  HousingPreferencesDialog, 
-  NotificationPreferencesDialog, 
-  ProfileEditDialog 
+import {
+  HousingPreferencesDialog,
+  NotificationPreferencesDialog,
+  ProfileEditDialog,
 } from "../components/PreferenceDialogs";
 import {
   MapPin,
-  User,
   Edit,
-  X,
   Plus,
   Heart,
   Building,
@@ -64,7 +59,9 @@ const Profile = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center w-full">
         <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-gray-200 shadow-lg">
-          <p className="text-gray-600 text-center">Unable to load user profile.</p>
+          <p className="text-gray-600 text-center">
+            Unable to load user profile.
+          </p>
         </div>
       </div>
     );
@@ -97,8 +94,8 @@ const Profile = () => {
   // Neighborhood preferences from database
   const neighborhoodPreferences = user?.neighborhoodPreferences || [
     "Near Public Transit",
-    "Walkable Area", 
-    "Safe Neighborhood"
+    "Walkable Area",
+    "Safe Neighborhood",
   ];
 
   const settingsOptions = [
@@ -175,7 +172,7 @@ const Profile = () => {
                         />
                         <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-lg font-semibold">
                           {user?.firstName?.charAt(0) ||
-                            user?.emailAddresses[0]?.emailAddress?.charAt(0) ||
+                            user?.emailAddresses?.[0].emailAddress?.charAt(0) ||
                             "U"}
                         </AvatarFallback>
                       </Avatar>
@@ -188,7 +185,10 @@ const Profile = () => {
 
                 <div className="mt-12 mb-6">
                   <h2 className="text-xl font-bold text-gray-900 mb-1">
-                    {user?.fullName || clerkUser?.fullName || clerkUser?.firstName || "User"}
+                    {user?.fullName ||
+                      clerkUser?.fullName ||
+                      clerkUser?.firstName ||
+                      "User"}
                   </h2>
                   <p className="text-gray-600 text-sm mb-2">
                     {user?.email || clerkUser?.emailAddresses[0]?.emailAddress}
@@ -222,7 +222,7 @@ const Profile = () => {
               <div className="space-y-2">
                 {settingsOptions.map((option, index) => {
                   const SettingComponent = option.component;
-                  
+
                   if (SettingComponent) {
                     return (
                       <SettingComponent
@@ -232,7 +232,10 @@ const Profile = () => {
                           <button className="w-full flex items-center justify-between py-3 rounded-xl hover:bg-white/50 transition-colors group">
                             <div className="flex items-center">
                               <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-gray-200 transition-colors">
-                                <option.icon size={16} className="text-gray-600" />
+                                <option.icon
+                                  size={16}
+                                  className="text-gray-600"
+                                />
                               </div>
                               <div className="text-left">
                                 <div className="text-sm font-medium text-gray-900">
@@ -249,7 +252,7 @@ const Profile = () => {
                       />
                     );
                   }
-                  
+
                   return (
                     <button
                       key={index}
@@ -319,7 +322,9 @@ const Profile = () => {
                       Email Address
                     </label>
                     <div className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-gray-900">
-                      {user.email || clerkUser?.emailAddresses[0]?.emailAddress || "Not set"}
+                      {user.email ||
+                        clerkUser?.emailAddresses[0]?.emailAddress ||
+                        "Not set"}
                     </div>
                   </div>
                 </div>
@@ -329,7 +334,9 @@ const Profile = () => {
                       Phone Number
                     </label>
                     <div className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-gray-900">
-                      {user.phoneNumber || clerkUser?.phoneNumbers[0]?.phoneNumber || "Not set"}
+                      {user.phoneNumber ||
+                        clerkUser?.phoneNumbers[0]?.phoneNumber ||
+                        "Not set"}
                     </div>
                   </div>
                   <div>
@@ -424,15 +431,17 @@ const Profile = () => {
                     </Button>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {neighborhoodPreferences.map((preference: string, index: number) => (
-                      <Badge
-                        key={index}
-                        variant="secondary"
-                        className="bg-white/60 text-gray-700 border border-gray-200 hover:bg-white/80 px-3 py-1"
-                      >
-                        {preference}
-                      </Badge>
-                    ))}
+                    {neighborhoodPreferences.map(
+                      (preference: string, index: number) => (
+                        <Badge
+                          key={index}
+                          variant="secondary"
+                          className="bg-white/60 text-gray-700 border border-gray-200 hover:bg-white/80 px-3 py-1"
+                        >
+                          {preference}
+                        </Badge>
+                      ),
+                    )}
                   </div>
                 </div>
               </div>
@@ -519,7 +528,11 @@ const Profile = () => {
                           </h4>
                           <p className="text-sm text-gray-500">
                             Created{" "}
-                            {party.createdAt ? new Date(party.createdAt as string).toLocaleDateString() : "Unknown"}
+                            {party.createdAt
+                              ? new Date(
+                                  party.createdAt as string,
+                                ).toLocaleDateString()
+                              : "Unknown"}
                           </p>
                         </div>
                       </div>
