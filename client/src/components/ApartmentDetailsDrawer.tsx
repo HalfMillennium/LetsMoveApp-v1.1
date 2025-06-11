@@ -51,19 +51,19 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
         }`}
       >
         {/* Glass header */}
-        <div className="sticky top-0 z-10 backdrop-blur-md bg-white/70 p-6 border-b border-white/20">
-          <div className="flex justify-between items-center">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">
+        <div className="sticky top-0 z-10 backdrop-blur-md bg-white/70 px-6 py-4 border-b border-white/20">
+          <div className="flex justify-between items-start">
+            <div className="flex-1 min-w-0">
+              <h2 className="text-xl font-semibold text-gray-900 mb-1 truncate">
                 {apartment.title}
               </h2>
-              <p className="text-gray-600">{apartment.address}</p>
+              <p className="text-sm text-gray-600 truncate">{apartment.address}</p>
             </div>
             <Button
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="rounded-full hover:bg-white/50 backdrop-blur-sm transition-all duration-200 border border-white/20"
+              className="ml-4 rounded-full hover:bg-white/50 backdrop-blur-sm transition-all duration-200"
             >
               <X className="h-5 w-5" />
             </Button>
@@ -73,36 +73,36 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
           {/* Hero Image with Glass Elements */}
-          <div className="relative overflow-hidden group m-4">
-            <div className="w-full rounded-3xl overflow-hidden">
+          <div className="relative overflow-hidden group mx-6 mt-6 mb-4">
+            <div className="w-full rounded-2xl overflow-hidden">
               <img
                 src={apartment.images[0]}
                 alt={apartment.title}
-                className="w-full h-[320px] object-cover transition duration-700 ease-in-out group-hover:scale-105"
+                className="w-full h-[280px] object-cover transition duration-700 ease-in-out group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
             
             {/* Floating Save Button - Top Right */}
-            <div className="absolute top-4 right-4">
+            <div className="absolute top-3 right-3">
               <Button
                 variant="outline"
                 size="sm"
-                className="backdrop-blur-md bg-white/80 hover:bg-white/90 rounded-full shadow-lg border-white/20 transition-all duration-200 px-4"
+                className="backdrop-blur-md bg-white/90 hover:bg-white rounded-full shadow-md border-white/30 transition-all duration-200"
                 onClick={() => onAddToFavorites?.(apartment.id)}
               >
-                <Heart className="h-4 w-4 text-rose-500 mr-2" />
+                <Heart className="h-4 w-4 text-rose-500 mr-1" />
                 Save
               </Button>
             </div>
 
             {/* Image pagination dots */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1">
               {[0, 1, 2, 3, 4].map((index) => (
                 <div
                   key={index}
-                  className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                    index === 0 ? "bg-white w-6" : "bg-white/60"
+                  className={`h-1.5 rounded-full transition-all duration-200 ${
+                    index === 0 ? "bg-white w-4" : "bg-white/60 w-1.5"
                   }`}
                 />
               ))}
@@ -112,59 +112,59 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
           {/* Glass Card Content */}
           <div className="px-6 space-y-6">
             {/* Price and Basic Info Card */}
-            <div className="backdrop-blur-md bg-white/60 rounded-3xl p-6 border border-white/20 shadow-lg">
-              <div className="flex flex-col space-y-4">
-                <div className="flex items-baseline space-x-2">
-                  <span className="text-3xl font-bold text-gray-900">
-                    ${apartment.price}
-                  </span>
-                  <span className="text-gray-600 text-lg">/month</span>
+            <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
+              <div className="flex items-baseline space-x-2 mb-4">
+                <span className="text-2xl font-bold text-gray-900">
+                  ${apartment.price}
+                </span>
+                <span className="text-gray-600">/month</span>
+              </div>
+              
+              <div className="grid grid-cols-3 gap-3">
+                <div className="flex flex-col items-center p-3 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                  <Home className="h-4 w-4 text-gray-600 mb-1" />
+                  <span className="text-xs font-medium text-center">{apartment.bedrooms} bed</span>
                 </div>
-                
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="flex flex-col items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
-                    <Home className="h-5 w-5 text-gray-600 mb-1" />
-                    <span className="text-sm font-medium">{apartment.bedrooms} bed</span>
-                  </div>
-                  <div className="flex flex-col items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
-                    <Bath className="h-5 w-5 text-gray-600 mb-1" />
-                    <span className="text-sm font-medium">{apartment.bathrooms} bath</span>
-                  </div>
-                  <div className="flex flex-col items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
-                    <MapPin className="h-5 w-5 text-gray-600 mb-1" />
-                    <span className="text-sm font-medium">{apartment.location}</span>
-                  </div>
+                <div className="flex flex-col items-center p-3 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                  <Bath className="h-4 w-4 text-gray-600 mb-1" />
+                  <span className="text-xs font-medium text-center">{apartment.bathrooms} bath</span>
+                </div>
+                <div className="flex flex-col items-center p-3 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                  <MapPin className="h-4 w-4 text-gray-600 mb-1" />
+                  <span className="text-xs font-medium text-center truncate">{apartment.location}</span>
                 </div>
               </div>
             </div>
 
             {/* People Interested Card */}
-            <div className="backdrop-blur-md bg-white/60 rounded-3xl p-6 border border-white/20 shadow-lg">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
                 People interested in this listing
               </h3>
-              <div className="flex items-center space-x-3 mb-3">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3].map((index) => (
-                    <div
-                      key={index}
-                      className="w-8 h-8 rounded-full border-2 border-white shadow-sm"
-                      style={{
-                        backgroundColor: ["#10B981", "#F59E0B", "#8B5CF6"][index - 1],
-                      }}
-                    />
-                  ))}
-                  <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium text-gray-600">
-                    +8
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-2">
+                  <div className="flex -space-x-2">
+                    {[1, 2, 3].map((index) => (
+                      <div
+                        key={index}
+                        className="w-7 h-7 rounded-full border-2 border-white shadow-sm"
+                        style={{
+                          backgroundColor: ["#10B981", "#F59E0B", "#8B5CF6"][index - 1],
+                        }}
+                      />
+                    ))}
+                    <div className="w-7 h-7 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium text-gray-600">
+                      +8
+                    </div>
                   </div>
+                  <span className="text-sm text-gray-600">
+                    In 3 search parties
+                  </span>
                 </div>
-                <span className="text-sm text-gray-600">
-                  This apartment is in 3 search parties
-                </span>
               </div>
               
               <Button
-                className="w-full rounded-2xl backdrop-blur-sm bg-gray-900/90 hover:bg-gray-900 text-white border-0 shadow-lg"
+                className="w-full rounded-xl bg-gray-900 hover:bg-gray-800 text-white shadow-sm"
                 onClick={() => onAddToSearchParty?.(apartment.id)}
               >
                 <Plus className="h-4 w-4 mr-2" />
@@ -173,11 +173,11 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
             </div>
 
             {/* Description Card */}
-            <div className="backdrop-blur-md bg-white/60 rounded-3xl p-6 border border-white/20 shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
                 About this apartment
               </h3>
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-sm">
                 {apartment.description ||
                   `This beautiful ${apartment.bedrooms}-bedroom, ${apartment.bathrooms}-bathroom apartment features modern amenities and a spacious layout${
                     apartment.squareFeet ? ` with ${apartment.squareFeet} square feet of living space` : ""
@@ -186,35 +186,35 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
             </div>
 
             {/* Amenities Card */}
-            <div className="backdrop-blur-md bg-white/60 rounded-3xl p-6 border border-white/20 shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
                 What this place offers
               </h3>
-              <div className="grid grid-cols-1 gap-3">
+              <div className="grid grid-cols-1 gap-2">
                 {apartment.amenities && apartment.amenities.length > 0 ? (
                   apartment.amenities.slice(0, 6).map((amenity, index) => (
-                    <div key={index} className="flex items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
-                      <CheckCircle2 className="h-5 w-5 mr-3 text-green-600" />
-                      <span className="font-medium">{amenity}</span>
+                    <div key={index} className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                      <CheckCircle2 className="h-4 w-4 mr-2.5 text-green-600" />
+                      <span className="text-sm font-medium">{amenity}</span>
                     </div>
                   ))
                 ) : (
                   <>
-                    <div className="flex items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
-                      <Wifi className="h-5 w-5 mr-3 text-blue-600" />
-                      <span className="font-medium">High-speed WiFi</span>
+                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                      <Wifi className="h-4 w-4 mr-2.5 text-blue-600" />
+                      <span className="text-sm font-medium">High-speed WiFi</span>
                     </div>
-                    <div className="flex items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
-                      <DollarSign className="h-5 w-5 mr-3 text-green-600" />
-                      <span className="font-medium">Utilities included</span>
+                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                      <DollarSign className="h-4 w-4 mr-2.5 text-green-600" />
+                      <span className="text-sm font-medium">Utilities included</span>
                     </div>
-                    <div className="flex items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
-                      <BadgeCheck className="h-5 w-5 mr-3 text-purple-600" />
-                      <span className="font-medium">Modern appliances</span>
+                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                      <BadgeCheck className="h-4 w-4 mr-2.5 text-purple-600" />
+                      <span className="text-sm font-medium">Modern appliances</span>
                     </div>
-                    <div className="flex items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
-                      <Map className="h-5 w-5 mr-3 text-orange-600" />
-                      <span className="font-medium">Close to transit</span>
+                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                      <Map className="h-4 w-4 mr-2.5 text-orange-600" />
+                      <span className="text-sm font-medium">Close to transit</span>
                     </div>
                   </>
                 )}
@@ -222,36 +222,35 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
             </div>
 
             {/* Location Card */}
-            <div className="backdrop-blur-md bg-white/60 rounded-3xl p-6 border border-white/20 shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Location</h3>
-              <div className="h-[220px] rounded-2xl overflow-hidden mb-4">
+            <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Location</h3>
+              <div className="h-[200px] rounded-xl overflow-hidden mb-3">
                 <img
                   src={`https://maps.googleapis.com/maps/api/staticmap?center=${apartment.latitude},${apartment.longitude}&zoom=14&size=600x300&markers=color:red%7C${apartment.latitude},${apartment.longitude}`}
                   alt="Location map"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="flex items-center p-3 backdrop-blur-sm bg-white/40 rounded-2xl border border-white/20">
-                <MapPin className="h-5 w-5 mr-3 text-red-600" />
-                <span className="font-medium">{apartment.address}</span>
+              <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                <MapPin className="h-4 w-4 mr-2.5 text-red-600" />
+                <span className="text-sm font-medium truncate">{apartment.address}</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Glass Footer */}
-        <div className="sticky bottom-0 backdrop-blur-md bg-white/80 border-t border-white/20 p-6 m-4 rounded-3xl shadow-lg">
+        <div className="sticky bottom-0 backdrop-blur-md bg-white/80 border-t border-white/20 p-5 mx-6 mb-4 rounded-2xl shadow-sm">
           <div className="flex justify-between items-center">
             <div className="flex flex-col">
-              <div className="flex items-baseline space-x-2">
-                <span className="text-2xl font-bold text-gray-900">${apartment.price}</span>
-                <span className="text-gray-600">/month</span>
+              <div className="flex items-baseline space-x-1">
+                <span className="text-xl font-bold text-gray-900">${apartment.price}</span>
+                <span className="text-gray-600 text-sm">/month</span>
               </div>
-              <span className="text-sm text-gray-500">Best price in area</span>
+              <span className="text-xs text-gray-500">Best price in area</span>
             </div>
             <Button 
-              size="lg" 
-              className="px-8 py-3 rounded-2xl bg-gray-900 hover:bg-gray-800 text-white shadow-lg"
+              className="px-6 py-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-white shadow-sm"
             >
               Apply Now
             </Button>
