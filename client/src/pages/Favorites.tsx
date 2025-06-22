@@ -10,6 +10,12 @@ const Favorites = () => {
   const { favorites, isLoading } = useFavorites();
   const { searchParties } = useSearchParty();
 
+  console.log("🔍 Favorites Page: Rendering with data:", {
+    favorites,
+    isLoading,
+    favoritesCount: favorites.length
+  });
+
   return (
     <motion.section 
       initial={{ opacity: 0 }}

@@ -140,16 +140,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/favorites", requireAuth(), async (req, res) => {
     try {
       const { userId: clerkId } = getAuth(req);
+      console.log("🔍 API: GET /api/favorites - clerkId:", clerkId);
 
       if (!clerkId) {
+        console.log("🔍 API: GET /api/favorites - No clerkId, unauthorized");
         return res.status(401).json({ message: "Unauthorized" });
       }
 
       const user = await getOrCreateUser(clerkId);
+      console.log("🔍 API: GET /api/favorites - user:", user);
+      
       const favorites = await storage.getFavoritesByUserId(user.id);
+      console.log("🔍 API: GET /api/favorites - favorites from storage:", favorites);
+      
       res.json(favorites);
     } catch (error) {
-      console.error("Error fetching favorites:", error);
+      console.error("🔍 API: Error fetching favorites:", error);
       res.status(500).json({ message: "Error fetching favorites" });
     }
   });
@@ -158,24 +164,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { userId: clerkId } = getAuth(req);
       const { apartmentId } = req.body;
+      console.log("🔍 API: POST /api/favorites - clerkId:", clerkId, "apartmentId:", apartmentId);
 
       if (!clerkId) {
+        console.log("🔍 API: POST /api/favorites - No clerkId, unauthorized");
         return res.status(401).json({ message: "Unauthorized" });
       }
 
       if (!apartmentId) {
+        console.log("🔍 API: POST /api/favorites - No apartmentId provided");
         return res.status(400).json({ message: "ApartmentId is required" });
       }
 
       const user = await getOrCreateUser(clerkId);
+      console.log("🔍 API: POST /api/favorites - user:", user);
+      
       const favorite = await storage.addFavorite({
         userId: user.id,
         apartmentId: Number(apartmentId),
       });
+      console.log("🔍 API: POST /api/favorites - created favorite:", favorite);
 
       res.status(201).json(favorite);
     } catch (error) {
-      console.error("Error adding favorite:", error);
+      console.error("🔍 API: Error adding favorite:", error);
       res.status(500).json({ message: "Error adding favorite" });
     }
   });
@@ -183,18 +195,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/favorites/:id", requireAuth(), async (req, res) => {
     try {
       const { userId: clerkId } = getAuth(req);
+      const favoriteId = req.params.id;
+      console.log("🔍 API: DELETE /api/favorites/:id - clerkId:", clerkId, "favoriteId:", favoriteId);
 
       if (!clerkId) {
+        console.log("🔍 API: DELETE /api/favorites/:id - No clerkId, unauthorized");
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      const result = await storage.removeFavorite(Number(req.params.id));
+      const result = await storage.removeFavorite(Number(favoriteId));
+      console.log("🔍 API: DELETE /api/favorites/:id - storage result:", result);
+      
       if (!result) {
+        console.log("🔍 API: DELETE /api/favorites/:id - Favorite not found");
         return res.status(404).json({ message: "Favorite not found" });
       }
+      
+      console.log("🔍 API: DELETE /api/favorites/:id - Successfully removed favorite");
       res.status(204).send();
     } catch (error) {
-      console.error("Error removing favorite:", error);
+      console.error("🔍 API: Error removing favorite:", error);
       res.status(500).json({ message: "Error removing favorite" });
     }
   });

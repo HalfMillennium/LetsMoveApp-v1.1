@@ -44,6 +44,8 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
 
+  console.log("🔍 FavoritesProvider: Initializing");
+
   // Fetch favorites
   const {
     data: favorites = [],
@@ -52,26 +54,34 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   } = useQuery<FavoriteWithApartment[]>({
     queryKey: ["/api/favorites"],
     queryFn: async () => {
+      console.log("🔍 FavoritesProvider: Fetching favorites from API");
       const response = await apiRequest("GET", "/api/favorites");
-      return response.json();
+      const data = await response.json();
+      console.log("🔍 FavoritesProvider: Received favorites data:", data);
+      return data;
     },
   });
 
   // Add favorite mutation
   const addFavoriteMutation = useMutation({
     mutationFn: async (apartmentId: number) => {
-      return apiRequest("POST", "/api/favorites", {
+      console.log("🔍 FavoritesProvider: Adding favorite for apartment ID:", apartmentId);
+      const response = await apiRequest("POST", "/api/favorites", {
         apartmentId,
       });
+      console.log("🔍 FavoritesProvider: Add favorite response:", response);
+      return response;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("🔍 FavoritesProvider: Add favorite successful:", data);
       queryClient.invalidateQueries({ queryKey: ["/api/favorites"] });
       toast({
         title: "Added to favorites",
         description: "The apartment has been added to your favorites.",
       });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("🔍 FavoritesProvider: Add favorite failed:", error);
       toast({
         title: "Error",
         description: "Could not add to favorites. Please try again.",
@@ -83,16 +93,21 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   // Remove favorite mutation
   const removeFavoriteMutation = useMutation({
     mutationFn: async (favoriteId: number) => {
-      return apiRequest("DELETE", `/api/favorites/${favoriteId}`);
+      console.log("🔍 FavoritesProvider: Removing favorite with ID:", favoriteId);
+      const response = await apiRequest("DELETE", `/api/favorites/${favoriteId}`);
+      console.log("🔍 FavoritesProvider: Remove favorite response:", response);
+      return response;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("🔍 FavoritesProvider: Remove favorite successful:", data);
       queryClient.invalidateQueries({ queryKey: ["/api/favorites"] });
       toast({
         title: "Removed from favorites",
         description: "The apartment has been removed from your favorites.",
       });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("🔍 FavoritesProvider: Remove favorite failed:", error);
       toast({
         title: "Error",
         description: "Could not remove from favorites. Please try again.",
@@ -103,16 +118,21 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
 
   // Check if an apartment is favorited
   const isFavorite = (apartmentId: number): boolean => {
-    return favorites.some((fav) => fav.apartmentId === apartmentId);
+    const result = favorites.some((fav) => fav.apartmentId === apartmentId);
+    console.log(`🔍 FavoritesProvider: Checking if apartment ${apartmentId} is favorite:`, result);
+    console.log(`🔍 FavoritesProvider: Current favorites:`, favorites.map(f => ({ id: f.id, apartmentId: f.apartmentId })));
+    return result;
   };
 
   // Add a favorite
   const addFavorite = async (apartmentId: number): Promise<void> => {
+    console.log("🔍 FavoritesProvider: addFavorite called with apartmentId:", apartmentId);
     await addFavoriteMutation.mutateAsync(apartmentId);
   };
 
   // Remove a favorite
   const removeFavorite = async (favoriteId: number): Promise<void> => {
+    console.log("🔍 FavoritesProvider: removeFavorite called with favoriteId:", favoriteId);
     await removeFavoriteMutation.mutateAsync(favoriteId);
   };
 
