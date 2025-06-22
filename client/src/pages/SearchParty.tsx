@@ -121,7 +121,7 @@ const SearchParty = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-[#FFF9F2] via-white to-[#FFF5E6] w-full"
+      className="min-h-screen bg-gray-50 w-full"
     >
       <div className="container mx-auto px-6 py-8">
         {/* Header Section */}
@@ -129,25 +129,25 @@ const SearchParty = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex flex-col sm:flex-row sm:items-center justify-between mb-8"
+          className="flex flex-col sm:flex-row sm:items-center justify-between mb-12"
         >
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-semibold text-gray-900 mb-1">
               Search Parties
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-500 text-sm">
               Collaborate with friends to find the perfect place
             </p>
           </motion.div>
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="mt-4 sm:mt-0 rounded-full bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5">
+              <Button className="mt-4 sm:mt-0 bg-gray-900 hover:bg-gray-800 text-white font-medium px-4 py-2 rounded-lg text-sm">
                 <Plus className="mr-2 h-4 w-4" />
-                Create New Party
+                Create Party
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-white border border-gray-200 rounded-xl shadow-lg">
@@ -202,14 +202,14 @@ const SearchParty = () => {
         </motion.div>
 
         {isLoading ? (
-          <div className="space-y-6">
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-200">
-              <Skeleton className="h-8 w-48 mb-4" />
+          <div className="space-y-8">
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <Skeleton className="h-6 w-48 mb-2" />
               <Skeleton className="h-4 w-32 mb-6" />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Skeleton className="h-48 rounded-lg" />
-                <Skeleton className="h-48 rounded-lg" />
-                <Skeleton className="h-48 rounded-lg" />
+                <Skeleton className="h-40 rounded-lg" />
+                <Skeleton className="h-40 rounded-lg" />
+                <Skeleton className="h-40 rounded-lg" />
               </div>
             </div>
           </div>
@@ -218,7 +218,7 @@ const SearchParty = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="space-y-6"
+            className="space-y-8"
           >
             {searchParties.map((searchParty, index) => {
               // Show 3 sample apartments per search party
@@ -235,17 +235,16 @@ const SearchParty = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                  whileHover={{ y: -2, transition: { duration: 0.2 } }}
-                  className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                  className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-gray-300 transition-colors duration-200"
                 >
                   {/* Header Section */}
-                  <div className="bg-gradient-to-r from-orange-400 to-pink-500 px-6 py-4">
+                  <div className="px-6 py-5 border-b border-gray-100">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-                      <div className="text-white">
-                        <h2 className="text-xl font-bold mb-1">
+                      <div>
+                        <h2 className="text-lg font-semibold text-gray-900 mb-1">
                           {searchParty.name}
                         </h2>
-                        <div className="text-orange-100 text-sm">
+                        <div className="text-gray-500 text-sm">
                           {listingCount} listings • Updated {daysAgo} days ago
                         </div>
                       </div>
@@ -253,18 +252,18 @@ const SearchParty = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-full"
+                          className="border-gray-200 text-gray-600 hover:bg-gray-50 rounded-md text-xs"
                           onClick={() => handleOpenChat(searchParty)}
                         >
-                          <MessageCircle className="h-4 w-4 mr-1" />
+                          <MessageCircle className="h-3 w-3 mr-1" />
                           Chat
                         </Button>
                         <Button
                           variant="outline"
                           size="sm"
-                          className="bg-white/10 border-white/20 text-white hover:bg-white/20 rounded-full"
+                          className="border-gray-200 text-gray-600 hover:bg-gray-50 rounded-md text-xs"
                         >
-                          <Calendar className="h-4 w-4 mr-1" />
+                          <Calendar className="h-3 w-3 mr-1" />
                           Schedule
                         </Button>
                       </div>
@@ -275,44 +274,44 @@ const SearchParty = () => {
                     {/* Members section */}
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center">
-                        <div className="flex -space-x-2 mr-3">
-                          {mockUserImages.slice(0, 4).map((img, idx) => (
+                        <div className="flex -space-x-1 mr-3">
+                          {mockUserImages.slice(0, 3).map((img, idx) => (
                             <img
                               key={idx}
                               src={img}
                               alt={`Member ${idx + 1}`}
-                              className="w-8 h-8 rounded-full border-2 border-white object-cover shadow-sm"
+                              className="w-6 h-6 rounded-full border border-white object-cover"
                             />
                           ))}
                         </div>
-                        <span className="text-sm text-gray-600 font-medium">
+                        <span className="text-xs text-gray-500">
                           {mockUserImages.length} members
                         </span>
                       </div>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-sm text-gray-600 hover:bg-gray-100 rounded-full px-3 py-1"
+                        className="text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-md px-2 py-1"
                       >
-                        <Users className="h-4 w-4 mr-1" />
+                        <Users className="h-3 w-3 mr-1" />
                         Manage
                       </Button>
                     </div>
 
                     {/* Recently Added Section */}
                     <div className="mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      <h3 className="text-sm font-medium text-gray-900 mb-3">
                         Recent Listings
                       </h3>
                     </div>
 
                     {/* Listings grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                       {listings.length > 0
                         ? listings.slice(0, 3).map((listing, idx) => (
                             <div
                               key={idx}
-                              className="bg-gray-50 rounded-2xl overflow-hidden border border-gray-200 hover:shadow-xl transition-all cursor-pointer group"
+                              className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
                               onClick={() =>
                                 handleApartmentSelect(listing.apartment!)
                               }
@@ -324,43 +323,38 @@ const SearchParty = () => {
                                     `https://source.unsplash.com/random/300x200/?apartment,${idx}`
                                   }
                                   alt="Apartment"
-                                  className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-200"
+                                  className="w-full h-32 object-cover"
                                 />
-                                <div className="absolute top-3 right-3 bg-white/95 text-gray-900 text-sm font-semibold px-3 py-1 rounded-full shadow-sm">
+                                <div className="absolute top-2 right-2 bg-white text-gray-900 text-xs font-medium px-2 py-1 rounded-md">
                                   $
                                   {listing.apartment?.price || 1500 + idx * 300}
                                   /mo
                                 </div>
                               </div>
-                              <div className="p-4 bg-white">
-                                <h4 className="font-semibold text-gray-900 mb-2 line-clamp-1">
+                              <div className="p-3 bg-white">
+                                <h4 className="font-medium text-gray-900 mb-1 text-sm line-clamp-1">
                                   {listing.apartment?.title ||
                                     `Apartment ${idx + 1}`}
                                 </h4>
-                                <div className="flex items-center text-gray-600 text-sm mb-2">
-                                  <span className="font-medium">
-                                    {listing.apartment?.bedrooms ||
-                                      (idx % 3) + 1}{" "}
-                                    bed • {listing.apartment?.bathrooms || 1}{" "}
-                                    bath
-                                  </span>
-                                  <span className="mx-2">•</span>
-                                  <span>
-                                    {listing.apartment?.squareFeet ||
-                                      800 + idx * 100}{" "}
-                                    sq ft
-                                  </span>
+                                <div className="text-gray-500 text-xs mb-1">
+                                  {listing.apartment?.bedrooms ||
+                                    (idx % 3) + 1}{" "}
+                                  bed • {listing.apartment?.bathrooms || 1}{" "}
+                                  bath
                                 </div>
-                                <div className="text-gray-500 text-sm mb-3 line-clamp-1">
-                                  {listing.apartment?.location ||
-                                    (idx === 0
-                                      ? "New York, NY"
-                                      : idx === 1
-                                        ? "Brooklyn, NY"
-                                        : "Jersey City, NJ")}
+                                <div className="flex items-center text-gray-400 text-xs">
+                                  <MapPin className="h-3 w-3 mr-1" />
+                                  <span className="truncate">
+                                    {listing.apartment?.location ||
+                                      (idx === 0
+                                        ? "New York, NY"
+                                        : idx === 1
+                                          ? "Brooklyn, NY"
+                                          : "Jersey City, NJ")}
+                                  </span>
                                 </div>
                                 {listing.notes && (
-                                  <div className="mt-3 text-xs text-gray-600 italic line-clamp-2 bg-gray-50 p-3 rounded-lg">
+                                  <div className="mt-2 text-xs text-gray-500 italic line-clamp-2 bg-gray-50 p-2 rounded-md">
                                     "{listing.notes}"
                                   </div>
                                 )}
@@ -373,32 +367,31 @@ const SearchParty = () => {
                             return (
                               <div
                                 key={idx}
-                                className="bg-gray-50 rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg transition-all cursor-pointer group"
+                                className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
                                 onClick={() => handleApartmentSelect(apartment)}
                               >
                                 <div className="relative">
                                   <img
                                     src={apartment.images[0]}
                                     alt={apartment.title}
-                                    className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-200"
+                                    className="w-full h-32 object-cover"
                                   />
-                                  <div className="absolute top-3 right-3 bg-white/95 text-gray-900 text-sm font-semibold px-3 py-1 rounded-full shadow-sm">
+                                  <div className="absolute top-2 right-2 bg-white text-gray-900 text-xs font-medium px-2 py-1 rounded-md">
                                     ${apartment.price}/mo
                                   </div>
                                 </div>
-                                <div className="p-4 bg-white">
-                                  <h4 className="font-semibold text-gray-900 mb-2 line-clamp-1">
+                                <div className="p-3 bg-white">
+                                  <h4 className="font-medium text-gray-900 mb-1 text-sm line-clamp-1">
                                     {apartment.title}
                                   </h4>
-                                  <div className="flex items-center text-gray-600 text-sm mb-2">
-                                    <span className="font-medium">
-                                      {apartment.bedrooms} bed •{" "}
-                                      {apartment.bathrooms} bath
-                                    </span>
-                                    <span className="mx-2">•</span>
-                                    <span>
-                                      {apartment.squareFeet || 800 + idx * 100}{" "}
-                                      sq ft
+                                  <div className="text-gray-500 text-xs mb-1">
+                                    {apartment.bedrooms} bed •{" "}
+                                    {apartment.bathrooms} bath
+                                  </div>
+                                  <div className="flex items-center text-gray-400 text-xs">
+                                    <MapPin className="h-3 w-3 mr-1" />
+                                    <span className="truncate">
+                                      {apartment.location}
                                     </span>
                                   </div>
                                   <div className="text-gray-500 text-sm mb-3 line-clamp-1">

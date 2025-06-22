@@ -31,7 +31,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const endpoint = "https://production-sfo.browserless.io/chromium/bql";
   const token = process.env.VITE_BROWSERLESS_API_KEY || "";
 
-  async function fetchBrowserQL(url: string) {
+  async function fetchListingDetails(url: string) {
     const response = await fetch(`${endpoint}?token=${token}`, {
       method: "POST",
       headers: {
@@ -590,14 +590,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch("/api/users/preferences", requireAuth(), async (req, res) => {
     try {
       const { userId: clerkId } = getAuth(req);
-      
+
       if (!clerkId) {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
       const updates = req.body;
       const user = await storage.updateUser(clerkId, updates);
-      
+
       res.json(user);
     } catch (error) {
       res.status(500).json({ message: "Error updating user preferences" });
@@ -657,7 +657,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     const url = req.query.url as string;
     try {
-      const listingData = await fetchBrowserQL(url);
+      const listingData = await fetchListingDetails(url);
+      res.json(listingData);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
+
+  app.get("/active-listings", async (req, res) => {
+    const { lat, long } = req.query;
+    if (!!!lat || !!!long) {
+      res.status(400).json({ error: "Invalid lat/long" });
+    }
+    try {
+      const listingData = await fetch(url);
       res.json(listingData);
     } catch (error) {
       console.error(error);
