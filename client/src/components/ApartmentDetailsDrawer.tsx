@@ -80,7 +80,6 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
                 alt={apartment.title}
                 className="w-full h-[280px] object-cover transition duration-700 ease-in-out group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
             
             {/* Floating Save Button - Top Right */}
