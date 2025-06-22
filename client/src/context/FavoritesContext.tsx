@@ -8,14 +8,19 @@ import {
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { queryClient } from "@/lib/queryClient";
-import { Favorite, Apartment } from "../types";
+import { Favorite, Apartment } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
 // Default user ID (in a real app, this would come from auth)
 const DEFAULT_USER_ID = 1;
 
+// Extended favorite type with apartment data
+interface FavoriteWithApartment extends Favorite {
+  apartment?: Apartment;
+}
+
 interface FavoritesContextType {
-  favorites: Favorite[];
+  favorites: FavoriteWithApartment[];
   isLoading: boolean;
   error: Error | null;
   addFavorite: (apartmentId: number) => Promise<void>;
@@ -44,7 +49,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     data: favorites = [],
     isLoading,
     error,
-  } = useQuery<Favorite[]>({
+  } = useQuery<FavoriteWithApartment[]>({
     queryKey: ["/api/favorites"],
     queryFn: async () => {
       const response = await apiRequest("GET", "/api/favorites");
