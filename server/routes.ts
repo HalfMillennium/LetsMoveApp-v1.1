@@ -486,26 +486,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.post("/api/search-parties/:id/listings", async (req, res) => {
+  app.post("/api/search-parties/:id/listings", requireAuth(), async (req, res) => {
     try {
-      const { apartmentId, addedById, notes } = req.body;
+      const { userId: clerkId } = getAuth(req);
+      const { apartmentId, notes } = req.body;
       const searchPartyId = Number(req.params.id);
 
-      if (!apartmentId || !addedById || !searchPartyId) {
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      if (!apartmentId || !searchPartyId) {
         return res.status(400).json({
-          message: "ApartmentId, addedById and searchPartyId are required",
+          message: "ApartmentId and searchPartyId are required",
         });
+      }
+
+      const user = await storage.getUserByClerkId(clerkId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Verify user is a member of the search party
+      const member = await storage.getSearchPartyMember(searchPartyId, user.id);
+      if (!member) {
+        return res.status(403).json({ message: "You are not a member of this search party" });
       }
 
       const listing = await storage.addSearchPartyListing({
         searchPartyId,
         apartmentId: Number(apartmentId),
-        addedById: Number(addedById),
+        addedById: user.id,
         notes,
       });
 
       res.status(201).json(listing);
     } catch (error) {
+      console.error("Error adding listing to search party:", error);
       res.status(500).json({ message: "Error adding listing to search party" });
     }
   });
