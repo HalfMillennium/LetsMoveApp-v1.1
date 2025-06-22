@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import {
   Check,
-  X,
-  Plus,
   Home,
   Building,
   MapPin,

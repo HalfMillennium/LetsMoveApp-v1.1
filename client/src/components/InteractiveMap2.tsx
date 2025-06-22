@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, SVGProps } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Apartment } from "../types";
 import { useGeolocation } from "../lib/useGeolocation";
 import { Button } from "@/components/ui/button";
