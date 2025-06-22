@@ -13,6 +13,7 @@ import {
   ExternalLink,
   Users,
   ArrowRight,
+  MapPin,
 } from "lucide-react";
 import {
   Dialog,
@@ -393,13 +394,6 @@ const SearchParty = () => {
                                     <span className="truncate">
                                       {apartment.location}
                                     </span>
-                                  </div>
-                                  <div className="text-gray-500 text-sm mb-3 line-clamp-1">
-                                    {apartment.location}
-                                  </div>
-                                  <div className="flex items-center justify-between text-xs text-gray-500 bg-gray-50 py-2 px-3 rounded-lg">
-                                    <span>Added 2 days ago</span>
-                                    <ExternalLink className="h-3 w-3" />
                                   </div>
                                 </div>
                               </div>
