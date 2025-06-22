@@ -45,12 +45,9 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     isLoading,
     error,
   } = useQuery<Favorite[]>({
-    queryKey: ["/api/favorites", { userId: DEFAULT_USER_ID }],
+    queryKey: ["/api/favorites"],
     queryFn: async () => {
-      const response = await fetch(`/api/favorites?userId=${DEFAULT_USER_ID}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch favorites");
-      }
+      const response = await apiRequest("GET", "/api/favorites");
       return response.json();
     },
   });
@@ -59,7 +56,6 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   const addFavoriteMutation = useMutation({
     mutationFn: async (apartmentId: number) => {
       return apiRequest("POST", "/api/favorites", {
-        userId: DEFAULT_USER_ID,
         apartmentId,
       });
     },

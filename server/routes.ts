@@ -137,50 +137,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Favorites endpoints
-  app.get("/api/favorites", async (req, res) => {
+  app.get("/api/favorites", requireAuth(), async (req, res) => {
     try {
-      const userId = req.query.userId as string;
+      const { userId: clerkId } = getAuth(req);
 
-      if (!userId) {
-        return res.status(400).json({ message: "UserId is required" });
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
       }
 
-      const favorites = await storage.getFavoritesByUserId(Number(userId));
+      const user = await getOrCreateUser(clerkId);
+      const favorites = await storage.getFavoritesByUserId(user.id);
       res.json(favorites);
     } catch (error) {
+      console.error("Error fetching favorites:", error);
       res.status(500).json({ message: "Error fetching favorites" });
     }
   });
 
-  app.post("/api/favorites", async (req, res) => {
+  app.post("/api/favorites", requireAuth(), async (req, res) => {
     try {
-      const { userId, apartmentId } = req.body;
+      const { userId: clerkId } = getAuth(req);
+      const { apartmentId } = req.body;
 
-      if (!userId || !apartmentId) {
-        return res
-          .status(400)
-          .json({ message: "UserId and apartmentId are required" });
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
       }
 
+      if (!apartmentId) {
+        return res.status(400).json({ message: "ApartmentId is required" });
+      }
+
+      const user = await getOrCreateUser(clerkId);
       const favorite = await storage.addFavorite({
-        userId: Number(userId),
+        userId: user.id,
         apartmentId: Number(apartmentId),
       });
 
       res.status(201).json(favorite);
     } catch (error) {
+      console.error("Error adding favorite:", error);
       res.status(500).json({ message: "Error adding favorite" });
     }
   });
 
-  app.delete("/api/favorites/:id", async (req, res) => {
+  app.delete("/api/favorites/:id", requireAuth(), async (req, res) => {
     try {
+      const { userId: clerkId } = getAuth(req);
+
+      if (!clerkId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
       const result = await storage.removeFavorite(Number(req.params.id));
       if (!result) {
         return res.status(404).json({ message: "Favorite not found" });
       }
       res.status(204).send();
     } catch (error) {
+      console.error("Error removing favorite:", error);
       res.status(500).json({ message: "Error removing favorite" });
     }
   });
