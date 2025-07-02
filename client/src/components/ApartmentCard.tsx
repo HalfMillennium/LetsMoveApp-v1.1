@@ -32,7 +32,7 @@ const ApartmentCard = ({ apartment }: ApartmentCardProps) => {
           className="w-full h-64 object-cover"
         />
         <button
-          className={`absolute top-3 right-3 ${isFavorited ? "bg-[#E9927E]" : "bg-white"} p-2 rounded-[10px] ${isFavorited ? "text-white" : "text-[#E9927E]"} hover:bg-[#FFF5E6]`}
+          className={`absolute top-3 right-3 ${isFavorited ? "bg-[#E9927E]" : "bg-white"} p-2 rounded-xl ${isFavorited ? "text-white" : "text-[#E9927E]"} hover:bg-[#FFF5E6]`}
           onClick={handleFavoriteToggle}
         >
           <Heart className="h-5 w-5" fill={isFavorited ? "white" : "none"} />
@@ -59,7 +59,7 @@ const ApartmentCard = ({ apartment }: ApartmentCardProps) => {
             {apartment.amenities?.slice(0, 3).map((amenity, index) => (
               <span
                 key={index}
-                className="bg-[#C9DAD0]/20 text-[#1A4A4A] text-xs px-2 py-1 rounded-[10px]"
+                className="bg-[#C9DAD0]/20 text-[#1A4A4A] text-xs px-2 py-1 rounded-xl"
               >
                 {amenity}
               </span>

@@ -43,7 +43,7 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
 
         {/* Favorite Button */}
         <button
-          className="absolute top-3 right-3 p-2 rounded-[10px] bg-white/90 hover:bg-white shadow-sm"
+          className="absolute top-3 right-3 p-2 rounded-xl bg-white/90 hover:bg-white shadow-sm"
           onClick={(e) => {
             e.stopPropagation();
             // Handle favorite toggle
@@ -58,7 +58,7 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
 
         {/* Search Party Button */}
         <button
-          className="absolute top-3 left-3 p-2 rounded-[10px] bg-white/90 hover:bg-white shadow-sm cursor-pointer"
+          className="absolute top-3 left-3 p-2 rounded-xl bg-white/90 hover:bg-white shadow-sm cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
             handleAddToSearchParty(apartment);

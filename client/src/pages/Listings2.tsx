@@ -357,14 +357,14 @@ const Listings2 = () => {
                 <button
                   key={collection.id}
                   ref={(el) => (collectionRefs.current[idx] = el)}
-                  className={`flex flex-col items-center px-4 py-2 whitespace-nowrap mr-4 transition-all opacity-0 transform -translate-y-4 duration-500 ${
+                  className={`flex items-center px-4 py-2 whitespace-nowrap gap-2 transition-all opacity-0 transform -translate-y-4 duration-500 ${
                     activeCollection.id === collection.id
                       ? `border-b-2 ${collection.id == "all" ? "border-[#E9927E]" : "border-gray-800"} text-gray-800`
                       : "text-gray-500 hover:text-gray-800 hover:border-b-2 hover:border-gray-300"
                   }`}
                   onClick={() => handleCollectionChange(collection.id)}
                 >
-                  <div className="flex items-center mb-1">
+                  <div className="flex items-center">
                     {collection.icon}
                   </div>
                   <span
@@ -379,7 +379,7 @@ const Listings2 = () => {
               {/* View All Button - Only shows when collections might overflow */}
               {mightCollectionsOverflow && (
                 <button
-                  className="flex items-center ml-2 px-4 py-2 border border-gray-200 rounded-[10px] text-gray-700 whitespace-nowrap hover:bg-gray-50 gap-2"
+                  className="flex items-center ml-2 px-4 py-2 border border-gray-200 rounded-xl text-gray-700 whitespace-nowrap hover:bg-gray-50 gap-2"
                   onClick={handleOpenAllCollectionsModal}
                 >
                   <GalleryVerticalEnd className="h-4 w-4" />
@@ -388,7 +388,7 @@ const Listings2 = () => {
               )}
 
               <button
-                className="flex items-center ml-auto px-4 py-2 font-medium rounded-[10px] text-gray-700 whitespace-nowrap items-center gap-2 bg-primary text-white"
+                className="flex items-center ml-auto px-4 py-2 font-medium rounded-xl text-gray-700 whitespace-nowrap items-center gap-2 bg-primary text-white"
                 onClick={handleAddCollection}
               >
                 <div className="flex items-center">
@@ -401,7 +401,7 @@ const Listings2 = () => {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 container mx-auto px-6 py-6">
+        <main className="flex-1 container mx-auto px-6 py-6 gap-2">
           <div className="flex flex-1 flex-col lg:flex-row items-start lg:items-center justify-between lg:mb-8 gap-4 md:gap-8">
             <div className="flex flex-col flex-1">
               <p className="text-xs text-gray-600">
@@ -440,7 +440,7 @@ const Listings2 = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="rounded-[10px] flex items-center gap-2 border-gray-200 bg-white/90 hover:bg-white"
+                    className="rounded-xl flex items-center gap-2 border-gray-200 bg-white/90 hover:bg-white"
                     onClick={handleAddCollection}
                   >
                     <ListPlus className="h-4 w-4" />

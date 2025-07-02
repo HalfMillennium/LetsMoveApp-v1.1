@@ -293,7 +293,7 @@ const Profile = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-gray-200 rounded-[10px]"
+                      className="border-gray-200 rounded-xl"
                     >
                       <Edit size={14} />
                       Edit
@@ -358,7 +358,7 @@ const Profile = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-gray-200 rounded-[10px]"
+                      className="border-gray-200 rounded-xl"
                     >
                       <Settings size={14} />
                       Customize
@@ -419,7 +419,7 @@ const Profile = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-primary rounded-[10px]"
+                      className="text-primary rounded-xl"
                     >
                       <Plus size={14} />
                       Add
@@ -451,7 +451,7 @@ const Profile = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-gray-200 rounded-[10px]"
+                  className="border-gray-200 rounded-xl"
                 >
                   <Plus size={14} />
                   New Collection
@@ -499,7 +499,7 @@ const Profile = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-gray-200 rounded-[10px]"
+                  className="border-gray-200 rounded-xl"
                 >
                   <Users size={14} />
                   Create Party

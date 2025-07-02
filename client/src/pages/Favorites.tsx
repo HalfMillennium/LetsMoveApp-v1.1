@@ -10,10 +10,88 @@ const Favorites = () => {
   const { favorites, isLoading } = useFavorites();
   const { searchParties } = useSearchParty();
 
+  // Hard-coded sample favorites for testing
+  const sampleFavorites = [
+    {
+      id: 1,
+      userId: 1,
+      apartmentId: 1,
+      apartment: {
+        id: 1,
+        title: "Modern Downtown Loft",
+        address: "123 Main Street, Downtown",
+        location: "Downtown District",
+        price: 2500,
+        bedrooms: 2,
+        bathrooms: 2,
+        squareFeet: 1200,
+        description: "Beautiful modern loft with city views, hardwood floors, and updated kitchen. Perfect for urban living.",
+        images: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&h=300&fit=crop"],
+        amenities: ["Gym", "Rooftop Deck", "Parking", "Pet Friendly"],
+        latitude: "40.7128",
+        longitude: "-74.0060",
+        isAvailable: true,
+        createdById: 1,
+        distance: null
+      }
+    },
+    {
+      id: 2,
+      userId: 1,
+      apartmentId: 2,
+      apartment: {
+        id: 2,
+        title: "Cozy Garden Apartment",
+        address: "456 Oak Avenue, Midtown",
+        location: "Midtown",
+        price: 1800,
+        bedrooms: 1,
+        bathrooms: 1,
+        squareFeet: 850,
+        description: "Charming garden-level apartment with private patio, natural light, and quiet neighborhood setting.",
+        images: ["https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=300&fit=crop"],
+        amenities: ["Garden", "Laundry", "Storage"],
+        latitude: "40.7589",
+        longitude: "-73.9851",
+        isAvailable: true,
+        createdById: 1,
+        distance: null
+      }
+    },
+    {
+      id: 3,
+      userId: 1,
+      apartmentId: 3,
+      apartment: {
+        id: 3,
+        title: "Luxury High-Rise Studio",
+        address: "789 Park Place, Upper East",
+        location: "Upper East Side",
+        price: 3200,
+        bedrooms: 0,
+        bathrooms: 1,
+        squareFeet: 600,
+        description: "Elegant studio in luxury high-rise with concierge, fitness center, and stunning city views.",
+        images: ["https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&h=300&fit=crop"],
+        amenities: ["Concierge", "Fitness Center", "Pool", "Valet Parking"],
+        latitude: "40.7831",
+        longitude: "-73.9712",
+        isAvailable: true,
+        createdById: 1,
+        distance: null
+      }
+    }
+  ];
+
+  // Use sample data if no real favorites exist
+  const displayFavorites = favorites.length > 0 ? favorites : sampleFavorites;
+
   console.log("🔍 Favorites Page: Rendering with data:", {
     favorites,
+    displayFavorites,
     isLoading,
-    favoritesCount: favorites.length
+    favoritesCount: favorites.length,
+    displayFavoritesCount: displayFavorites.length
   });
 
   return (
@@ -41,7 +119,7 @@ const Favorites = () => {
             </h1>
             <p className="text-gray-600">Save and share apartments you love</p>
           </motion.div>
-          {favorites.length > 0 && (
+          {displayFavorites.length > 0 && (
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -49,7 +127,7 @@ const Favorites = () => {
             >
               <Button
                 onClick={() => (window.location.href = "/listings")}
-                className="mt-4 sm:mt-0 rounded-[10px] bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5"
+                className="mt-4 sm:mt-0 rounded-xl bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5"
               >
                 <Home className="mr-2 h-4 w-4" />
                 Browse More
@@ -84,7 +162,7 @@ const Favorites = () => {
               </div>
             </div>
           </motion.div>
-        ) : favorites.length === 0 ? (
+        ) : displayFavorites.length === 0 ? (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -114,7 +192,7 @@ const Favorites = () => {
               >
                 <Button
                   onClick={() => (window.location.href = "/listings")}
-                  className="bg-orange-400 hover:bg-orange-500 text-white rounded-[10px] px-6 py-2.5 font-medium"
+                  className="bg-orange-400 hover:bg-orange-500 text-white rounded-xl px-6 py-2.5 font-medium"
                 >
                   <Home className="mr-2 h-4 w-4" />
                   Browse Apartments
@@ -128,7 +206,7 @@ const Favorites = () => {
             <div className="bg-white rounded-3xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900">
-                  Saved Apartments ({favorites.length})
+                  Saved Apartments ({displayFavorites.length})
                 </h2>
                 <div className="flex items-center text-sm text-gray-600">
                   <Heart className="h-4 w-4 mr-1 text-red-500" />
@@ -136,7 +214,7 @@ const Favorites = () => {
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {favorites.map((favorite) => (
+                {displayFavorites.map((favorite) => (
                   <ApartmentCard
                     key={favorite.id}
                     apartment={favorite.apartment}
@@ -167,7 +245,7 @@ const Favorites = () => {
                     <Button
                       key={party.id}
                       variant="outline"
-                      className="border-gray-300 hover:bg-gray-50 text-gray-700 rounded-[10px] p-3 h-auto flex items-center justify-between"
+                      className="border-gray-300 hover:bg-gray-50 text-gray-700 rounded-xl p-3 h-auto flex items-center justify-between"
                       onClick={() =>
                         (window.location.href = `/search-party/${party.id}`)
                       }

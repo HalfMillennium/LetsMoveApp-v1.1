@@ -125,7 +125,7 @@ const SearchParty = () => {
           </motion.div>
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="mt-4 sm:mt-0 bg-gray-900 hover:bg-gray-800 text-white font-medium px-4 py-2 rounded-lg text-sm">
+              <Button className="mt-4 sm:mt-0 bg-gray-900 hover:bg-gray-800 text-white font-medium px-4 py-2 rounded-xl text-sm">
                 <Plus className="mr-2 h-4 w-4" />
                 Create Party
               </Button>
@@ -148,7 +148,7 @@ const SearchParty = () => {
                     id="party-name"
                     value={newPartyName}
                     onChange={(e) => setNewPartyName(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-orange-400"
                     placeholder="e.g., NYC Summer 2025 Hunt"
                   />
                 </div>
@@ -156,7 +156,7 @@ const SearchParty = () => {
 
                 <Button
                   type="submit"
-                  className="w-full bg-orange-400 hover:bg-orange-500 text-white py-3 rounded-[10px] font-medium transition-colors"
+                  className="w-full bg-orange-400 hover:bg-orange-500 text-white py-3 rounded-xl font-medium transition-colors"
                 >
                   Create Search Party
                 </Button>
@@ -171,9 +171,9 @@ const SearchParty = () => {
               <Skeleton className="h-6 w-48 mb-2" />
               <Skeleton className="h-4 w-32 mb-6" />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Skeleton className="h-40 rounded-lg" />
-                <Skeleton className="h-40 rounded-lg" />
-                <Skeleton className="h-40 rounded-lg" />
+                <Skeleton className="h-40 rounded-xl" />
+                <Skeleton className="h-40 rounded-xl" />
+                <Skeleton className="h-40 rounded-xl" />
               </div>
             </div>
           </div>
@@ -216,7 +216,7 @@ const SearchParty = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border-gray-200 text-gray-600 hover:bg-gray-50 rounded-md text-xs"
+                          className="border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl text-xs"
                           onClick={() => handleOpenChat(searchParty)}
                         >
                           <MessageCircle className="h-3 w-3 mr-1" />
@@ -225,7 +225,7 @@ const SearchParty = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border-gray-200 text-gray-600 hover:bg-gray-50 rounded-md text-xs"
+                          className="border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl text-xs"
                         >
                           <Calendar className="h-3 w-3 mr-1" />
                           Schedule
@@ -255,7 +255,7 @@ const SearchParty = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-md px-2 py-1"
+                        className="text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-xl px-2 py-1"
                       >
                         <Users className="h-3 w-3 mr-1" />
                         Manage
@@ -275,7 +275,7 @@ const SearchParty = () => {
                         ? listings.slice(0, 3).map((listing, idx) => (
                             <div
                               key={idx}
-                              className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
+                              className="bg-gray-50 rounded-xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
                               onClick={() =>
                                 handleApartmentSelect(listing.apartment!)
                               }
@@ -289,7 +289,7 @@ const SearchParty = () => {
                                   alt="Apartment"
                                   className="w-full h-32 object-cover"
                                 />
-                                <div className="absolute top-2 right-2 bg-white text-gray-900 text-xs font-medium px-2 py-1 rounded-md">
+                                <div className="absolute top-2 right-2 bg-white text-gray-900 text-xs font-medium px-2 py-1 rounded-xl">
                                   $
                                   {listing.apartment?.price || 1500 + idx * 300}
                                   /mo
@@ -318,7 +318,7 @@ const SearchParty = () => {
                                   </span>
                                 </div>
                                 {listing.notes && (
-                                  <div className="mt-2 text-xs text-gray-500 italic line-clamp-2 bg-gray-50 p-2 rounded-md">
+                                  <div className="mt-2 text-xs text-gray-500 italic line-clamp-2 bg-gray-50 p-2 rounded-xl">
                                     "{listing.notes}"
                                   </div>
                                 )}
@@ -331,7 +331,7 @@ const SearchParty = () => {
                             return (
                               <div
                                 key={idx}
-                                className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
+                                className="bg-gray-50 rounded-xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
                                 onClick={() => handleApartmentSelect(apartment)}
                               >
                                 <div className="relative">
@@ -340,7 +340,7 @@ const SearchParty = () => {
                                     alt={apartment.title}
                                     className="w-full h-32 object-cover"
                                   />
-                                  <div className="absolute top-2 right-2 bg-white text-gray-900 text-xs font-medium px-2 py-1 rounded-md">
+                                  <div className="absolute top-2 right-2 bg-white text-gray-900 text-xs font-medium px-2 py-1 rounded-xl">
                                     ${apartment.price}/mo
                                   </div>
                                 </div>
@@ -368,7 +368,7 @@ const SearchParty = () => {
                     <div className="flex justify-center mt-6 pt-4 border-t border-gray-100">
                       <Button
                         variant="outline"
-                        className="text-gray-700 border-gray-300 hover:bg-gray-50 rounded-[10px] px-6 py-2"
+                        className="text-gray-700 border-gray-300 hover:bg-gray-50 rounded-xl px-6 py-2"
                       >
                         View All {listingCount} Listings
                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -419,7 +419,7 @@ const SearchParty = () => {
               >
                 <Button
                   onClick={() => setCreateDialogOpen(true)}
-                  className="bg-orange-400 hover:bg-orange-500 text-white rounded-[10px] px-6 py-2.5 font-medium"
+                  className="bg-orange-400 hover:bg-orange-500 text-white rounded-xl px-6 py-2.5 font-medium"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Create Your First Search Party

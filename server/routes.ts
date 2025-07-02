@@ -3,7 +3,6 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { clerkMiddleware, requireAuth, getAuth } from "@clerk/express";
 import { InsertUser } from "../shared/schema";
-import { fetchListingDetails, fetchListings } from "./scrapers";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create HTTP server
@@ -482,8 +481,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     const url = req.query.url as string;
     try {
-      const listingData = await fetchListingDetails(url);
-      res.json(listingData);
+      /*const listingData = await fetchListingDetails(url);
+      res.json(listingData);*/
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });
@@ -497,8 +496,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return;
     }
     try {
-      const listingData = await fetchListings();
-      res.json(listingData);
+      /*const listingData = await fetchListingsFromStorage();
+      res.json(listingData);*/
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });

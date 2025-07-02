@@ -71,12 +71,12 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center gap-2 rounded-[10px] bg-white border border-gray-200 shadow-sm relative"
+          className="flex items-center gap-2 rounded-xl bg-white border border-gray-200 shadow-sm relative"
         >
           <Sliders className="h-4 w-4" />
           <span>Filters</span>
           {activeFilterCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-[#E9927E] text-white text-xs w-5 h-5 flex items-center justify-center rounded-[10px]">
+            <span className="absolute -top-1 -right-1 bg-[#E9927E] text-white text-xs w-5 h-5 flex items-center justify-center rounded-xl">
               {activeFilterCount}
             </span>
           )}
@@ -98,7 +98,7 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
                     <span>{range.label}</span>
                   </div>
                   {activeFilters.price?.label === range.label && (
-                    <div className="h-2 w-2 rounded-[10px] bg-[#E9927E]" />
+                    <div className="h-2 w-2 rounded-xl bg-[#E9927E]" />
                   )}
                 </CommandItem>
               ))}
@@ -119,7 +119,7 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
                     <span>{option.label}</span>
                   </div>
                   {activeFilters.bedrooms === option.value && (
-                    <div className="h-2 w-2 rounded-[10px] bg-[#E9927E]" />
+                    <div className="h-2 w-2 rounded-xl bg-[#E9927E]" />
                   )}
                 </CommandItem>
               ))}
@@ -140,7 +140,7 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
                     <span>{option.label}</span>
                   </div>
                   {activeFilters.distance === option.value && (
-                    <div className="h-2 w-2 rounded-[10px] bg-[#E9927E]" />
+                    <div className="h-2 w-2 rounded-xl bg-[#E9927E]" />
                   )}
                 </CommandItem>
               ))}
@@ -183,7 +183,7 @@ const MobileFilterPopover: React.FC<MobileFilterPopoverProps> = ({
                         <span>{party.name}</span>
                       </div>
                       {activeSearchParty?.id === party.id && (
-                        <div className="h-2 w-2 rounded-[10px] bg-[#A259FF]" />
+                        <div className="h-2 w-2 rounded-xl bg-[#A259FF]" />
                       )}
                     </CommandItem>
                   ))}

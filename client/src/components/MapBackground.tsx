@@ -13,15 +13,25 @@ const MapBackground = ({ children, variant = "map" }: MapBackgroundProps) => {
     <div className="flex flex-col flex-1 w-full">
       <Header />
       <div
-        className="flex-1 flex flex-col justify-center items-center bg-cover bg-center w-full backdrop-blur-md"
+        className="flex-1 flex flex-col justify-center items-center w-full relative overflow-hidden"
         style={{
-          backdropFilter: "opacity(20%)",
-          backgroundImage:
-            variant === "cityscape" ? cityscapeBgImage : undefined,
           backgroundColor: variant === "cityscape" ? undefined : "#FFF5E6",
         }}
       >
-        <div className="w-full">{children}</div>
+        {variant === "cityscape" && (
+          <>
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: cityscapeBgImage,
+                filter: "blur(8px)",
+                transform: "scale(1.1)",
+              }}
+            />
+            <div className="absolute inset-0 bg-black/20" />
+          </>
+        )}
+        <div className="relative z-10 w-full">{children}</div>
       </div>
     </div>
   );

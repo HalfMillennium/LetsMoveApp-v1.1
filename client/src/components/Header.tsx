@@ -80,7 +80,7 @@ const Header = () => {
 
         <div className="flex items-center space-x-3">
           <button
-            className="text-[#1A4A4A] p-2 rounded-[10px] hover:bg-[#C9DAD0]/20"
+            className="text-[#1A4A4A] p-2 rounded-xl hover:bg-[#C9DAD0]/20"
             onClick={() => setLocation("/listings")}
           >
             <Search className="h-6 w-6" />
@@ -91,7 +91,7 @@ const Header = () => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="relative h-10 w-10 rounded-[10px]"
+                  className="relative h-10 w-10 rounded-xl"
                 >
                   <Avatar className="h-10 w-10">
                     <AvatarImage
@@ -138,10 +138,10 @@ const Header = () => {
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Button className="rounded-[10px]" variant="ghost" asChild>
+              <Button className="rounded-xl" variant="ghost" asChild>
                 <Link href="/sign-in">Sign In</Link>
               </Button>
-              <Button className="rounded-[10px]" asChild>
+              <Button className="rounded-xl" asChild>
                 <Link href="/sign-up">Sign Up</Link>
               </Button>
             </div>
@@ -151,7 +151,7 @@ const Header = () => {
           {isMobile && (
             <Sheet>
               <SheetTrigger asChild>
-                <button className="text-[#1A4A4A] p-2 rounded-[10px] hover:bg-[#C9DAD0]/20 md:hidden">
+                <button className="text-[#1A4A4A] p-2 rounded-xl hover:bg-[#C9DAD0]/20 md:hidden">
                   <Menu className="h-6 w-6" />
                 </button>
               </SheetTrigger>
