@@ -21,19 +21,14 @@ import {
   Map,
   Settings,
   Star,
-  Calendar,
   Users,
   ChevronRight,
   Bell,
-  Shield,
-  CreditCard,
   Camera,
-  Check,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const Profile = () => {
-  const { toast } = useToast();
   const { searchParties } = useSearchParty();
   const { user: clerkUser, isLoaded } = useUser();
 
@@ -298,7 +293,7 @@ const Profile = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-gray-200 rounded-full"
+                      className="border-gray-200 rounded-[10px]"
                     >
                       <Edit size={14} />
                       Edit
@@ -363,7 +358,7 @@ const Profile = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-gray-200 rounded-full"
+                      className="border-gray-200 rounded-[10px]"
                     >
                       <Settings size={14} />
                       Customize
@@ -424,7 +419,7 @@ const Profile = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-primary rounded-full"
+                      className="text-primary rounded-[10px]"
                     >
                       <Plus size={14} />
                       Add
@@ -456,7 +451,7 @@ const Profile = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-gray-200 rounded-full"
+                  className="border-gray-200 rounded-[10px]"
                 >
                   <Plus size={14} />
                   New Collection
@@ -504,7 +499,7 @@ const Profile = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-gray-200 rounded-full"
+                  className="border-gray-200 rounded-[10px]"
                 >
                   <Users size={14} />
                   Create Party

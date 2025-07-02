@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { X, PlusCircle, Search } from "lucide-react";
+import { PlusCircle, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -69,7 +69,7 @@ export const AllCollectionsModal: React.FC<AllCollectionsModalProps> = ({
               className="flex flex-col items-center justify-center p-6 border border-dashed border-gray-300 rounded-2xl cursor-pointer hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 h-[120px]"
               onClick={onAddCollection}
             >
-              <div className="h-10 w-10 flex items-center justify-center mb-3 bg-gray-100 rounded-full">
+              <div className="h-10 w-10 flex items-center justify-center mb-3 bg-gray-100 rounded-[10px]">
                 <PlusCircle className="h-5 w-5 text-gray-500" />
               </div>
               <span className="text-sm text-gray-600 font-medium">Add Collection</span>
@@ -85,7 +85,7 @@ export const AllCollectionsModal: React.FC<AllCollectionsModalProps> = ({
                   onClose();
                 }}
               >
-                <div className="h-10 w-10 flex items-center justify-center mb-3 bg-primary/10 rounded-full group-hover:bg-primary/20 transition-colors">
+                <div className="h-10 w-10 flex items-center justify-center mb-3 bg-primary/10 rounded-[10px] group-hover:bg-primary/20 transition-colors">
                   <div className="text-primary">
                     {collection.icon}
                   </div>
@@ -109,7 +109,7 @@ export const AllCollectionsModal: React.FC<AllCollectionsModalProps> = ({
               </p>
               <Button 
                 onClick={onAddCollection}
-                className="rounded-full"
+                className="rounded-[10px]"
               >
                 <PlusCircle className="h-4 w-4 mr-2" />
                 Create New Collection
@@ -129,7 +129,7 @@ export const AllCollectionsModal: React.FC<AllCollectionsModalProps> = ({
               </p>
               <Button 
                 onClick={onAddCollection}
-                className="rounded-full"
+                className="rounded-[10px]"
               >
                 <PlusCircle className="h-4 w-4 mr-2" />
                 Create Your First Collection

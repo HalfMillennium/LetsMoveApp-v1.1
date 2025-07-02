@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Droppable } from 'react-beautiful-dnd';
+import React, { useState } from 'react';
 import { 
   X, 
   UserCircle2, 
@@ -10,9 +9,9 @@ import {
   Check 
 } from 'lucide-react';
 import { useSearchParty } from '../context/SearchPartyContext';
-import { SearchParty, Apartment } from '../types';
+import { SearchParty } from '../types';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   Popover,
   PopoverContent,
@@ -27,7 +26,6 @@ interface SearchPartyDropZoneProps {
 }
 
 const SearchPartyDropZone: React.FC<SearchPartyDropZoneProps> = ({
-  onAddToParty,
   onClose,
   currentSearchParty,
   onChangeSearchParty

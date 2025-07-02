@@ -1,11 +1,10 @@
 import { 
   users, type User, type InsertUser,
-  apartments, type Apartment, type InsertApartment,
+  apartments, type Apartment,
   favorites, type Favorite, type InsertFavorite,
   searchParties, type SearchParty, type InsertSearchParty,
   searchPartyMembers, type SearchPartyMember, type InsertSearchPartyMember,
   searchPartyListings, type SearchPartyListing, type InsertSearchPartyListing,
-  searchPartyInvitations, type SearchPartyInvitation, type InsertSearchPartyInvitation
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and } from "drizzle-orm";
@@ -43,10 +42,6 @@ export interface IStorage {
   addSearchPartyListing(listing: InsertSearchPartyListing): Promise<SearchPartyListing>;
   getSearchPartyListings(searchPartyId: number): Promise<SearchPartyListing[]>;
   
-  // Invitation methods
-  acceptSearchPartyInvitation(token: string, userId: number): Promise<SearchPartyMember>;
-  getSearchPartyInvitation(token: string): Promise<SearchPartyInvitation | undefined>;
-  createSearchPartyInvitation(invitation: InsertSearchPartyInvitation): Promise<SearchPartyInvitation>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -245,32 +240,6 @@ export class DatabaseStorage implements IStorage {
       .where(eq(searchPartyListings.searchPartyId, searchPartyId));
   }
 
-  async acceptSearchPartyInvitation(token: string, userId: number): Promise<SearchPartyMember> {
-    // Mock implementation - would normally validate token and create member
-    const member = await this.addSearchPartyMember({
-      searchPartyId: 1,
-      userId,
-      role: "member"
-    });
-    return member;
-  }
-
-  async getSearchPartyInvitation(token: string): Promise<SearchPartyInvitation | undefined> {
-    // Mock implementation - would normally look up invitation by token
-    const [invitation] = await db
-      .select()
-      .from(searchPartyInvitations)
-      .where(eq(searchPartyInvitations.token, token));
-    return invitation || undefined;
-  }
-
-  async createSearchPartyInvitation(insertInvitation: InsertSearchPartyInvitation): Promise<SearchPartyInvitation> {
-    const [invitation] = await db
-      .insert(searchPartyInvitations)
-      .values(insertInvitation)
-      .returning();
-    return invitation;
-  }
 }
 
 export const storage = new DatabaseStorage();

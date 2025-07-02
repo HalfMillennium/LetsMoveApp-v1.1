@@ -28,7 +28,7 @@ const SearchBar = ({
   return (
     <div className="relative w-full max-w-xl mx-auto mt-6 mb-8">
       <div 
-        className={`flex items-center overflow-hidden rounded-full shadow-lg ${
+        className={`flex items-center overflow-hidden rounded-[10px] shadow-lg ${
           darkMode ? 'bg-[#0E2C3F]/80 text-white border border-[#374a5b]/50' : 'bg-white text-[#1A4A4A]'
         }`}
       >

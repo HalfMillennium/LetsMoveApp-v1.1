@@ -170,81 +170,91 @@ const InteractiveMap = ({
         </div>
       )}
 
-      {/* User Location Marker */}
-      {coordinates && (
-        <g
-          transform={`translate(${
-            convertLatLongToXY(
-              coordinates.latitude.toString(),
-              coordinates.longitude.toString(),
-            ).x
-          }, ${
-            convertLatLongToXY(
-              coordinates.latitude.toString(),
-              coordinates.longitude.toString(),
-            ).y
-          })`}
-          className="animate-pulse"
-        >
-          <circle r="10" fill="#1A4A4A" opacity="0.3" />
-          <circle r="5" fill="#1A4A4A" />
-        </g>
-      )}
-
-      {/* Apartment Markers */}
-      {apartments.map((apt) => {
-        const { x, y } = convertLatLongToXY(apt.latitude, apt.longitude);
-        const isSelected = apt.id === selectedApartmentId;
-        const isHovered = apt.id === hoveredApartmentId;
-        const size = isSelected || isHovered ? 1.3 : 1;
-
-        return (
+      {/* SVG Map with markers */}
+      <svg 
+        className="absolute inset-0 w-full h-full"
+        viewBox={viewBox}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={() => setIsDragging(false)}
+        onMouseLeave={() => setIsDragging(false)}
+      >
+        {/* User Location Marker */}
+        {coordinates && (
           <g
-            key={apt.id}
-            transform={`translate(${x}, ${y}) scale(${size})`}
-            className={`transition-transform duration-200 cursor-pointer ${isSelected ? "drop-shadow-lg" : ""}`}
-            onClick={() => onApartmentSelect && onApartmentSelect(apt.id)}
-            onMouseEnter={() => setHoveredApartmentId(apt.id)}
-            onMouseLeave={() => setHoveredApartmentId(null)}
+            transform={`translate(${
+              convertLatLongToXY(
+                coordinates.latitude.toString(),
+                coordinates.longitude.toString(),
+              ).x
+            }, ${
+              convertLatLongToXY(
+                coordinates.latitude.toString(),
+                coordinates.longitude.toString(),
+              ).y
+            })`}
+            className="animate-pulse"
           >
-            <circle
-              r="18"
-              fill={isSelected ? "#E9927E" : "#ff8c69"}
-              opacity={isSelected ? "1" : "0.7"}
-              className="transition-all duration-200"
-            />
-            <Home
-              className="w-6 h-6 -translate-x-3 -translate-y-3"
-              stroke="#FFF"
-              strokeWidth={2}
-            />
-
-            {/* Price Label */}
-            {(isSelected || isHovered) && (
-              <g transform="translate(0, -30)">
-                <rect
-                  x="-30"
-                  y="-12"
-                  width="60"
-                  height="24"
-                  rx="4"
-                  fill="white"
-                  className="drop-shadow-md"
-                />
-                <text
-                  textAnchor="middle"
-                  alignmentBaseline="middle"
-                  fill="#1A4A4A"
-                  fontWeight="bold"
-                  fontSize="10"
-                >
-                  ${apt.price}
-                </text>
-              </g>
-            )}
+            <circle r="10" fill="#1A4A4A" opacity="0.3" />
+            <circle r="5" fill="#1A4A4A" />
           </g>
-        );
-      })}
+        )}
+
+        {/* Apartment Markers */}
+        {apartments.map((apt) => {
+          const { x, y } = convertLatLongToXY(apt.latitude, apt.longitude);
+          const isSelected = apt.id === selectedApartmentId;
+          const isHovered = apt.id === hoveredApartmentId;
+          const size = isSelected || isHovered ? 1.3 : 1;
+
+          return (
+            <g
+              key={apt.id}
+              transform={`translate(${x}, ${y}) scale(${size})`}
+              className={`transition-transform duration-200 cursor-pointer ${isSelected ? "drop-shadow-lg" : ""}`}
+              onClick={() => onApartmentSelect && onApartmentSelect(apt.id)}
+              onMouseEnter={() => setHoveredApartmentId(apt.id)}
+              onMouseLeave={() => setHoveredApartmentId(null)}
+            >
+              <circle
+                r="18"
+                fill={isSelected ? "#E9927E" : "#ff8c69"}
+                opacity={isSelected ? "1" : "0.7"}
+                className="transition-all duration-200"
+              />
+              <Home
+                className="w-6 h-6 -translate-x-3 -translate-y-3"
+                stroke="#FFF"
+                strokeWidth={2}
+              />
+
+              {/* Price Label */}
+              {(isSelected || isHovered) && (
+                <g transform="translate(0, -30)">
+                  <rect
+                    x="-30"
+                    y="-12"
+                    width="60"
+                    height="24"
+                    rx="4"
+                    fill="white"
+                    className="drop-shadow-md"
+                  />
+                  <text
+                    textAnchor="middle"
+                    alignmentBaseline="middle"
+                    fill="#1A4A4A"
+                    fontWeight="bold"
+                    fontSize="10"
+                  >
+                    ${apt.price}
+                  </text>
+                </g>
+              )}
+            </g>
+          );
+        })}
+      </svg>
 
       {/* Mobile Legend */}
       <div className="absolute bottom-4 left-4 bg-white p-2 rounded-lg shadow-md text-xs md:hidden">

@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
-  Marker,
   InfoWindow,
   OverlayView,
   DrawingManager,
@@ -45,7 +44,7 @@ interface GoogleMapComponentProps {
 export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
   apartments,
   onApartmentSelect,
-  selectedApartmentId,
+  selectedApartmentId: _selectedApartmentId,
 }) => {
   const [mapCenter, setMapCenter] = useState(defaultCenter);
   const [selectedApartment, setSelectedApartment] = useState<Apartment | null>(

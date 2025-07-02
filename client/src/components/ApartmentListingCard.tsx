@@ -2,12 +2,10 @@ import React from "react";
 import { Apartment } from "@/types";
 import {
   Heart,
-  Map as MapIcon,
   Users,
   Bed,
   Bath,
   Square,
-  Play,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -19,17 +17,6 @@ interface ApartmentListingCardProps {
   handleAddToSearchParty: (apartment: Apartment) => void;
 }
 
-const formatRating = (rating: number) => rating.toFixed(1);
-
-const getListingRating = (index: number) => {
-  const ratings = [4.93, 4.97, 4.97, 4.85, 4.92, 4.78, 4.88];
-  return ratings[index % ratings.length];
-};
-
-const getListingReviews = (index: number) => {
-  const reviews = [407, 700, 385, 562, 238, 645, 389];
-  return reviews[index % reviews.length];
-};
 
 export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
   apartment,
@@ -56,7 +43,7 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
 
         {/* Favorite Button */}
         <button
-          className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white shadow-sm"
+          className="absolute top-3 right-3 p-2 rounded-[10px] bg-white/90 hover:bg-white shadow-sm"
           onClick={(e) => {
             e.stopPropagation();
             // Handle favorite toggle
@@ -71,7 +58,7 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
 
         {/* Search Party Button */}
         <button
-          className="absolute top-3 left-3 p-2 rounded-full bg-white/90 hover:bg-white shadow-sm cursor-pointer"
+          className="absolute top-3 left-3 p-2 rounded-[10px] bg-white/90 hover:bg-white shadow-sm cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
             handleAddToSearchParty(apartment);

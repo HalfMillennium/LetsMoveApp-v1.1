@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { X, Send, UserCircle2, ArrowRight } from "lucide-react";
+import { X, Send } from "lucide-react";
 import { SearchParty } from "../types";
 
 interface Message {

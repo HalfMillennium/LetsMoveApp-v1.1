@@ -1,8 +1,6 @@
-import { useState, useMemo, useEffect, useRef } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useLocation } from "wouter";
+import { useState, useEffect, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
-  Heart,
   Map as MapIcon,
   MapPin,
   Globe,
@@ -14,7 +12,6 @@ import {
   Building2,
   Star,
   GalleryVerticalEnd,
-  Users,
   Puzzle,
   LayoutGrid,
 } from "lucide-react";
@@ -42,7 +39,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { ApartmentListingCard } from "@/components/ApartmentListingCard";
 
 const Listings2 = () => {
-  const [location] = useLocation();
   const { toast } = useToast();
   const { searchParties } = useSearchParty();
   const [filters, setFilters] = useState<FilterSettings>({});
@@ -51,7 +47,7 @@ const Listings2 = () => {
   >();
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] =
     useState<boolean>(false);
-  const [searchParams] = useState(() => {
+  useState(() => {
     const urlParams = new URLSearchParams(window.location.search);
     return {
       q: urlParams.get("q") || "",
@@ -88,7 +84,6 @@ const Listings2 = () => {
   const [activeCollection, setActiveCollection] = useState<ListingCollection>(
     allCollections["all"],
   );
-  const [mapExpanded, setMapExpanded] = useState<boolean>(false);
 
   // Search party states
   const [showSearchPartyOverlay, setShowSearchPartyOverlay] =
@@ -137,8 +132,6 @@ const Listings2 = () => {
     };
   }, [searchParties, toast]);
 
-  // Used to show number of experiences/listings
-  const totalListings = 235;
 
   // Fetch apartments with applied filters
   const {
@@ -176,12 +169,8 @@ const Listings2 = () => {
     setIsDetailsDrawerOpen(false);
   };
 
-  // Toggle map expansion
-  const toggleMapExpansion = () => {
-    setMapExpanded(!mapExpanded);
-  };
 
-  const [activeListingFilters, setActiveListingFilters] =
+  const [, setActiveListingFilters] =
     useState<ActiveFilters>({});
 
   // State for collections management
@@ -249,7 +238,7 @@ const Listings2 = () => {
   };
 
   // Filter apartments by search party
-  const [filterBySearchParty, setFilterBySearchParty] = useState(false);
+  const [, setFilterBySearchParty] = useState(false);
 
   const handleSearchPartyFilterToggle = (checked: boolean) => {
     setFilterBySearchParty(checked);
@@ -263,34 +252,10 @@ const Listings2 = () => {
     }
   };
 
-  // Handle rating and price display for each listing
-  const formatRating = (rating: number) => rating.toFixed(1);
-
-  // These would come from the actual data in a real app
-  const getListingRating = (index: number) => {
-    const ratings = [4.93, 4.97, 4.97, 4.85, 4.92, 4.78, 4.88];
-    return ratings[index % ratings.length];
-  };
-
-  const getListingReviews = (index: number) => {
-    const reviews = [407, 700, 385, 562, 238, 645, 389];
-    return reviews[index % reviews.length];
-  };
-
-  const getListingDuration = (index: number) => {
-    const durations = [2, 6, 3, 4, 1, 5, 2];
-    return durations[index % durations.length];
-  };
-
-  const getListingPrice = (index: number) => {
-    const prices = [30, 39, 44, 55, 28, 42, 36];
-    return prices[index % prices.length];
-  };
 
   // Animation refs
   const headerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const listingsContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const apartmentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const collectionRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -414,7 +379,7 @@ const Listings2 = () => {
               {/* View All Button - Only shows when collections might overflow */}
               {mightCollectionsOverflow && (
                 <button
-                  className="flex items-center ml-2 px-4 py-2 border border-gray-200 rounded-full text-gray-700 whitespace-nowrap hover:bg-gray-50 gap-2"
+                  className="flex items-center ml-2 px-4 py-2 border border-gray-200 rounded-[10px] text-gray-700 whitespace-nowrap hover:bg-gray-50 gap-2"
                   onClick={handleOpenAllCollectionsModal}
                 >
                   <GalleryVerticalEnd className="h-4 w-4" />
@@ -423,7 +388,7 @@ const Listings2 = () => {
               )}
 
               <button
-                className="flex items-center ml-auto px-4 py-2 font-medium rounded-full text-gray-700 whitespace-nowrap items-center gap-2 bg-primary text-white"
+                className="flex items-center ml-auto px-4 py-2 font-medium rounded-[10px] text-gray-700 whitespace-nowrap items-center gap-2 bg-primary text-white"
                 onClick={handleAddCollection}
               >
                 <div className="flex items-center">
@@ -436,7 +401,7 @@ const Listings2 = () => {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 container mx-auto px-6 py-6 space-y-8">
+        <main className="flex-1 container mx-auto px-6 py-6">
           <div className="flex flex-1 flex-col lg:flex-row items-start lg:items-center justify-between lg:mb-8 gap-4 md:gap-8">
             <div className="flex flex-col flex-1">
               <p className="text-xs text-gray-600">
@@ -475,7 +440,7 @@ const Listings2 = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="rounded-full flex items-center gap-2 border-gray-200 bg-white/90 hover:bg-white"
+                    className="rounded-[10px] flex items-center gap-2 border-gray-200 bg-white/90 hover:bg-white"
                     onClick={handleAddCollection}
                   >
                     <ListPlus className="h-4 w-4" />
@@ -488,7 +453,7 @@ const Listings2 = () => {
           {/* Main Grid with Map Split */}
           <div className="flex flex-col grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Apartment Listings */}
-            <div className={`${mapExpanded ? "hidden lg:block" : ""}`}>
+            <div>
               {isLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {[1, 2, 3, 4, 5, 6].map((_, i) => (
@@ -537,17 +502,17 @@ const Listings2 = () => {
         apartment={selectedApartment}
         isOpen={isDetailsDrawerOpen}
         onClose={handleCloseDetailsDrawer}
-        onAddToFavorites={(id) => {
+        onAddToFavorites={() => {
           toast({
             title: "Added to favorites",
             description: "Apartment has been added to your favorites list",
           });
         }}
-        onAddToSearchParty={(id) => {
+        onAddToSearchParty={(apartmentId) => {
           if (activeSearchParty) {
             addListingToParty(
               activeSearchParty.id,
-              id,
+              apartmentId,
               "Added from listings page",
             );
           }

@@ -14,7 +14,6 @@ import Favorites from "./pages/Favorites";
 import Profile from "./pages/Profile";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import AcceptInvitation from "./pages/AcceptInvitation";
 import ProtectedRoute from "./components/ProtectedRoute";
 import HomeFooter from "./components/Footer";
 
@@ -26,7 +25,6 @@ function Router() {
       {/* Public routes */}
       <Route path="/sign-in" component={SignIn} />
       <Route path="/sign-up" component={SignUp} />
-      <Route path="/invite/:token" component={AcceptInvitation} />
 
       {/* Protected routes */}
       <Route path="/">

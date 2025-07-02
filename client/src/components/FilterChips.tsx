@@ -187,7 +187,7 @@ const FilterChips = ({
           </div>
         ) : (
           /* Desktop/Tablet version of filters */
-          <div className="flex items-center border backdrop-blur-sm rounded-full p-2 flex-grow transition-all duration-300 ease-in-out">
+          <div className="flex items-center border backdrop-blur-sm rounded-[10px] p-2 flex-grow transition-all duration-300 ease-in-out">
             <div className="flex gap-4 px-2 transition-all duration-300 ease-in-out">
               {/* Price Range Dropdown */}
               <div className="flex items-center">
@@ -322,7 +322,7 @@ const FilterChips = ({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-[#1A4A4A] ml-1 h-8 text-xs rounded-full items-center whitespace-nowrap"
+                  className="text-[#1A4A4A] ml-1 h-8 text-xs rounded-[10px] items-center whitespace-nowrap"
                   onClick={() => {
                     clearAllFilters();
                     if (filterBySearchParty) {

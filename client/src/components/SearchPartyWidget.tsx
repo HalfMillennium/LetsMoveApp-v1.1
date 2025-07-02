@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useSearchParty } from "../context/SearchPartyContext";
-import { SearchParty, Apartment, Member, SearchPartyListing } from "../types";
+import { SearchParty, Apartment, SearchPartyListing } from "../types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -99,7 +99,7 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
   };
 
   // Use parentOnDragEnd prop if provided, otherwise use our own implementation
-  const handleLocalDrag = async (result: DropResult) => {
+  const handleDrag = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
     // If the parent component has provided its own onDragEnd handler, use that instead
@@ -187,6 +187,7 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
 
       {/* Content - visible when expanded */}
       {isExpanded && (
+        <DragDropContext onDragEnd={handleDrag}>
         <div className="p-4">
           <div className="flex flex-1 items-center justify-between gap-4">
             <Select
@@ -288,7 +289,7 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
                         </div>
                       ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                          {searchPartyListings.map((listing, index) => {
+                          {searchPartyListings.map((listing) => {
                             // Find the associated apartment for better display
                             const apartment = apartments.find(
                               (a) => a.id === listing.apartmentId,
@@ -363,6 +364,7 @@ const SearchPartyWidget: React.FC<SearchPartyWidgetProps> = ({
             </div>
           )}
         </div>
+        </DragDropContext>
       )}
     </div>
   );

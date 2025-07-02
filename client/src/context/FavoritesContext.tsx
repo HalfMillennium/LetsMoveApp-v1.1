@@ -10,13 +10,12 @@ import { apiRequest } from "@/lib/queryClient";
 import { queryClient } from "@/lib/queryClient";
 import { Favorite, Apartment } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@clerk/clerk-react";
 
-// Default user ID (in a real app, this would come from auth)
-const DEFAULT_USER_ID = 1;
 
 // Extended favorite type with apartment data
 interface FavoriteWithApartment extends Favorite {
-  apartment?: Apartment;
+  apartment: Apartment;
 }
 
 interface FavoritesContextType {
@@ -32,9 +31,9 @@ const DEFAULT_FAVORITES: FavoritesContextType = {
   favorites: [],
   isLoading: false,
   error: null,
-  addFavorite: async (apartmentId: number) => {},
-  removeFavorite: async (favoriteId: number) => {},
-  isFavorite: (apartmentId: number) => false,
+  addFavorite: async (_apartmentId: number) => {},
+  removeFavorite: async (_favoriteId: number) => {},
+  isFavorite: (_apartmentId: number) => false,
 };
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(
@@ -43,6 +42,7 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(
 
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
+  const { getToken } = useAuth();
 
   console.log("🔍 FavoritesProvider: Initializing");
 
@@ -55,7 +55,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     queryKey: ["/api/favorites"],
     queryFn: async () => {
       console.log("🔍 FavoritesProvider: Fetching favorites from API");
-      const response = await apiRequest("GET", "/api/favorites");
+      const response = await apiRequest("GET", "/api/favorites", undefined, getToken);
       const data = await response.json();
       console.log("🔍 FavoritesProvider: Received favorites data:", data);
       return data;
@@ -68,7 +68,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       console.log("🔍 FavoritesProvider: Adding favorite for apartment ID:", apartmentId);
       const response = await apiRequest("POST", "/api/favorites", {
         apartmentId,
-      });
+      }, getToken);
       console.log("🔍 FavoritesProvider: Add favorite response:", response);
       return response;
     },
@@ -94,7 +94,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   const removeFavoriteMutation = useMutation({
     mutationFn: async (favoriteId: number) => {
       console.log("🔍 FavoritesProvider: Removing favorite with ID:", favoriteId);
-      const response = await apiRequest("DELETE", `/api/favorites/${favoriteId}`);
+      const response = await apiRequest("DELETE", `/api/favorites/${favoriteId}`, undefined, getToken);
       console.log("🔍 FavoritesProvider: Remove favorite response:", response);
       return response;
     },

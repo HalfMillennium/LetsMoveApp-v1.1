@@ -109,7 +109,7 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
                   <div className="relative">
                     {iconObj.icon}
                     {selectedIconIndex === index && (
-                      <div className="absolute -top-2 -right-2 bg-blue-500 rounded-full p-0.5">
+                      <div className="absolute -top-2 -right-2 bg-blue-500 rounded-[10px] p-0.5">
                         <Check className="h-3 w-3 text-white" />
                       </div>
                     )}
@@ -123,7 +123,7 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
 
         <DialogFooter className="flex justify-between sm:justify-between">
           <Button
-            className="rounded-full"
+            className="rounded-[10px]"
             variant="outline"
             onClick={handleCancel}
           >
@@ -132,7 +132,7 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
           <Button
             onClick={handleCreate}
             disabled={!collectionName.trim() || selectedIconIndex === null}
-            className="rounded-full"
+            className="rounded-[10px]"
           >
             Create Collection
           </Button>

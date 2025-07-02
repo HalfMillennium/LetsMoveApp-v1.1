@@ -1,54 +1,16 @@
-import { useState } from "react";
 import { Link } from "wouter";
 import { SearchParty } from "../types";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { useToast } from "@/hooks/use-toast";
-import { useSearchParty } from "../context/SearchPartyContext";
 
 interface SearchPartyCardProps {
   searchParty: SearchParty;
   currentUser?: any;
 }
 
-const SearchPartyCard = ({ searchParty, currentUser }: SearchPartyCardProps) => {
-  const [email, setEmail] = useState("");
-  const { inviteToSearchParty, removeMemberFromSearchParty } = useSearchParty();
-  const { toast } = useToast();
-  const [open, setOpen] = useState(false);
-  
-  const isOwner = searchParty.userRole === 'owner';
+const SearchPartyCard = ({ searchParty }: SearchPartyCardProps) => {
 
   // Mock data for shared favorites
   const sharedListings = searchParty.listings || [];
-
-  const handleInvite = async () => {
-    if (!email) {
-      toast({
-        title: "Error",
-        description: "Please enter an email address",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // In a real app, we would send an invitation to this email
-    // For now, just show a success message
-    toast({
-      title: "Invitation Sent",
-      description: `An invitation has been sent to ${email}`,
-    });
-
-    setEmail("");
-    setOpen(false);
-  };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mb-8">
@@ -73,26 +35,6 @@ const SearchPartyCard = ({ searchParty, currentUser }: SearchPartyCardProps) => 
             className="w-10 h-10 rounded-full border-2 border-white"
           />
         ))}
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <button className="w-10 h-10 rounded-full bg-[#C9DAD0]/20 border-2 border-white flex items-center justify-center text-[#1A4A4A] text-xs font-bold">
-              +
-            </button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Invite to "{searchParty.name}"</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <Input
-                placeholder="Enter email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <Button onClick={handleInvite}>Send Invitation</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
 
       {sharedListings.length > 0 && (
@@ -132,30 +74,6 @@ const SearchPartyCard = ({ searchParty, currentUser }: SearchPartyCardProps) => 
             View all shared listings
           </Button>
         </Link>
-
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              className="border-[#E9927E] text-[#E9927E] hover:bg-[#E9927E]/10"
-            >
-              Invite friends
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Invite to "{searchParty.name}"</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <Input
-                placeholder="Enter email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <Button onClick={handleInvite}>Send Invitation</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );

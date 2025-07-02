@@ -13,7 +13,7 @@ const MapBackground = ({ children, variant = "map" }: MapBackgroundProps) => {
     <div className="flex flex-col flex-1 w-full">
       <Header />
       <div
-        className="flex-1 flex flex-col justify-center items-center bg-cover bg-center w-full"
+        className="flex-1 flex flex-col justify-center items-center bg-cover bg-center w-full backdrop-blur-md"
         style={{
           backdropFilter: "opacity(20%)",
           backgroundImage:

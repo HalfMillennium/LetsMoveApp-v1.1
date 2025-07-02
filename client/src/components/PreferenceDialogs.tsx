@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import {
   Dialog,
   DialogContent,
@@ -14,16 +13,6 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { 
-  Settings, 
-  Home, 
-  DollarSign, 
-  Building, 
-  Bell, 
-  MapPin,
-  Trash2,
-  Plus
-} from "lucide-react";
 
 interface User {
   id: number;

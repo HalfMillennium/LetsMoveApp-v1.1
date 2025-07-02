@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Menu, Search, CircleUserRound, LogOut } from "lucide-react";
+import { Menu, Search, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useUser, useClerk } from "@clerk/clerk-react";
@@ -80,7 +80,7 @@ const Header = () => {
 
         <div className="flex items-center space-x-3">
           <button
-            className="text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20"
+            className="text-[#1A4A4A] p-2 rounded-[10px] hover:bg-[#C9DAD0]/20"
             onClick={() => setLocation("/listings")}
           >
             <Search className="h-6 w-6" />
@@ -91,7 +91,7 @@ const Header = () => {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="relative h-10 w-10 rounded-full"
+                  className="relative h-10 w-10 rounded-[10px]"
                 >
                   <Avatar className="h-10 w-10">
                     <AvatarImage
@@ -138,10 +138,10 @@ const Header = () => {
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Button className="rounded-full" variant="ghost" asChild>
+              <Button className="rounded-[10px]" variant="ghost" asChild>
                 <Link href="/sign-in">Sign In</Link>
               </Button>
-              <Button className="rounded-full" asChild>
+              <Button className="rounded-[10px]" asChild>
                 <Link href="/sign-up">Sign Up</Link>
               </Button>
             </div>
@@ -151,7 +151,7 @@ const Header = () => {
           {isMobile && (
             <Sheet>
               <SheetTrigger asChild>
-                <button className="text-[#1A4A4A] p-2 rounded-full hover:bg-[#C9DAD0]/20 md:hidden">
+                <button className="text-[#1A4A4A] p-2 rounded-[10px] hover:bg-[#C9DAD0]/20 md:hidden">
                   <Menu className="h-6 w-6" />
                 </button>
               </SheetTrigger>

@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  X,
   Heart,
   Share2,
   Map,
@@ -8,7 +7,6 @@ import {
   Ruler,
   Wifi,
   DollarSign,
-  Building,
   CheckCircle2,
   BadgeCheck,
   MapPin,

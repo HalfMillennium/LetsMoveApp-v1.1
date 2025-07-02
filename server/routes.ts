@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { clerkMiddleware, requireAuth, getAuth } from "@clerk/express";
 import { InsertUser } from "../shared/schema";
+import { fetchListingDetails, fetchListings } from "./scrapers";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create HTTP server
@@ -26,51 +27,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       user = await storage.createUser(newUser);
     }
     return user;
-  }
-
-  const endpoint = "https://production-sfo.browserless.io/chromium/bql";
-  const token = process.env.VITE_BROWSERLESS_API_KEY || "";
-
-  async function fetchListingDetails(url: string) {
-    const response = await fetch(`${endpoint}?token=${token}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `
-        mutation ExtractHtml($url: String!) {
-          goto(url: $url, waitUntil: networkIdle) {
-            status
-          }
-          images: mapSelector(selector: "[class^='MediaCarousel_mediaCarouselImageWrapper_']") {
-            imageContainer: innerHTML
-          }
-          price: querySelector(selector: "[class*='PriceInfo_price__']") {
-            text: innerText
-          }
-          specs: mapSelector(selector: "[class^='PropertyDetails_item__']") {
-            item: innerText
-          }
-          about: querySelector(selector: "[class^='ListingDescription_shortDescription__']") {
-            descriptionHtml: innerHTML # Contains the <p> elements
-          }
-          featuresEmbed: querySelector(selector: "[class^='Lists_listsWrapper__']") {
-            featuresHtml: innerHTML
-          }
-          listedBy: querySelector(selector: "[class*='styled__AgentText']") {
-            agentInfo: innerText
-          }
-        }`,
-        variables: {
-          url,
-        },
-      }),
-    });
-
-    const data = await response.json();
-    console.log(data);
-    return data;
   }
 
   // API Routes - all prefixed with /api
@@ -119,7 +75,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       res.json(filteredApartments);
-    } catch (error) {
+    } catch {
       res.status(500).json({ message: "Error fetching apartments" });
     }
   });
@@ -131,7 +87,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Apartment not found" });
       }
       res.json(apartment);
-    } catch (error) {
+    } catch {
       res.status(500).json({ message: "Error fetching apartment" });
     }
   });
@@ -232,7 +188,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("user id", user.id);
       const searchParties = await storage.getSearchPartiesByUserId(user.id);
       res.json(searchParties);
-    } catch (error) {
+    } catch {
       res.status(500).json({ message: "Error fetching search parties" });
     }
   });
@@ -240,7 +196,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/search-parties", requireAuth(), async (req, res) => {
     try {
       const { userId: clerkId } = getAuth(req);
-      const { name, invitations } = req.body;
+      const { name } = req.body;
 
       if (!clerkId) {
         return res.status(401).json({ message: "Unauthorized" });
@@ -258,33 +214,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         createdById: user.id,
       });
 
-      // Create invitations if provided
-      if (invitations && Array.isArray(invitations)) {
-        for (const invitation of invitations) {
-          const { contactInfo, contactType } = invitation;
-
-          // Check if contact is already a user
-          const existingUser = await storage.findUserByContact(contactInfo);
-
-          if (existingUser) {
-            // Add existing user directly to the search party
-            await storage.addSearchPartyMember({
-              searchPartyId: searchParty.id,
-              userId: existingUser.id,
-              role: "member",
-            });
-          } else {
-            // Create invitation for new user
-            await storage.createSearchPartyInvitation({
-              searchPartyId: searchParty.id,
-              invitedBy: user.id,
-              contactInfo,
-              contactType,
-            });
-          }
-        }
-      }
-
       res.status(201).json(searchParty);
     } catch (error) {
       console.error("Error creating search party:", error);
@@ -292,160 +221,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Send invitations to a search party
-  app.post(
-    "/api/search-parties/:id/invite",
-    requireAuth(),
-    async (req, res) => {
-      try {
-        const { userId: clerkId } = getAuth(req);
-        const { invitations } = req.body;
-        const searchPartyId = Number(req.params.id);
 
-        if (!clerkId) {
-          return res.status(401).json({ message: "Unauthorized" });
-        }
 
-        const user = await storage.getUserByClerkId(clerkId);
-        if (!user) {
-          return res.status(404).json({ message: "User not found" });
-        }
-
-        // Verify user is a member of the search party
-        const member = await storage.getSearchPartyMember(
-          searchPartyId,
-          user.id,
-        );
-        if (!member) {
-          return res
-            .status(403)
-            .json({ message: "You are not a member of this search party" });
-        }
-
-        const results = [];
-
-        for (const invitation of invitations) {
-          const { contactInfo, contactType } = invitation;
-
-          // Check if contact is already a user
-          const existingUser = await storage.findUserByContact(contactInfo);
-
-          if (existingUser) {
-            // Check if user is already a member
-            const existingMember = await storage.getSearchPartyMember(
-              searchPartyId,
-              existingUser.id,
-            );
-            if (!existingMember) {
-              const newMember = await storage.addSearchPartyMember({
-                searchPartyId,
-                userId: existingUser.id,
-                role: "member",
-              });
-              results.push({
-                type: "member_added",
-                user: existingUser,
-                member: newMember,
-              });
-            } else {
-              results.push({ type: "already_member", user: existingUser });
-            }
-          } else {
-            // Create invitation for new user
-            const newInvitation = await storage.createSearchPartyInvitation({
-              searchPartyId,
-              invitedBy: user.id,
-              contactInfo,
-              contactType,
-            });
-            results.push({
-              type: "invitation_sent",
-              invitation: newInvitation,
-            });
-          }
-        }
-
-        res.status(201).json({ results });
-      } catch (error) {
-        console.error("Error sending invitations:", error);
-        res.status(500).json({ message: "Error sending invitations" });
-      }
-    },
-  );
-
-  // Accept invitation
-  app.post(
-    "/api/invitations/:token/accept",
-    requireAuth(),
-    async (req, res) => {
-      try {
-        const { userId: clerkId } = getAuth(req);
-        const { token } = req.params;
-
-        if (!clerkId) {
-          return res.status(401).json({ message: "Unauthorized" });
-        }
-
-        const user = await storage.getUserByClerkId(clerkId);
-        if (!user) {
-          return res.status(404).json({ message: "User not found" });
-        }
-
-        const member = await storage.acceptSearchPartyInvitation(
-          token,
-          user.id,
-        );
-        res.json(member);
-      } catch (error) {
-        console.error("Error accepting invitation:", error);
-        res
-          .status(400)
-          .json({ message: error.message || "Error accepting invitation" });
-      }
-    },
-  );
-
-  // Get invitation details
-  app.get("/api/invitations/:token", async (req, res) => {
-    try {
-      const { token } = req.params;
-      const invitation = await storage.getSearchPartyInvitation(token);
-
-      if (!invitation) {
-        return res.status(404).json({ message: "Invitation not found" });
-      }
-
-      if (
-        invitation.status !== "pending" ||
-        invitation.expiresAt < new Date()
-      ) {
-        return res
-          .status(400)
-          .json({ message: "Invitation is invalid or expired" });
-      }
-
-      // Get search party details
-      const searchParty = await storage.getSearchParty(
-        invitation.searchPartyId,
-      );
-
-      res.json({
-        invitation: {
-          id: invitation.id,
-          searchPartyId: invitation.searchPartyId,
-          contactInfo: invitation.contactInfo,
-          contactType: invitation.contactType,
-          expiresAt: invitation.expiresAt,
-        },
-        searchParty: {
-          id: searchParty?.id,
-          name: searchParty?.name,
-        },
-      });
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching invitation" });
-    }
-  });
 
   app.post(
     "/api/search-parties/:id/members",
@@ -473,7 +250,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
 
         res.status(201).json(member);
-      } catch (error) {
+      } catch {
         res
           .status(500)
           .json({ message: "Error adding member to search party" });
@@ -515,7 +292,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error("Error removing member:", error);
         res
           .status(403)
-          .json({ message: error.message || "Error removing member" });
+          .json({ message: error || "Error removing member" });
       }
     },
   );
@@ -567,7 +344,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const listings = await storage.getSearchPartyListings(searchPartyId);
       res.json(listings);
-    } catch (error) {
+    } catch {
       res.status(500).json({ message: "Error fetching search party listings" });
     }
   });
@@ -577,7 +354,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const users = await storage.getAllUsers();
       res.json(users);
-    } catch (error) {
+    } catch {
       res.status(500).json({ message: "Error fetching users" });
     }
   });
@@ -632,7 +409,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       res.json(user);
-    } catch (error) {
+    } catch {
       res.status(500).json({ message: "Error fetching user" });
     }
   });
@@ -650,14 +427,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const user = await storage.updateUser(clerkId, updates);
 
       res.json(user);
-    } catch (error) {
+    } catch {
       res.status(500).json({ message: "Error updating user preferences" });
     }
   });
 
   app.post("/api/users", async (req, res) => {
     try {
-      const { username, password, email, fullName, profileImage } = req.body;
+      const { username, password, email, fullName, profileImage, clerkId } = req.body;
 
       if (!username || !password || !email) {
         return res
@@ -671,17 +448,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const user = await storage.createUser({
+        clerkId,
         username,
-        password,
         email,
         fullName,
         profileImage,
       });
 
-      // Remove password from response
-      const { password: _, ...userWithoutPassword } = user;
-      res.status(201).json(userWithoutPassword);
-    } catch (error) {
+      res.status(201).json(user);
+    } catch {
       res.status(500).json({ message: "Error creating user" });
     }
   });
@@ -693,18 +468,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
 
-      // Remove password from response
-      const { password: _, ...userWithoutPassword } = user;
-      res.json(userWithoutPassword);
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching user" });
+      res.json(user);
+    } catch {
+      res.status(500).json({ message: "Error fetching user by id" });
     }
   });
 
   // API endpoint
   app.get("/listing-details", async (req, res) => {
-    if (!!!req.query.url || typeof req.query.url !== "string") {
+    if (!req.query.url || typeof req.query.url !== "string") {
       res.status(400).json({ error: "Invalid listing url" });
+      return;
     }
     const url = req.query.url as string;
     try {
@@ -717,12 +491,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get("/active-listings", async (req, res) => {
-    const { lat, long } = req.query;
-    if (!!!lat || !!!long) {
+    const { lat: _lat, long: _long } = req.query;
+    if (!_lat || !_long) {
       res.status(400).json({ error: "Invalid lat/long" });
+      return;
     }
     try {
-      const listingData = await fetch(url);
+      const listingData = await fetchListings();
       res.json(listingData);
     } catch (error) {
       console.error(error);

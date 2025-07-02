@@ -2,13 +2,10 @@ import React from "react";
 import {
   X,
   Heart,
-  Share2,
   Map,
   Home,
-  Ruler,
   Wifi,
   DollarSign,
-  Building,
   Plus,
   CheckCircle2,
   BadgeCheck,
@@ -16,7 +13,6 @@ import {
   Bath,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Apartment } from "../types";
 
 interface ApartmentDetailsDrawerProps {
@@ -63,7 +59,7 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="ml-4 rounded-full hover:bg-white/50 backdrop-blur-sm transition-all duration-200"
+              className="ml-4 rounded-[10px] hover:bg-white/50 backdrop-blur-sm transition-all duration-200"
             >
               <X className="h-5 w-5" />
             </Button>
@@ -87,7 +83,7 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
               <Button
                 variant="outline"
                 size="sm"
-                className="backdrop-blur-md bg-white/90 hover:bg-white rounded-full shadow-md border-white/30 transition-all duration-200"
+                className="backdrop-blur-md bg-white/90 hover:bg-white rounded-[10px] shadow-md border-white/30 transition-all duration-200"
                 onClick={() => onAddToFavorites?.(apartment.id)}
               >
                 <Heart className="h-4 w-4 text-rose-500 mr-1" />
@@ -100,7 +96,7 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
               {[0, 1, 2, 3, 4].map((index) => (
                 <div
                   key={index}
-                  className={`h-1.5 rounded-full transition-all duration-200 ${
+                  className={`h-1.5 rounded-[10px] transition-all duration-200 ${
                     index === 0 ? "bg-white w-4" : "bg-white/60 w-1.5"
                   }`}
                 />
@@ -146,13 +142,13 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
                     {[1, 2, 3].map((index) => (
                       <div
                         key={index}
-                        className="w-7 h-7 rounded-full border-2 border-white shadow-sm"
+                        className="w-7 h-7 rounded-[10px] border-2 border-white shadow-sm"
                         style={{
                           backgroundColor: ["#10B981", "#F59E0B", "#8B5CF6"][index - 1],
                         }}
                       />
                     ))}
-                    <div className="w-7 h-7 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium text-gray-600">
+                    <div className="w-7 h-7 rounded-[10px] bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium text-gray-600">
                       +8
                     </div>
                   </div>

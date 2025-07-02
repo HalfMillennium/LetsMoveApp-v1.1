@@ -15,8 +15,8 @@ export const Navigation = ({
 
   // Define styles based on props
   const pillStyle = darkMode
-    ? "bg-[#FFF9F2] text-[#0D2436] hover:bg-opacity-90 rounded-full py-3 px-8 text-sm font-medium transition-colors"
-    : "bg-[#FFF9F2] rounded-full py-3 px-8 text-sm font-medium";
+    ? "bg-[#FFF9F2] text-[#0D2436] hover:bg-opacity-90 rounded-[10px] py-3 px-8 text-sm font-medium transition-colors"
+    : "bg-[#FFF9F2] rounded-[10px] py-3 px-8 text-sm font-medium";
 
   const ghostStyle = darkMode
     ? "text-white hover:text-[#F9A775] py-2 text-sm font-medium transition-colors"

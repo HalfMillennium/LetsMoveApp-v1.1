@@ -4,13 +4,11 @@ import { useSearchParty } from "../context/SearchPartyContext";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Plus,
   MessageCircle,
   Calendar,
-  ExternalLink,
   Users,
   ArrowRight,
   MapPin,
@@ -31,7 +29,6 @@ const SearchParty = () => {
   const { searchParties, isLoading, createSearchParty } = useSearchParty();
   const { toast } = useToast();
   const [newPartyName, setNewPartyName] = useState("");
-  const [invitations, setInvitations] = useState<string>("");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   // State for apartment details modal
@@ -58,22 +55,6 @@ const SearchParty = () => {
     setChatDrawerOpen(true);
   };
 
-  const parseInvitations = (invitationText: string) => {
-    if (!invitationText.trim()) return [];
-
-    return invitationText
-      .split(/[,\n]/)
-      .map((contact) => contact.trim())
-      .filter((contact) => contact.length > 0)
-      .map((contact) => {
-        // Simple email detection
-        const isEmail = contact.includes("@") && contact.includes(".");
-        return {
-          contactInfo: contact,
-          contactType: isEmail ? ("email" as const) : ("phone" as const),
-        };
-      });
-  };
 
   const handleCreateParty = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,16 +69,14 @@ const SearchParty = () => {
     }
 
     try {
-      const parsedInvitations = parseInvitations(invitations);
       await createSearchParty(newPartyName);
 
       setNewPartyName("");
-      setInvitations("");
       setCreateDialogOpen(false);
 
       toast({
         title: "Success!",
-        description: `Your search party has been created${parsedInvitations.length > 0 ? " and invitations have been sent" : ""}.`,
+        description: "Your search party has been created.",
       });
     } catch (error) {
       console.error("Error creating search party:", error);
@@ -174,26 +153,10 @@ const SearchParty = () => {
                   />
                 </div>
 
-                <div>
-                  <label
-                    htmlFor="invites"
-                    className="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    Invite Members (Email or Phone)
-                  </label>
-                  <Textarea
-                    id="invites"
-                    value={invitations}
-                    onChange={(e) => setInvitations(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400"
-                    placeholder="Enter email addresses or phone numbers separated by commas or new lines"
-                    rows={3}
-                  />
-                </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-orange-400 hover:bg-orange-500 text-white py-3 rounded-full font-medium transition-colors"
+                  className="w-full bg-orange-400 hover:bg-orange-500 text-white py-3 rounded-[10px] font-medium transition-colors"
                 >
                   Create Search Party
                 </Button>
@@ -405,7 +368,7 @@ const SearchParty = () => {
                     <div className="flex justify-center mt-6 pt-4 border-t border-gray-100">
                       <Button
                         variant="outline"
-                        className="text-gray-700 border-gray-300 hover:bg-gray-50 rounded-full px-6 py-2"
+                        className="text-gray-700 border-gray-300 hover:bg-gray-50 rounded-[10px] px-6 py-2"
                       >
                         View All {listingCount} Listings
                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -456,7 +419,7 @@ const SearchParty = () => {
               >
                 <Button
                   onClick={() => setCreateDialogOpen(true)}
-                  className="bg-orange-400 hover:bg-orange-500 text-white rounded-full px-6 py-2.5 font-medium"
+                  className="bg-orange-400 hover:bg-orange-500 text-white rounded-[10px] px-6 py-2.5 font-medium"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Create Your First Search Party
@@ -472,7 +435,7 @@ const SearchParty = () => {
         apartment={selectedApartment}
         isOpen={detailsModalOpen}
         onClose={() => setDetailsModalOpen(false)}
-        onAddToFavorites={(id) => {
+        onAddToFavorites={() => {
           toast({
             title: "Added to Favorites",
             description: "This apartment has been added to your favorites.",

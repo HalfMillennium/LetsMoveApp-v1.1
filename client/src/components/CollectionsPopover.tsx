@@ -34,7 +34,7 @@ const CollectionsPopover = ({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center gap-2 rounded-full bg-white border border-gray-200 shadow-sm"
+          className="flex items-center gap-2 rounded-[10px] bg-white border border-gray-200 shadow-sm"
         >
           <GalleryVerticalEnd className="h-4 w-4" />
           <span className="hidden sm:inline-block">

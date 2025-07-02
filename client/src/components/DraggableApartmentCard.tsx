@@ -1,7 +1,7 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { Apartment } from '../types';
-import { Heart, Map as MapIcon, Users } from "lucide-react";
+import { Heart, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface DraggableApartmentCardProps {

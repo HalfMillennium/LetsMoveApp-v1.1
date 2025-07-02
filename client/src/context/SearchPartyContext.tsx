@@ -6,10 +6,8 @@ import { apiRequest } from "../lib/queryClient";
 import {
   SearchParty,
   SearchPartyListing,
-  SearchPartyMember,
   SearchPartyContextType,
   User,
-  InvitationRequest,
 } from "../types";
 import { useToast } from "@/hooks/use-toast";
 
@@ -71,10 +69,9 @@ export const SearchPartyProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Create a new search party
   const createSearchPartyMutation = useMutation({
-    mutationFn: async ({ name, invitations }: { name: string; invitations?: InvitationRequest[] }) => {
+    mutationFn: async ({ name }: { name: string }) => {
       const response = await apiRequest("POST", "/api/search-parties", {
         name,
-        invitations,
       });
       return response.json() as Promise<SearchParty>;
     },
@@ -136,106 +133,12 @@ export const SearchPartyProvider: React.FC<{ children: React.ReactNode }> = ({
     },
   });
 
-  // Invite users to search party
-  const inviteToSearchPartyMutation = useMutation({
-    mutationFn: async ({
-      searchPartyId,
-      invitations,
-    }: {
-      searchPartyId: number;
-      invitations: InvitationRequest[];
-    }) => {
-      const response = await apiRequest(
-        "POST",
-        `/api/search-parties/${searchPartyId}/invite`,
-        { invitations },
-      );
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["/api/search-parties"],
-      });
-      toast({
-        title: "Success",
-        description: "Invitations sent successfully",
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to send invitations",
-        variant: "destructive",
-      });
-      setError(error as Error);
-    },
-  });
 
-  // Remove member from search party
-  const removeMemberMutation = useMutation({
-    mutationFn: async ({
-      searchPartyId,
-      userId,
-    }: {
-      searchPartyId: number;
-      userId: number;
-    }) => {
-      const response = await apiRequest(
-        "DELETE",
-        `/api/search-parties/${searchPartyId}/members/${userId}`,
-      );
-      return response;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["/api/search-parties"],
-      });
-      toast({
-        title: "Success",
-        description: "Member removed successfully",
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to remove member",
-        variant: "destructive",
-      });
-      setError(error as Error);
-    },
-  });
 
-  // Accept invitation
-  const acceptInvitationMutation = useMutation({
-    mutationFn: async (token: string) => {
-      const response = await apiRequest(
-        "POST",
-        `/api/invitations/${token}/accept`,
-      );
-      return response.json() as Promise<SearchPartyMember>;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["/api/search-parties"],
-      });
-      toast({
-        title: "Success",
-        description: "Successfully joined the search party",
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to accept invitation",
-        variant: "destructive",
-      });
-      setError(error as Error);
-    },
-  });
 
   // Function to create a search party
-  const createSearchParty = async (name: string, invitations?: InvitationRequest[]): Promise<SearchParty> => {
-    return createSearchPartyMutation.mutateAsync({ name, invitations });
+  const createSearchParty = async (name: string): Promise<SearchParty> => {
+    return createSearchPartyMutation.mutateAsync({ name });
   };
 
   // Function to add a listing to a search party
@@ -272,63 +175,19 @@ export const SearchPartyProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // Function to invite users to search party
-  const inviteToSearchParty = async (
-    searchPartyId: number,
-    invitations: InvitationRequest[],
-  ): Promise<any> => {
-    return inviteToSearchPartyMutation.mutateAsync({
-      searchPartyId,
-      invitations,
-    });
-  };
 
-  // Function to remove member from search party
-  const removeMemberFromSearchParty = async (
-    searchPartyId: number,
-    userId: number,
-  ): Promise<void> => {
-    await removeMemberMutation.mutateAsync({
-      searchPartyId,
-      userId,
-    });
-  };
 
-  // Function to accept invitation
-  const acceptInvitation = async (token: string): Promise<SearchPartyMember> => {
-    return acceptInvitationMutation.mutateAsync(token);
-  };
 
-  // Function to get invitation details
-  const getInvitationDetails = async (token: string): Promise<any> => {
-    try {
-      const response = await fetch(`/api/invitations/${token}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch invitation details");
-      }
-      return response.json();
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error);
-      }
-      throw error;
-    }
-  };
 
   return (
     <SearchPartyContext.Provider
       value={{
         searchParties,
-        currentUser,
         isLoading,
         error,
         createSearchParty,
         addListingToParty,
-        getSearchPartyListings,
-        inviteToSearchParty,
-        removeMemberFromSearchParty,
-        acceptInvitation,
-        getInvitationDetails,
+        getSearchPartyListings
       }}
     >
       {children}

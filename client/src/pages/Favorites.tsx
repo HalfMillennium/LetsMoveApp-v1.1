@@ -49,7 +49,7 @@ const Favorites = () => {
             >
               <Button
                 onClick={() => (window.location.href = "/listings")}
-                className="mt-4 sm:mt-0 rounded-full bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5"
+                className="mt-4 sm:mt-0 rounded-[10px] bg-orange-400 hover:bg-orange-500 text-white font-medium px-6 py-2.5"
               >
                 <Home className="mr-2 h-4 w-4" />
                 Browse More
@@ -114,7 +114,7 @@ const Favorites = () => {
               >
                 <Button
                   onClick={() => (window.location.href = "/listings")}
-                  className="bg-orange-400 hover:bg-orange-500 text-white rounded-full px-6 py-2.5 font-medium"
+                  className="bg-orange-400 hover:bg-orange-500 text-white rounded-[10px] px-6 py-2.5 font-medium"
                 >
                   <Home className="mr-2 h-4 w-4" />
                   Browse Apartments
@@ -139,7 +139,7 @@ const Favorites = () => {
                 {favorites.map((favorite) => (
                   <ApartmentCard
                     key={favorite.id}
-                    apartment={favorite.apartment!}
+                    apartment={favorite.apartment}
                   />
                 ))}
               </div>
@@ -167,7 +167,7 @@ const Favorites = () => {
                     <Button
                       key={party.id}
                       variant="outline"
-                      className="border-gray-300 hover:bg-gray-50 text-gray-700 rounded-full p-3 h-auto flex items-center justify-between"
+                      className="border-gray-300 hover:bg-gray-50 text-gray-700 rounded-[10px] p-3 h-auto flex items-center justify-between"
                       onClick={() =>
                         (window.location.href = `/search-party/${party.id}`)
                       }

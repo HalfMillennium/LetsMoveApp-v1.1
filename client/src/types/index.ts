@@ -57,26 +57,9 @@ export interface SearchParty {
   userRole?: string;
   members?: SearchPartyMember[];
   listings?: SearchPartyListing[];
-  pendingInvitations?: SearchPartyInvitation[];
 }
 
-export interface SearchPartyInvitation {
-  id: number;
-  searchPartyId: number;
-  invitedBy: number;
-  contactInfo: string;
-  contactType: "email" | "phone";
-  invitationToken: string;
-  status: "pending" | "accepted" | "declined" | "expired";
-  expiresAt: string;
-  createdAt: string;
-  acceptedAt?: string;
-}
 
-export interface InvitationRequest {
-  contactInfo: string;
-  contactType: "email" | "phone";
-}
 
 export interface Member {
   userId: number;
