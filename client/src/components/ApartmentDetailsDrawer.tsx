@@ -51,7 +51,7 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
           <div className="flex justify-between items-start">
             <div className="flex-1 min-w-0">
               <h2 className="text-xl font-semibold text-gray-900 mb-1 truncate">
-                {apartment.title}
+                {apartment.title || apartment.address || 'Apartment Listing'}
               </h2>
               <p className="text-sm text-gray-600 truncate">{apartment.address}</p>
             </div>
@@ -180,6 +180,44 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
               </p>
             </div>
 
+            {/* Listing Details Card */}
+            {(apartment.listedBy || apartment.leaseTerm || apartment.netEffective || apartment.listingUrl) && (
+              <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                  Listing Details
+                </h3>
+                <div className="space-y-3">
+                  {apartment.listedBy && (
+                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                      <span className="text-sm font-medium">Listed by: {apartment.listedBy}</span>
+                    </div>
+                  )}
+                  {apartment.leaseTerm && (
+                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                      <span className="text-sm font-medium">Lease term: {apartment.leaseTerm}</span>
+                    </div>
+                  )}
+                  {apartment.netEffective && (
+                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                      <span className="text-sm font-medium">Net effective: {apartment.netEffective}</span>
+                    </div>
+                  )}
+                  {apartment.listingUrl && (
+                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
+                      <a 
+                        href={apartment.listingUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                      >
+                        View original listing
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Amenities Card */}
             <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
@@ -215,17 +253,25 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
                 )}
               </div>
             </div>
-
             {/* Location Card */}
             <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Location</h3>
-              <div className="h-[200px] rounded-xl overflow-hidden mb-3">
-                <img
-                  src={`https://maps.googleapis.com/maps/api/staticmap?center=${apartment.latitude},${apartment.longitude}&zoom=14&size=600x300&markers=color:red%7C${apartment.latitude},${apartment.longitude}`}
-                  alt="Location map"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+              {apartment.latitude && apartment.longitude ? (
+                <div className="h-[200px] rounded-xl overflow-hidden mb-3">
+                  <img
+                    src={`https://maps.googleapis.com/maps/api/staticmap?center=${apartment.latitude},${apartment.longitude}&zoom=14&size=600x300&markers=color:red%7C${apartment.latitude},${apartment.longitude}`}
+                    alt="Location map"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="h-[200px] rounded-xl overflow-hidden mb-3 bg-gray-100 flex items-center justify-center">
+                  <div className="text-center">
+                    <MapPin className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                    <p className="text-sm text-gray-500">Map not available</p>
+                  </div>
+                </div>
+              )}
               <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
                 <MapPin className="h-4 w-4 mr-2.5 text-red-600" />
                 <span className="text-sm font-medium truncate">{apartment.address}</span>

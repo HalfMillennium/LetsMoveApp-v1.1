@@ -35,7 +35,7 @@ export const users = pgTable("users", {
 // Apartment listings
 export const apartments = pgTable("apartments", {
   id: serial("id").primaryKey(),
-  title: text("title").notNull(),
+  title: text("title"),
   description: text("description"),
   price: integer("price").notNull(),
   bedrooms: integer("bedrooms").notNull(),
@@ -43,13 +43,17 @@ export const apartments = pgTable("apartments", {
   squareFeet: integer("square_feet"),
   location: text("location").notNull(),
   address: text("address").notNull(),
-  latitude: text("latitude").notNull(),
-  longitude: text("longitude").notNull(),
+  latitude: text("latitude"),
+  longitude: text("longitude"),
   images: text("images").array().notNull(),
   amenities: text("amenities").array(),
   isAvailable: boolean("is_available").default(true),
   createdById: integer("created_by_id").references(() => users.id),
-  distance: text("distance")
+  distance: text("distance"),
+  listingUrl: text("listing_url"),
+  listedBy: text("listed_by"),
+  leaseTerm: text("lease_term"),
+  netEffective: text("net_effective")
 });
 
 // Favorites (saved apartments)

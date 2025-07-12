@@ -3,6 +3,8 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { clerkMiddleware, requireAuth, getAuth } from "@clerk/express";
 import { InsertUser } from "../shared/schema";
+import { supabase } from "./supabaseClient";
+import { transformRawApartmentResponse, type RawApartmentResponse } from "./apartmentTransform";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create HTTP server
@@ -76,18 +78,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(filteredApartments);
     } catch {
       res.status(500).json({ message: "Error fetching apartments" });
-    }
-  });
-
-  app.get("/api/apartments/:id", async (req, res) => {
-    try {
-      const apartment = await storage.getApartment(Number(req.params.id));
-      if (!apartment) {
-        return res.status(404).json({ message: "Apartment not found" });
-      }
-      res.json(apartment);
-    } catch {
-      res.status(500).json({ message: "Error fetching apartment" });
     }
   });
 
@@ -470,6 +460,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(user);
     } catch {
       res.status(500).json({ message: "Error fetching user by id" });
+    }
+  });
+
+  // Supabase apartments endpoint  
+  app.get("/api/listings", async (req, res, next) => {
+    try {
+      console.log("🔍 Fetching apartments from Supabase...");
+      
+      // Fetch from Supabase listings table
+      const { data, error } = await supabase
+        .from('listings')
+        .select();
+
+      if (error) {
+        console.error('🔴 Supabase error:', error);
+        return res.status(500).json({ 
+          error: "Error fetching from Supabase", 
+          details: error.message 
+        });
+      }
+
+      console.log(`🔍 Retrieved ${data?.length || 0} records from Supabase`);
+
+      if (!data || data.length === 0) {
+        console.log('🔍 No data found, returning empty array');
+        return res.json([]);
+      }
+
+      // Extract and transform apartment listings from nested data
+      const allApartments: any[] = [];
+      let apartmentIdCounter = 1000; // Start with high IDs to avoid conflicts
+
+      data.forEach((record: any) => {
+        if (record.data && record.data.data && record.data.data.listings) {
+          const listings = record.data.data.listings;
+          console.log(`🔍 Found ${listings.length} apartments in record ${record.id}`);
+          
+          listings.forEach((listing: RawApartmentResponse) => {
+            try {
+              const transformedApartment = transformRawApartmentResponse(listing, apartmentIdCounter++);
+              allApartments.push(transformedApartment);
+            } catch (transformError) {
+              console.error('🔴 Error transforming apartment:', transformError);
+            }
+          });
+        }
+      });
+
+      console.log(`✅ Successfully transformed ${allApartments.length} total apartments`);
+      return res.json(allApartments);
+      
+    } catch (error) {
+      console.error("🔴 Unexpected error in Supabase apartments endpoint:", error);
+      console.error("Stack trace:", error instanceof Error ? error.stack : 'No stack trace');
+      return res.status(500).json({ 
+        error: "Error fetching apartments from Supabase",
+        message: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 

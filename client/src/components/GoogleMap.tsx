@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 const containerStyle = {
   width: "100%",
   height: "100%",
-  borderRadius: 12,
+  borderRadius: 10,
 };
 
 // Default map center (will be updated with user's location)
@@ -405,12 +405,14 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
         )}
 
         {/* Apartment markers */}
-        {apartments.map((apartment) => (
+        {apartments
+          .filter((apartment) => apartment.latitude && apartment.longitude)
+          .map((apartment) => (
           <OverlayView
             key={apartment.id}
             position={{
-              lat: parseFloat(apartment.latitude),
-              lng: parseFloat(apartment.longitude),
+              lat: parseFloat(apartment.latitude!),
+              lng: parseFloat(apartment.longitude!),
             }}
             mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
           >
@@ -470,7 +472,7 @@ export const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({
         ))}
 
         {/* Info window for selected apartment */}
-        {selectedApartment && (
+        {selectedApartment && selectedApartment.latitude && selectedApartment.longitude && (
           <InfoWindow
             position={{
               lat: parseFloat(selectedApartment.latitude),

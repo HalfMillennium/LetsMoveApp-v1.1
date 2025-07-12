@@ -1,9 +1,74 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Apartment } from "../types";
+import { Apartment, RawApartmentResponse } from "../types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+// Transform raw API response to normalized apartment format
+export function transformRawApartmentResponse(raw: RawApartmentResponse, id: number): Apartment {
+  // Extract values from nested arrays, handling empty arrays gracefully
+  const extractInnerText = (arr: Array<{ innerText: string }>) => 
+    arr.length > 0 ? arr[0].innerText : '';
+  
+  const extractSrcValue = (arr: Array<{ src: { name: string; value: string } }>) => 
+    arr.map(item => item.src.value);
+
+  // Parse numeric values
+  const parsePrice = (priceStr: string): number => {
+    const cleaned = priceStr.replace(/[\$,]/g, '');
+    return parseInt(cleaned) || 0;
+  };
+
+  const parseBedrooms = (bedStr: string): number => {
+    const match = bedStr.match(/(\d+)\s*bed/i);
+    return match ? parseInt(match[1]) : 0;
+  };
+
+  const parseBathrooms = (bathStr: string): number => {
+    const match = bathStr.match(/(\d+(?:\.\d+)?)\s*bath/i);
+    return match ? parseFloat(match[1]) : 0;
+  };
+
+  const parseSquareFeet = (sqftStr: string): number | undefined => {
+    const match = sqftStr.match(/(\d+)\s*ft²/i);
+    return match ? parseInt(match[1]) : undefined;
+  };
+  const rawBoroText = extractInnerText(raw.boro);
+  const boroText = rawBoroText.replace('RENTAL UNIT IN ', '').replace(/\b\w/g, char => char.toUpperCase());
+  return {
+    id,
+    price: parsePrice(extractInnerText(raw.price)),
+    bedrooms: parseBedrooms(extractInnerText(raw.beds)),
+    bathrooms: parseBathrooms(extractInnerText(raw.baths)),
+    squareFeet: parseSquareFeet(extractInnerText(raw.sqft)),
+    location: boroText,
+    address: raw.general.length > 0 ? raw.general[0].address : '',
+    images: extractSrcValue(raw.imageUrls),
+    isAvailable: true,
+    listingUrl: raw.general.length > 0 ? raw.general[0].listingUrl.value : undefined,
+    listedBy: extractInnerText(raw.listedBy),
+    leaseTerm: raw.leaseTerm.length > 0 ? extractInnerText(raw.leaseTerm) : undefined,
+    netEffective: raw.netEffective.length > 0 ? extractInnerText(raw.netEffective) : undefined,
+  };
+}
+
+// Function to fetch and transform Supabase apartment data
+export async function fetchSupabaseApartments(): Promise<Apartment[]> {
+  try {
+    console.log("Trying to fetch supabase entries");
+    const response = await fetch('/api/listings');
+    if (!response.ok) {
+      throw new Error('Failed to fetch Supabase apartments');
+    }
+    const apartmentData: Apartment[] = await response.json();
+    
+    return apartmentData;
+  } catch (error) {
+    console.error('Error fetching Supabase apartments:', error);
+    return [];
+  }
 }
 
 export const exampleApartments: Apartment[] = [

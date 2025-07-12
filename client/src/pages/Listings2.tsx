@@ -26,7 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GoogleMapComponent } from "../components/GoogleMap";
 import FilterChips from "../components/FilterChips";
-import { exampleApartments } from "../lib/utils";
+import { exampleApartments, fetchSupabaseApartments } from "../lib/utils";
 import { ListingCollection } from "../types";
 import ApartmentDetailsDrawer from "../components/ApartmentDetailsDrawer";
 import CreateCollectionModal from "../components/CreateCollectionModal";
@@ -141,8 +141,12 @@ const Listings2 = () => {
   } = useQuery<Apartment[]>({
     queryKey: ["/api/apartments", filters],
     queryFn: async () => {
-      // In a real app, we would fetch from the API with filters
-      // For now, use the example data
+      // Try to fetch from Supabase first, fallback to example data
+      const supabaseData = await fetchSupabaseApartments();
+      if (supabaseData.length > 0) {
+        return supabaseData;
+      }
+      // Fallback to example data if Supabase is not available
       return exampleApartments;
     },
   });
@@ -485,7 +489,7 @@ const Listings2 = () => {
             <div
               ref={mapRef}
               style={{ borderRadius: 10 }}
-              className="lg:sticky lg:top-20 h-[70vh] overflow-hidden shadow-md opacity-0 transition-opacity duration-700"
+              className="lg:sticky lg:top-20 h-[70vh] overflow-hidden border opacity-0 transition-opacity duration-700"
             >
               <GoogleMapComponent
                 apartments={apartments}

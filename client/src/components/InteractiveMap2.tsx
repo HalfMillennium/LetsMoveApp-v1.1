@@ -330,8 +330,10 @@ const InteractiveMap = ({
         )}
 
         {/* Apartment markers */}
-        {apartments.map((apt) => {
-          const { x, y } = convertLatLongToXY(apt.latitude, apt.longitude);
+        {apartments
+          .filter((apt) => apt.latitude && apt.longitude)
+          .map((apt) => {
+          const { x, y } = convertLatLongToXY(apt.latitude!, apt.longitude!);
           const isSelected = apt.id === selectedApartmentId;
           const isHovered = apt.id === hoveredApartmentId;
 

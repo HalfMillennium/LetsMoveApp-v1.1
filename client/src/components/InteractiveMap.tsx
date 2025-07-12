@@ -201,8 +201,10 @@ const InteractiveMap = ({
         )}
 
         {/* Apartment Markers */}
-        {apartments.map((apt) => {
-          const { x, y } = convertLatLongToXY(apt.latitude, apt.longitude);
+        {apartments
+          .filter((apt) => apt.latitude && apt.longitude)
+          .map((apt) => {
+          const { x, y } = convertLatLongToXY(apt.latitude!, apt.longitude!);
           const isSelected = apt.id === selectedApartmentId;
           const isHovered = apt.id === hoveredApartmentId;
           const size = isSelected || isHovered ? 1.3 : 1;

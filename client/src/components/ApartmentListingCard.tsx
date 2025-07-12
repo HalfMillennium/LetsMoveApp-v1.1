@@ -73,10 +73,10 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
         {/* Title and Address */}
         <div>
           <h3 className="font-semibold text-gray-900 text-lg line-clamp-1">
-            {apartment.title}
+            {apartment.title || apartment.address || 'Apartment Listing'}
           </h3>
           <p className="text-gray-500 text-sm">
-            {apartment.address.split(",")[0]}, {apartment.location}
+            {apartment.address?.split(",")[0] || apartment.address || ''}, {apartment.location}
           </p>
         </div>
 
@@ -97,10 +97,12 @@ export const ApartmentListingCard: React.FC<ApartmentListingCardProps> = ({
             <span className="text-sm">{apartment.bathrooms}</span>
           </div>
 
-          <div className="flex items-center text-gray-700">
-            <Square className="h-4 w-4 mr-1.5 text-gray-500" />
-            <span className="text-sm">{apartment.squareFeet} ft²</span>
-          </div>
+          {apartment.squareFeet && (
+            <div className="flex items-center text-gray-700">
+              <Square className="h-4 w-4 mr-1.5 text-gray-500" />
+              <span className="text-sm">{apartment.squareFeet} ft²</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
