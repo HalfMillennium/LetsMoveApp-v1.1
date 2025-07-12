@@ -46,255 +46,184 @@ export const ApartmentDetailsDrawer: React.FC<ApartmentDetailsDrawerProps> = ({
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Glass header */}
-        <div className="sticky top-0 z-10 backdrop-blur-md bg-white/70 px-6 py-4 border-b border-white/20">
-          <div className="flex justify-between items-start">
-            <div className="flex-1 min-w-0">
-              <h2 className="text-xl font-semibold text-gray-900 mb-1 truncate">
-                {apartment.title || apartment.address || 'Apartment Listing'}
-              </h2>
-              <p className="text-sm text-gray-600 truncate">{apartment.address}</p>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="ml-4 rounded-xl hover:bg-white/50 backdrop-blur-sm transition-all duration-200"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto">
-          {/* Hero Image with Glass Elements */}
-          <div className="relative overflow-hidden group mx-6 mt-6 mb-4">
-            <div className="w-full rounded-2xl overflow-hidden">
-              <img
-                src={apartment.images[0]}
-                alt={apartment.title}
-                className="w-full h-[280px] object-cover transition duration-700 ease-in-out group-hover:scale-105"
-              />
-            </div>
-            
-            {/* Floating Save Button - Top Right */}
-            <div className="absolute top-3 right-3">
-              <Button
-                variant="outline"
-                size="sm"
-                className="backdrop-blur-md bg-white/90 hover:bg-white rounded-xl shadow-md border-white/30 transition-all duration-200"
-                onClick={() => onAddToFavorites?.(apartment.id)}
-              >
-                <Heart className="h-4 w-4 text-rose-500 mr-1" />
-                Save
-              </Button>
-            </div>
-
-            {/* Image pagination dots */}
-            <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1">
-              {[0, 1, 2, 3, 4].map((index) => (
-                <div
-                  key={index}
-                  className={`h-1.5 rounded-xl transition-all duration-200 ${
-                    index === 0 ? "bg-white w-4" : "bg-white/60 w-1.5"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Glass Card Content */}
-          <div className="px-6 space-y-6">
-            {/* Price and Basic Info Card */}
-            <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
-              <div className="flex items-baseline space-x-2 mb-4">
-                <span className="text-2xl font-bold text-gray-900">
-                  ${apartment.price}
-                </span>
-                <span className="text-gray-600">/month</span>
-              </div>
-              
-              <div className="grid grid-cols-3 gap-3">
-                <div className="flex flex-col items-center p-3 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                  <Home className="h-4 w-4 text-gray-600 mb-1" />
-                  <span className="text-xs font-medium text-center">{apartment.bedrooms} bed</span>
-                </div>
-                <div className="flex flex-col items-center p-3 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                  <Bath className="h-4 w-4 text-gray-600 mb-1" />
-                  <span className="text-xs font-medium text-center">{apartment.bathrooms} bath</span>
-                </div>
-                <div className="flex flex-col items-center p-3 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                  <MapPin className="h-4 w-4 text-gray-600 mb-1" />
-                  <span className="text-xs font-medium text-center truncate">{apartment.location}</span>
+        {/* Main Content */}
+        <div className="text-neutral-800 leading-[20px] w-full max-w-7xl font-['Airbnb_Cereal_VF',_Circular,_-apple-system,_'system-ui',_Roboto,_'Helvetica_Neue',_sans-serif] flex flex-wrap justify-start items-stretch mx-auto px-20">
+          <div className="w-[58.3333%] relative mx-[0%]">
+            <div>
+              <div>
+                <div className="py-8">
+                  <div>
+                    <div className="contents">
+                      <section>
+                        <div className="leading-[26px] tracking-[-0.22px] text-[22px] font-medium">
+                          <h2>{apartment.title}</h2>
+                        </div>
+                        <div className="mt-1">
+                          <ol className="list-decimal">
+                            <li className="inline-block text-left">
+                              {apartment.bedrooms} bed
+                            </li>
+                            <li className="inline-block text-left">
+                              <span>
+                                <span className="whitespace-pre-wrap"> · </span>
+                              </span>
+                              {apartment.bathrooms} bath
+                            </li>
+                            <li className="inline-block text-left">
+                              <span>
+                                <span className="whitespace-pre-wrap"> · </span>
+                              </span>
+                              {apartment.squareFeet} sqft
+                            </li>
+                          </ol>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* People Interested Card */}
-            <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                People interested in this listing
-              </h3>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-2">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3].map((index) => (
+              <div className="py-6">
+                <div className="contents">
+                  <div className="flex gap-6">
+                    <div className="relative size-10">
+                      <button
+                        type="button"
+                        className="bg-transparent block relative text-center underline cursor-pointer rounded-[50%] size-full"
+                      >
+                        <div className="bg-neutral-200 relative overflow-hidden cursor-pointer rounded-[50%] size-10">
+                          <div
+                            className="min-h-px bg-center inline-block no-repeat align-bottom cursor-pointer size-full"
+                            role="presentation"
+                          >
+                            <img
+                              className="max-w-none inline-block align-bottom object-cover cursor-pointer size-full"
+                              alt="Host profile picture"
+                              src="https://placehold.co/240x247"
+                            />
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                    <div className="flex flex-col justify-center gap-1">
+                      <div className="font-medium">
+                        {" "}
+                        Listed by: {apartment.listedBy}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Description Card */}
+              <div className="border-t-neutral-200 border-t-[1.5px] pt-8 pb-12">
+                <div className="whitespace-pre-wrap">
+                  <div className="leading-[22px] overflow-hidden text-ellipsis">
+                    <p>{apartment.description}</p>
+                  </div>
+                </div>
+              </div>
+              {/* Amenities Card */}
+              <div className="border-t-neutral-200 border-t-[1.5px] py-12">
+                <section>
+                  <div className="pb-6">
+                    <div className="leading-[26px] tracking-[-0.22px] text-[22px] font-medium">
+                      <h2>What this place offers</h2>
+                    </div>
+                  </div>
+                  <div className="w-[calc(100%_+_16px)] flex flex-wrap justify-start items-stretch mx-[-8px]">
+                    {apartment?.amenities?.map((amenity, index) => (
                       <div
                         key={index}
-                        className="w-7 h-7 rounded-xl border-2 border-white shadow-sm"
-                        style={{
-                          backgroundColor: ["#10B981", "#F59E0B", "#8B5CF6"][index - 1],
-                        }}
-                      />
-                    ))}
-                    <div className="w-7 h-7 rounded-xl bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium text-gray-600">
-                      +8
-                    </div>
-                  </div>
-                  <span className="text-sm text-gray-600">
-                    In 3 search parties
-                  </span>
-                </div>
-              </div>
-              
-              <Button
-                className="w-full rounded-xl bg-gray-900 hover:bg-gray-800 text-white shadow-sm"
-                onClick={() => onAddToSearchParty?.(apartment.id)}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add to Search Party
-              </Button>
-            </div>
-
-            {/* Description Card */}
-            <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                About this apartment
-              </h3>
-              <p className="text-gray-700 leading-relaxed text-sm">
-                {apartment.description ||
-                  `This beautiful ${apartment.bedrooms}-bedroom, ${apartment.bathrooms}-bathroom apartment features modern amenities and a spacious layout${
-                    apartment.squareFeet ? ` with ${apartment.squareFeet} square feet of living space` : ""
-                  }. Located in ${apartment.location} with easy access to transportation, shopping, and dining.`}
-              </p>
-            </div>
-
-            {/* Listing Details Card */}
-            {(apartment.listedBy || apartment.leaseTerm || apartment.netEffective || apartment.listingUrl) && (
-              <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Listing Details
-                </h3>
-                <div className="space-y-3">
-                  {apartment.listedBy && (
-                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                      <span className="text-sm font-medium">Listed by: {apartment.listedBy}</span>
-                    </div>
-                  )}
-                  {apartment.leaseTerm && (
-                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                      <span className="text-sm font-medium">Lease term: {apartment.leaseTerm}</span>
-                    </div>
-                  )}
-                  {apartment.netEffective && (
-                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                      <span className="text-sm font-medium">Net effective: {apartment.netEffective}</span>
-                    </div>
-                  )}
-                  {apartment.listingUrl && (
-                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                      <a 
-                        href={apartment.listingUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                        className="w-1/2 relative mx-[0%] px-2"
                       >
-                        View original listing
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Amenities Card */}
-            <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                What this place offers
-              </h3>
-              <div className="grid grid-cols-1 gap-2">
-                {apartment.amenities && apartment.amenities.length > 0 ? (
-                  apartment.amenities.slice(0, 6).map((amenity, index) => (
-                    <div key={index} className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                      <CheckCircle2 className="h-4 w-4 mr-2.5 text-green-600" />
-                      <span className="text-sm font-medium">{amenity}</span>
-                    </div>
-                  ))
-                ) : (
-                  <>
-                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                      <Wifi className="h-4 w-4 mr-2.5 text-blue-600" />
-                      <span className="text-sm font-medium">High-speed WiFi</span>
-                    </div>
-                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                      <DollarSign className="h-4 w-4 mr-2.5 text-green-600" />
-                      <span className="text-sm font-medium">Utilities included</span>
-                    </div>
-                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                      <BadgeCheck className="h-4 w-4 mr-2.5 text-purple-600" />
-                      <span className="text-sm font-medium">Modern appliances</span>
-                    </div>
-                    <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                      <Map className="h-4 w-4 mr-2.5 text-orange-600" />
-                      <span className="text-sm font-medium">Close to transit</span>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-            {/* Location Card */}
-            <div className="backdrop-blur-md bg-white/60 rounded-2xl p-5 border border-white/20 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Location</h3>
-              {apartment.latitude && apartment.longitude ? (
-                <div className="h-[200px] rounded-xl overflow-hidden mb-3">
-                  <img
-                    src={`https://maps.googleapis.com/maps/api/staticmap?center=${apartment.latitude},${apartment.longitude}&zoom=14&size=600x300&markers=color:red%7C${apartment.latitude},${apartment.longitude}`}
-                    alt="Location map"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ) : (
-                <div className="h-[200px] rounded-xl overflow-hidden mb-3 bg-gray-100 flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                    <p className="text-sm text-gray-500">Map not available</p>
+                        <div className="pb-6 max-w-[83.3333%] flex flex-row-reverse justify-end items-center">
+                          <div>{amenity}</div>
+                          <div className="mr-4 min-w-6">
+                            <CheckCircle2 className="h-4 w-4 text-green-600" />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              )}
-              <div className="flex items-center p-2.5 backdrop-blur-sm bg-white/40 rounded-xl border border-white/20">
-                <MapPin className="h-4 w-4 mr-2.5 text-red-600" />
-                <span className="text-sm font-medium truncate">{apartment.address}</span>
+                </section>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Glass Footer */}
-        <div className="sticky bottom-0 backdrop-blur-md bg-white/80 border-t border-white/20 p-5 mx-6 mb-4 rounded-2xl shadow-sm">
-          <div className="flex justify-between items-center">
-            <div className="flex flex-col">
-              <div className="flex items-baseline space-x-1">
-                <span className="text-xl font-bold text-gray-900">${apartment.price}</span>
-                <span className="text-gray-600 text-sm">/month</span>
+          <div className="mr-[0%] ml-[8.33333%] w-[33.3333%] relative">
+            <div className="pr-px w-full top-20 z-[1] inline-block sticky">
+              <div className="pb-12">
+                <div>
+                  <div>
+                    <div className="mt-8">
+                      <div>
+                        <div className="shadow-[_#0000001f_0px_6px_16px_0px] p-6 rounded-xl">
+                          <div>
+                            <div>
+                              <div className="flex flex-col">
+                                <div className="mb-6 gap-x-2 flex flex-wrap justify-between items-baseline">
+                                  <div>
+                                    <div className="flex flex-wrap items-baseline">
+                                      <span className="flex relative items-baseline">
+                                        <div>
+                                          <div className="leading-[26px] text-[22px] flex flex-wrap justify-start items-baseline">
+                                            <span className="block">
+                                              <div className="inline-flex relative">
+                                                <button
+                                                  type="button"
+                                                  className="bg-transparent block font-medium underline cursor-pointer rounded-sm"
+                                                >
+                                                  <span className="font-semibold cursor-pointer">
+                                                    ${apartment.price}
+                                                  </span>
+                                                </button>
+                                              </div>
+                                            </span>
+                                          </div>
+                                        </div>
+                                        <div>
+                                          <span>/month</span>
+                                        </div>
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="shrink-[0]">
+                                  <div>
+                                    <Button
+                                      className="text-white w-full bg-transparent bg-[linear-gradient(to_right,_rgb(230,_30,_77)_0%,_rgb(227,_28,_95)_50%,_rgb(215,_4,_102)_100%)] relative text-center font-medium overflow-hidden cursor-pointer px-6 py-[14px] rounded-[999px]"
+                                      onClick={() =>
+                                        onAddToFavorites?.(apartment.id)
+                                      }
+                                    >
+                                      <span className="block relative cursor-pointer">
+                                        <span className="cursor-pointer">
+                                          Save
+                                        </span>
+                                      </span>
+                                    </Button>
+                                    <Button
+                                      className="text-white w-full bg-transparent bg-[linear-gradient(to_right,_rgb(230,_30,_77)_0%,_rgb(227,_28,_95)_50%,_rgb(215,_4,_102)_100%)] relative text-center font-medium overflow-hidden cursor-pointer px-6 py-[14px] rounded-[999px] mt-2"
+                                      onClick={() =>
+                                        onAddToSearchParty?.(apartment.id)
+                                      }
+                                    >
+                                      <span className="block relative cursor-pointer">
+                                        <span className="cursor-pointer">
+                                          Add to Search Party
+                                        </span>
+                                      </span>
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <span className="text-xs text-gray-500">Best price in area</span>
             </div>
-            <Button 
-              className="px-6 py-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-white shadow-sm"
-            >
-              Apply Now
-            </Button>
           </div>
         </div>
       </div>
